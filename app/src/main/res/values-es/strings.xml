@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="welcome_msg">Bienvenido a EzPermissions</string>
+	<string name="package_icon">App Icon</string>
+	<string name="package_permissions_number">Número total de permisos: %d</string>
+</resources>
