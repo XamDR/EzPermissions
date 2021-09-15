@@ -17,7 +17,8 @@
 		android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
 		android:paddingTop="8dp"
 		android:paddingBottom="8dp"
-		android:columnCount="2">
+		android:columnCount="3"
+		android:rowCount="2">
 
 		<ImageView
 			android:id="@+id/app_icon"
@@ -43,10 +44,23 @@
 
 		<TextView
 			android:id="@+id/app_number_permissions"
-			android:layout_width="0dp"
-			android:layout_gravity="fill_horizontal"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_column="1"
+			android:layout_row="1"
 			android:text="@{@string/package_permissions_number(appInfo.packageNumberPermissions)}"
 			android:textAppearance="?android:attr/textAppearanceSmall"
 			tools:text="Número total de permisos: 10"/>
+
+		<ImageButton
+			android:layout_width="@android:dimen/app_icon_size"
+			android:layout_height="@android:dimen/app_icon_size"
+			android:layout_gravity="end|center_vertical"
+			android:layout_column="2"
+			android:layout_row="0"
+			android:layout_rowSpan="2"
+			android:background="?selectableItemBackgroundBorderless"
+			android:contentDescription="@null"
+			android:src="@drawable/ic_next"/>
 	</GridLayout>
 </layout>
