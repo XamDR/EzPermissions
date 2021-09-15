@@ -5,8 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.maxdr.ezpermss.core.AppInfo
 import com.maxdr.ezpermss.databinding.AppRowLayoutBinding
+import com.maxdr.ezpermss.ui.helpers.NavigationService
+import com.maxdr.ezpermss.ui.permissions.PermissionDetailFragment
 
-class AppInfoAdapter(private val userInstalledApps: List<AppInfo>) : RecyclerView.Adapter<AppInfoAdapter.AppViewHolder>() {
+class AppInfoAdapter(private val userInstalledApps: List<AppInfo>,
+					 private val navigator: NavigationService) : RecyclerView.Adapter<AppInfoAdapter.AppViewHolder>() {
 
 	class AppViewHolder(private val binding: AppRowLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
 
@@ -20,6 +23,7 @@ class AppInfoAdapter(private val userInstalledApps: List<AppInfo>) : RecyclerVie
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppViewHolder {
 		val binding = AppRowLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+		binding.next.setOnClickListener { navigateToPermissionDetails() }
 		return AppViewHolder(binding)
 	}
 
@@ -29,4 +33,6 @@ class AppInfoAdapter(private val userInstalledApps: List<AppInfo>) : RecyclerVie
 	}
 
 	override fun getItemCount() = userInstalledApps.size
+
+	private fun navigateToPermissionDetails() = navigator.navigate(PermissionDetailFragment::class.java.name)
 }

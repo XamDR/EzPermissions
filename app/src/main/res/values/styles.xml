@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<style name="Theme.PopupOverlay.Menu" parent="">
+		<item name="android:textColorPrimary">?attr/colorOnSurface</item>
+		<item name="android:textColorSecondary">?attr/colorOnSurface</item>
+	</style>
+
+	<style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+</resources>

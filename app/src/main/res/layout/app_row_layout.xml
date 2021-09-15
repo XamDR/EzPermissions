@@ -53,6 +53,7 @@
 			tools:text="Número total de permisos: 10"/>
 
 		<ImageButton
+			android:id="@+id/next"
 			android:layout_width="@android:dimen/app_icon_size"
 			android:layout_height="@android:dimen/app_icon_size"
 			android:layout_gravity="end|center_vertical"

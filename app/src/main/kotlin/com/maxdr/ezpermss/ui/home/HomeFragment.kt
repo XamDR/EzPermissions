@@ -7,9 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.maxdr.ezpermss.MainActivity
 import com.maxdr.ezpermss.databinding.HomeFragmentBinding
 import com.maxdr.ezpermss.ui.apps.AppListFragment
+import com.maxdr.ezpermss.util.mainActivity
 
 class HomeFragment : Fragment() {
 
@@ -29,7 +29,7 @@ class HomeFragment : Fragment() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		binding?.btn?.setOnClickListener { (activity as MainActivity).navigate(AppListFragment::class.java.name) }
+		binding?.btn?.setOnClickListener { mainActivity.navigate(AppListFragment::class.java.name) }
 		binding?.btnRevoke?.setOnClickListener { revokePermission() }
 	}
 
