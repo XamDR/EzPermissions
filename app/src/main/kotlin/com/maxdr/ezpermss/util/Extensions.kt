@@ -5,6 +5,14 @@ import android.text.style.BulletSpan
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.maxdr.ezpermss.MainActivity
+import java.util.Locale
+
+val String.Companion.Empty: String
+	get() = ""
+
+fun String.toTitleCase() = this.replaceFirstChar {
+	if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+}
 
 val Fragment.mainActivity: MainActivity
 	get() = requireActivity() as? MainActivity

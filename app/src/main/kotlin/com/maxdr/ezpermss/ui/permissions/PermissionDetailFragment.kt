@@ -19,7 +19,7 @@ class PermissionDetailFragment : Fragment() {
 		PermissionDetailViewModelFactory(requireActivity().application, appInfo?.packageFullName!!)
 	}
 	private var appInfo: AppInfo? = null
-	private lateinit var adapter: PermissionsAdapter
+	private lateinit var adapter: PermissionStateAdapter
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -49,7 +49,7 @@ class PermissionDetailFragment : Fragment() {
 	}
 
 	private fun setupViewPagerWithTabLayout() {
-		adapter = PermissionsAdapter(this, listOf(NormalPermissionsFragment(), DangerousPermissionsFragment()))
+		adapter = PermissionStateAdapter(this, listOf(NormalPermissionsFragment(), DangerousPermissionsFragment()))
 		binding?.pager?.adapter = adapter
 		TabLayoutMediator(binding?.tabLayout!!, binding?.pager!!) { tab, position ->
 			tab.text = if (position == 0) getString(R.string.normal) else getString(R.string.dangerous)
