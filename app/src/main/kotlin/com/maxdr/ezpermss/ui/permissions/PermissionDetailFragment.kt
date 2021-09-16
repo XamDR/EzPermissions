@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.tabs.TabLayoutMediator
+import com.maxdr.ezpermss.R
 import com.maxdr.ezpermss.core.AppInfo
 import com.maxdr.ezpermss.databinding.PermissionDetailFragmentBinding
 import com.maxdr.ezpermss.util.debug
@@ -48,10 +49,10 @@ class PermissionDetailFragment : Fragment() {
 	}
 
 	private fun setupViewPagerWithTabLayout() {
-		adapter = PermissionsAdapter(this)
+		adapter = PermissionsAdapter(this, listOf(NormalPermissionsFragment(), DangerousPermissionsFragment()))
 		binding?.pager?.adapter = adapter
 		TabLayoutMediator(binding?.tabLayout!!, binding?.pager!!) { tab, position ->
-			tab.text = if (position == 0) "Normal" else "Dangerous"
+			tab.text = if (position == 0) getString(R.string.normal) else getString(R.string.dangerous)
 		}.attach()
 	}
 }
