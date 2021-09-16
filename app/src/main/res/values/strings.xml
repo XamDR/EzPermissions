@@ -3,4 +3,5 @@
 	<string name="welcome_msg">Welcome to EzPermissions</string>
 	<string name="package_icon">App Icon</string>
 	<string name="package_permissions_number">Total permissions number: %d</string>
+	<string name="normal_permissions">&#8226; android.permission.ACCESS_WIFI_STATE\n&#8226; android.permission.VIBRATE\n&#8226; android.permission.WAKE_LOCK\n&#8226; android.permission.SET_WALLPAPER\n&#8226; android.permission.NFC</string>
 </resources>

@@ -14,7 +14,9 @@ import com.maxdr.ezpermss.util.debug
 class PermissionDetailFragment : Fragment() {
 
 	private var binding: PermissionDetailFragmentBinding? = null
-	private val viewModel by viewModels<PermissionDetailViewModel>()
+	private val viewModel by viewModels<PermissionDetailViewModel> {
+		PermissionDetailViewModelFactory(requireActivity().application, appInfo?.packageFullName!!)
+	}
 	private var appInfo: AppInfo? = null
 	private lateinit var adapter: PermissionsAdapter
 

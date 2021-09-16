@@ -3,7 +3,9 @@
 	xmlns:tools="http://schemas.android.com/tools">
 
 	<data>
-
+		<variable
+			name="viewModel"
+			type="com.maxdr.ezpermss.ui.permissions.PermissionDetailViewModel" />
 	</data>
 
 	<FrameLayout
@@ -12,9 +14,12 @@
 		tools:context=".NormalPermissionsFragment">
 
 		<TextView
+			android:id="@+id/normal_permissions"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:text="NORMAL" />
+			android:bufferType="spannable"
+			android:padding="20dp"
+			tools:text="@string/normal_permissions" />
 
 	</FrameLayout>
 </layout>
