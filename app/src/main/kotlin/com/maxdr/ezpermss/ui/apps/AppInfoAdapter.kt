@@ -2,20 +2,21 @@ package com.maxdr.ezpermss.ui.apps
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.recyclerview.widget.RecyclerView
-import com.maxdr.ezpermss.core.AppInfo
+import com.maxdr.ezpermss.core.App
 import com.maxdr.ezpermss.databinding.AppRowLayoutBinding
 import com.maxdr.ezpermss.ui.helpers.NavigationService
 import com.maxdr.ezpermss.ui.permissions.PermissionDetailFragment
 
-class AppInfoAdapter(private val userInstalledApps: List<AppInfo>,
+class AppInfoAdapter(private val userInstalledApps: List<App>,
 					 private val navigator: NavigationService) : RecyclerView.Adapter<AppInfoAdapter.AppViewHolder>() {
 
-	class AppViewHolder(private val binding: AppRowLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
+	inner class AppViewHolder(private val binding: AppRowLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
 
-		fun bind(appInfo: AppInfo) {
+		fun bind(app: App) {
 			binding.apply {
-				this.appInfo = appInfo
+				this.app = app
 				executePendingBindings()
 			}
 		}
@@ -23,8 +24,9 @@ class AppInfoAdapter(private val userInstalledApps: List<AppInfo>,
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppViewHolder {
 		val binding = AppRowLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-		binding.next.setOnClickListener { navigateToPermissionDetails() }
-		return AppViewHolder(binding)
+		return AppViewHolder(binding).apply {
+			binding.next.setOnClickListener { navigateToPermissionDetails(adapterPosition) }
+		}
 	}
 
 	override fun onBindViewHolder(holder: AppViewHolder, position: Int) {
@@ -34,5 +36,9 @@ class AppInfoAdapter(private val userInstalledApps: List<AppInfo>,
 
 	override fun getItemCount() = userInstalledApps.size
 
-	private fun navigateToPermissionDetails() = navigator.navigate(PermissionDetailFragment::class.java.name)
+	private fun navigateToPermissionDetails(position: Int) {
+		val appInfo = userInstalledApps[position].info
+		val args = bundleOf("info" to appInfo)
+		navigator.navigate(PermissionDetailFragment::class.java.name, args)
+	}
 }

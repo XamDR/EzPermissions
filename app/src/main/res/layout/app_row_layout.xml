@@ -5,8 +5,8 @@
 
 	<data>
 		<variable
-			name="appInfo"
-			type="com.maxdr.ezpermss.core.AppInfo" />
+			name="app"
+			type="com.maxdr.ezpermss.core.App" />
 	</data>
 
 	<GridLayout
@@ -26,9 +26,9 @@
 			android:layout_height="@android:dimen/app_icon_size"
 			android:layout_rowSpan="2"
 			android:layout_marginEnd="8dp"
-			android:scaleType="centerInside"
 			android:contentDescription="@null"
-			app:src="@{appInfo.packageIcon}"
+			android:scaleType="centerInside"
+			app:src="@{app.icon}"
 			tools:src="@drawable/ic_launcher_foreground"/>
 
 		<TextView
@@ -38,7 +38,7 @@
 			android:layout_marginTop="2dp"
 			android:singleLine="true"
 			android:ellipsize="end"
-			android:text="@{appInfo.packageName}"
+			android:text="@{app.info.packageName}"
 			android:textAppearance="?android:attr/textAppearanceMedium"
 			tools:text="Youtube Music"/>
 
@@ -48,7 +48,7 @@
 			android:layout_height="wrap_content"
 			android:layout_column="1"
 			android:layout_row="1"
-			android:text="@{@string/package_permissions_number(appInfo.packageNumberPermissions)}"
+			android:text="@{@string/package_permissions_number(app.info.packageNumberPermissions)}"
 			android:textAppearance="?android:attr/textAppearanceSmall"
 			tools:text="Número total de permisos: 10"/>
 

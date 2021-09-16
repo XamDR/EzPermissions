@@ -6,17 +6,46 @@
 		<variable
 			name="viewModel"
 			type="com.maxdr.ezpermss.ui.permissions.PermissionDetailViewModel" />
+		<variable
+			name="appInfo"
+			type="com.maxdr.ezpermss.core.AppInfo" />
 	</data>
 
-	<FrameLayout
+	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
+		android:orientation="vertical"
 		tools:context=".ui.permissions.PermissionDetailFragment">
 
 		<TextView
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:text="Hello" />
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_marginTop="20dp"
+			android:layout_marginBottom="5dp"
+			android:text="@{appInfo.packageName}"
+			android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+			tools:text="Youtube Music" />
 
-	</FrameLayout>
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_marginTop="5dp"
+			android:layout_marginBottom="10dp"
+			android:text="@{appInfo.packageFullName}"
+			android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+			tools:text="com.google.android.youtubemusic" />
+
+		<com.google.android.material.tabs.TabLayout
+			android:id="@+id/tab_layout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content" />
+
+		<androidx.viewpager2.widget.ViewPager2
+			android:id="@+id/pager"
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:layout_weight="1" />
+	</LinearLayout>
 </layout>
