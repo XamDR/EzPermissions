@@ -4,6 +4,7 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto">
 
 	<data>
+		<import type="android.view.View"/>
 		<variable
 			name="viewModel"
 			type="com.maxdr.ezpermss.ui.permissions.PermissionDetailViewModel" />
@@ -25,5 +26,17 @@
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			tools:listitem="@layout/dangerous_permission_row_layout"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:text="@string/no_dangerous_permissions"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:visibility="@{viewModel.isEmpty ? View.VISIBLE : View.GONE}"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"/>
 	</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

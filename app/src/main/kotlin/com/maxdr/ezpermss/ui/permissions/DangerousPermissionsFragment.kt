@@ -27,6 +27,7 @@ class DangerousPermissionsFragment : Fragment() {
 		super.onViewCreated(view, savedInstanceState)
 		viewModel.dangerousPermissions.observe(viewLifecycleOwner) {
 			binding?.recyclerView?.adapter = DangerousPermissionAdapter(it)
+			viewModel.isEmpty.value = it.isEmpty()
 		}
 	}
 

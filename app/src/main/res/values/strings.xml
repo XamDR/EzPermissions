@@ -9,4 +9,5 @@
 	<string name="no_normal_permissions">There aren\'t normal permissions for this app.</string>
 	<string name="list_apps">List apps</string>
 	<string name="permission_summary" translatable="false">Allows an application to call any phone number, including emergency numbers, without going through the Dialer user interface for the user to confirm the call being placed.</string>
+	<string name="no_dangerous_permissions">There aren\'t dangerous permissions for this app.</string>
 </resources>

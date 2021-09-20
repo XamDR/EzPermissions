@@ -7,4 +7,5 @@
 	<string name="dangerous">Peligroso</string>
 	<string name="no_normal_permissions">No hay permisos normales para está aplicación.</string>
 	<string name="list_apps">Ver aplicaciones</string>
+	<string name="no_dangerous_permissions">No hay permisos peligrosos para está aplicación.</string>
 </resources>

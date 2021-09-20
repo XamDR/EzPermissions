@@ -1,6 +1,7 @@
 package com.maxdr.ezpermss.ui.permissions
 
 import android.app.Application
+import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.pm.PermissionInfo
 import android.os.Build
@@ -18,6 +19,8 @@ class PermissionDetailViewModel(private val app: Application,
 		fetchNormalPermissions()
 		fetchDangerousPermissions()
 	}
+
+	val isEmpty = MutableLiveData(true)
 
 	val normalPerssions: LiveData<List<String>> = fetchNormalPermissions()
 
@@ -44,18 +47,21 @@ class PermissionDetailViewModel(private val app: Application,
 	private fun fetchDangerousPermissions(): LiveData<List<DangerousPermissionInfo>> {
 		val dangerousPermissions = mutableListOf<DangerousPermissionInfo>()
 		val pm = app.applicationContext.packageManager
-		val permissions: Array<String>? = pm.getPackageInfo(packageFullName, PackageManager.GET_PERMISSIONS).requestedPermissions
+		val pi = pm.getPackageInfo(packageFullName, PackageManager.GET_PERMISSIONS)
+		val permissions: Array<String>? = pi.requestedPermissions
 
 		if (permissions != null) {
-			for (permission in permissions) {
+			for ((i, permission) in permissions.withIndex()) {
 				val protectionLevel = gerPermissionProtectionLevel(pm, permission)
 				if (protectionLevel == PermissionInfo.PROTECTION_DANGEROUS) {
 					val name = getPermissionLabel(pm, permission)
 					val summary = getDangerousPermissionDescription(pm, permission)
+					val enabled = (pi.requestedPermissionsFlags[i] and PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0
 
 					dangerousPermissions.add(DangerousPermissionInfo(
 						name = name ?: permission,
-						summary = summary ?: String.Empty
+						summary = summary ?: String.Empty,
+						enabled = enabled
 					))
 				}
 			}
