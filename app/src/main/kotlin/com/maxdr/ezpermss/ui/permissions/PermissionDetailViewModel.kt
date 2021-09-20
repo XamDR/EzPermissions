@@ -26,6 +26,8 @@ class PermissionDetailViewModel(private val app: Application,
 
 	val dangerousPermissions: LiveData<List<DangerousPermissionInfo>> = fetchDangerousPermissions()
 
+	val otherPermissions: LiveData<List<String>> = fetchOtherPermissions()
+
 	private fun fetchNormalPermissions(): LiveData<List<String>> {
 		val normalPermissions = mutableListOf<String>()
 		val pm = app.applicationContext.packageManager
@@ -33,7 +35,7 @@ class PermissionDetailViewModel(private val app: Application,
 
 		if (permissions != null) {
 			for (permission in permissions) {
-				val protectionLevel = gerPermissionProtectionLevel(pm, permission)
+				val protectionLevel = getPermissionProtectionLevel(pm, permission)
 				if (protectionLevel == PermissionInfo.PROTECTION_NORMAL) {
 					val name = getPermissionLabel(pm, permission)
 					normalPermissions.add(name.toString())
@@ -52,7 +54,7 @@ class PermissionDetailViewModel(private val app: Application,
 
 		if (permissions != null) {
 			for ((i, permission) in permissions.withIndex()) {
-				val protectionLevel = gerPermissionProtectionLevel(pm, permission)
+				val protectionLevel = getPermissionProtectionLevel(pm, permission)
 				if (protectionLevel == PermissionInfo.PROTECTION_DANGEROUS) {
 					val name = getPermissionLabel(pm, permission)
 					val summary = getDangerousPermissionDescription(pm, permission)
@@ -68,6 +70,25 @@ class PermissionDetailViewModel(private val app: Application,
 		}
 		dangerousPermissions.sortBy { it.name }
 		return MutableLiveData(dangerousPermissions)
+	}
+
+	private fun fetchOtherPermissions(): LiveData<List<String>> {
+		val systemPermissions = mutableListOf<String>()
+		val pm = app.applicationContext.packageManager
+		val permissions: Array<String>? = pm.getPackageInfo(packageFullName, PackageManager.GET_PERMISSIONS).requestedPermissions
+
+		if (permissions != null) {
+			for (permission in permissions) {
+				val protectionLevel = getPermissionProtectionLevel(pm, permission)
+				if (protectionLevel != PermissionInfo.PROTECTION_NORMAL &&
+					protectionLevel != PermissionInfo.PROTECTION_DANGEROUS) {
+					val name = getPermissionLabel(pm, permission)
+					name?.let { systemPermissions.add(it) }
+				}
+			}
+		}
+		systemPermissions.sortBy { it }
+		return MutableLiveData(systemPermissions)
 	}
 
 	private fun getPermissionLabel(pm: PackageManager, permission: String): String? {
@@ -86,7 +107,7 @@ class PermissionDetailViewModel(private val app: Application,
 	}
 
 	@Suppress("DEPRECATION")
-	private fun gerPermissionProtectionLevel(pm: PackageManager, permission: String) =
+	private fun getPermissionProtectionLevel(pm: PackageManager, permission: String) =
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
 			try {
 				pm.getPermissionInfo(permission, 0).protection

@@ -12,10 +12,10 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:scrollbars="none"
-		tools:context=".NormalPermissionsFragment">
+		tools:context=".ui.permissions.OtherPermissionsFragment">
 
 		<TextView
-			android:id="@+id/normal_permissions"
+			android:id="@+id/other_permissions"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:bufferType="spannable"

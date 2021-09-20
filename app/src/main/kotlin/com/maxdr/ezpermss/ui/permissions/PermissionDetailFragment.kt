@@ -51,10 +51,15 @@ class PermissionDetailFragment : Fragment() {
 	}
 
 	private fun setupViewPagerWithTabLayout() {
-		adapter = PermissionStateAdapter(this, listOf(NormalPermissionsFragment(), DangerousPermissionsFragment()))
+		adapter = PermissionStateAdapter(this,
+			listOf(NormalPermissionsFragment(), DangerousPermissionsFragment(), OtherPermissionsFragment()))
 		binding?.pager?.adapter = adapter
 		TabLayoutMediator(binding?.tabLayout!!, binding?.pager!!) { tab, position ->
-			tab.text = if (position == 0) getString(R.string.normal) else getString(R.string.dangerous)
+			tab.text = when (position) {
+				0 -> getString(R.string.normal_permission)
+				1 -> getString(R.string.dangerous_permission)
+				else -> getString(R.string.other_permission)
+			}
 		}.attach()
 	}
 }
