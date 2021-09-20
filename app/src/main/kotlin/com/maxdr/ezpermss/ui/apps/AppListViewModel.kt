@@ -22,15 +22,18 @@ class AppListViewModel(private val app: Application) : AndroidViewModel(app) {
 		val packages = pm.getInstalledApplications(PackageManager.GET_META_DATA)
 
 		for (packageInfo in packages) {
-			val packageName = pm.getApplicationLabel(packageInfo).toString()
 			val packageFullName = packageInfo.packageName
-			val drawableIcon = pm.getApplicationIcon(packageFullName)
 			val icon = pm.getApplicationInfo(packageFullName, 0).icon
-			val permissions: Array<String>? = pm.getPackageInfo(packageFullName, PackageManager.GET_PERMISSIONS).requestedPermissions
 
 			// If icon == 0 it means the app doesn't have a custom icon
 			// and instead uses the default application icon
+			// Also if pm.getLaunchIntentForPackage(packageFullName) returns null
+			// it means the app doesn't have a proper UI (main activity)
 			if (icon != 0 && pm.getLaunchIntentForPackage(packageFullName) != null) {
+				val packageName = pm.getApplicationLabel(packageInfo).toString()
+				val drawableIcon = pm.getApplicationIcon(packageFullName)
+				val permissions = pm.getPackageInfo(packageFullName, PackageManager.GET_PERMISSIONS).requestedPermissions
+
 				apps.add(App(
 					info = AppInfo(
 						packageName = packageName,

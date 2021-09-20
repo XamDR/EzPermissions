@@ -8,7 +8,7 @@
 			type="com.maxdr.ezpermss.ui.permissions.PermissionDetailViewModel" />
 	</data>
 
-	<FrameLayout
+	<ScrollView
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		tools:context=".NormalPermissionsFragment">
@@ -16,10 +16,10 @@
 		<TextView
 			android:id="@+id/normal_permissions"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"
+			android:layout_height="wrap_content"
 			android:bufferType="spannable"
 			android:padding="20dp"
+			android:textAppearance="?android:attr/textAppearanceMedium"
 			tools:text="@string/normal_permissions" />
-
-	</FrameLayout>
+	</ScrollView>
 </layout>

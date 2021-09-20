@@ -1,11 +1,13 @@
 package com.maxdr.ezpermss.ui.permissions
 
 import android.os.Bundle
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import com.maxdr.ezpermss.R
 import com.maxdr.ezpermss.databinding.NormalPermissionsFragmentBinding
 import com.maxdr.ezpermss.util.toBulletedList
 
@@ -27,7 +29,13 @@ class NormalPermissionsFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		viewModel.normalPerssions.observe(viewLifecycleOwner) {
-			binding?.normalPermissions?.text = if (it.isEmpty()) "No hay permisos" else it.toBulletedList()
+			if (it.isEmpty()) {
+				binding?.normalPermissions?.text = getString(R.string.no_normal_permissions)
+				binding?.normalPermissions?.gravity = Gravity.CENTER
+			}
+			else {
+				binding?.normalPermissions?.text = it.toBulletedList()
+			}
 		}
 	}
 

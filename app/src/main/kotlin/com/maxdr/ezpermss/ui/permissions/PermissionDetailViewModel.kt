@@ -1,23 +1,32 @@
 package com.maxdr.ezpermss.ui.permissions
 
 import android.app.Application
+import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.pm.PermissionInfo
 import android.os.Build
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.maxdr.ezpermss.core.DangerousPermissionInfo
+import com.maxdr.ezpermss.util.Empty
+import com.maxdr.ezpermss.util.toTitleCase
 
 class PermissionDetailViewModel(private val app: Application,
 								private val packageFullName: String) : AndroidViewModel(app) {
 
 	init {
-		getNormalPermissions()
+		fetchNormalPermissions()
+		fetchDangerousPermissions()
 	}
 
-	val normalPerssions: LiveData<List<String>> = getNormalPermissions()
+	val isEmpty = MutableLiveData(true)
 
-	private fun getNormalPermissions(): LiveData<List<String>> {
+	val normalPerssions: LiveData<List<String>> = fetchNormalPermissions()
+
+	val dangerousPermissions: LiveData<List<DangerousPermissionInfo>> = fetchDangerousPermissions()
+
+	private fun fetchNormalPermissions(): LiveData<List<String>> {
 		val normalPermissions = mutableListOf<String>()
 		val pm = app.applicationContext.packageManager
 		val permissions: Array<String>? = pm.getPackageInfo(packageFullName, PackageManager.GET_PERMISSIONS).requestedPermissions
@@ -26,11 +35,54 @@ class PermissionDetailViewModel(private val app: Application,
 			for (permission in permissions) {
 				val protectionLevel = gerPermissionProtectionLevel(pm, permission)
 				if (protectionLevel == PermissionInfo.PROTECTION_NORMAL) {
-					normalPermissions.add(permission)
+					val name = getPermissionLabel(pm, permission)
+					normalPermissions.add(name.toString())
 				}
 			}
 		}
+		normalPermissions.sortBy { it }
 		return MutableLiveData(normalPermissions)
+	}
+
+	private fun fetchDangerousPermissions(): LiveData<List<DangerousPermissionInfo>> {
+		val dangerousPermissions = mutableListOf<DangerousPermissionInfo>()
+		val pm = app.applicationContext.packageManager
+		val pi = pm.getPackageInfo(packageFullName, PackageManager.GET_PERMISSIONS)
+		val permissions: Array<String>? = pi.requestedPermissions
+
+		if (permissions != null) {
+			for ((i, permission) in permissions.withIndex()) {
+				val protectionLevel = gerPermissionProtectionLevel(pm, permission)
+				if (protectionLevel == PermissionInfo.PROTECTION_DANGEROUS) {
+					val name = getPermissionLabel(pm, permission)
+					val summary = getDangerousPermissionDescription(pm, permission)
+					val enabled = (pi.requestedPermissionsFlags[i] and PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0
+
+					dangerousPermissions.add(DangerousPermissionInfo(
+						name = name ?: permission,
+						summary = summary ?: String.Empty,
+						enabled = enabled
+					))
+				}
+			}
+		}
+		dangerousPermissions.sortBy { it.name }
+		return MutableLiveData(dangerousPermissions)
+	}
+
+	private fun getPermissionLabel(pm: PackageManager, permission: String): String? {
+		return try {
+			val label = pm.getPermissionInfo(permission, PackageManager.GET_META_DATA).loadLabel(pm).toString()
+			return if (label.contains('.')) label else label.toTitleCase()
+		}
+		catch (e: PackageManager.NameNotFoundException) { null }
+	}
+
+	private fun getDangerousPermissionDescription(pm: PackageManager, permission: String): String? {
+		return try {
+			return pm.getPermissionInfo(permission, PackageManager.GET_META_DATA).loadDescription(pm)?.toString()?.toTitleCase()
+		}
+		catch (e: PackageManager.NameNotFoundException) { null }
 	}
 
 	@Suppress("DEPRECATION")

@@ -1,8 +1,8 @@
 package com.maxdr.ezpermss.ui.home
 
 import android.os.Bundle
-import android.os.Process
-import android.os.UserHandle
+//import android.os.Process
+//import android.os.UserHandle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,22 +30,22 @@ class HomeFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		binding?.btn?.setOnClickListener { mainActivity.navigate(AppListFragment::class.java.name) }
-		binding?.btnRevoke?.setOnClickListener { revokePermission() }
+//		binding?.btnRevoke?.setOnClickListener { revokePermission() }
 	}
 
-	private fun revokePermission() {
-		val pm = requireContext().packageManager
-
-//		pm.revokeRuntimePermission("com.example.application", "", myUserHandle())
-		val m = pm::class.java.getDeclaredMethod("revokeRuntimePermission",
-			String::class.java,
-			String::class.java,
-			UserHandle::class.java
-		)
-		m.isAccessible = true
-		m.invoke(pm, "com.maxdr.ezpermss",
-			"android.permission.QUERY_ALL_PACKAGES",
-			Process.myUserHandle()
-		)
-	}
+//	private fun revokePermission() {
+//		val pm = requireContext().packageManager
+//
+////		pm.revokeRuntimePermission("com.example.application", "", myUserHandle())
+//		val m = pm::class.java.getDeclaredMethod("revokeRuntimePermission",
+//			String::class.java,
+//			String::class.java,
+//			UserHandle::class.java
+//		)
+//		m.isAccessible = true
+//		m.invoke(pm, "com.maxdr.ezpermss",
+//			"android.permission.QUERY_ALL_PACKAGES",
+//			Process.myUserHandle()
+//		)
+//	}
 }

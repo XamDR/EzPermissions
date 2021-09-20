@@ -9,6 +9,9 @@
 		<variable
 			name="appInfo"
 			type="com.maxdr.ezpermss.core.AppInfo" />
+		<variable
+			name="handler"
+			type="com.maxdr.ezpermss.ui.permissions.AppSettingsHandler" />
 	</data>
 
 	<LinearLayout
@@ -23,6 +26,7 @@
 			android:layout_gravity="center"
 			android:layout_marginTop="20dp"
 			android:layout_marginBottom="5dp"
+			android:onClick="@{() -> handler.openAppSettings(appInfo.packageFullName)}"
 			android:text="@{appInfo.packageName}"
 			android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
 			tools:text="Youtube Music" />

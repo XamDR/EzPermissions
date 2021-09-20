@@ -3,5 +3,9 @@
 	<string name="welcome_msg">Bienvenido a EzPermissions</string>
 	<string name="package_icon">App Icon</string>
 	<string name="package_permissions_number">Número total de permisos: %d</string>
-	<string name="normal_permissions">&#8226; android.permission.ACCESS_WIFI_STATE\n&#8226; android.permission.VIBRATE\n&#8226; android.permission.WAKE_LOCK\n&#8226; android.permission.SET_WALLPAPER\n&#8226; android.permission.NFC</string>
+	<string name="normal">Normal</string>
+	<string name="dangerous">Peligroso</string>
+	<string name="no_normal_permissions">No hay permisos normales para está aplicación.</string>
+	<string name="list_apps">Ver aplicaciones</string>
+	<string name="no_dangerous_permissions">No hay permisos peligrosos para está aplicación.</string>
 </resources>
