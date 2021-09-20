@@ -11,6 +11,7 @@ import com.maxdr.ezpermss.R
 import com.maxdr.ezpermss.core.AppInfo
 import com.maxdr.ezpermss.databinding.PermissionDetailFragmentBinding
 import com.maxdr.ezpermss.util.debug
+import com.maxdr.ezpermss.util.mainActivity
 
 class PermissionDetailFragment : Fragment() {
 
@@ -34,6 +35,7 @@ class PermissionDetailFragment : Fragment() {
 			lifecycleOwner = this@PermissionDetailFragment.viewLifecycleOwner
 			appInfo = this@PermissionDetailFragment.appInfo
 			viewModel = this@PermissionDetailFragment.viewModel
+			handler = AppSettingsHandler(mainActivity)
 		}
 		return binding?.root
 	}
