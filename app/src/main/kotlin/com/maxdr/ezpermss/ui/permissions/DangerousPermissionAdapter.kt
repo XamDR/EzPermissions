@@ -44,7 +44,7 @@ class DangerousPermissionAdapter(private val dangerousPermissions: List<Dangerou
 			setOnMenuItemClickListener { item ->
 				when (item.itemId) {
 					R.id.more_info_summary -> {
-						showSummaryInfo(view, position); true
+						showFullSummary(view, position); true
 					}
 					R.id.set_schedule -> {
 						android.util.Log.d("ITEM", position.toString()); true
@@ -56,7 +56,7 @@ class DangerousPermissionAdapter(private val dangerousPermissions: List<Dangerou
 		}
 	}
 
-	private fun showSummaryInfo(view: View, position: Int) {
+	private fun showFullSummary(view: View, position: Int) {
 		val dangerousPermission = dangerousPermissions[position]
 		MaterialAlertDialogBuilder(view.context).apply {
 			setTitle(dangerousPermission.name)
