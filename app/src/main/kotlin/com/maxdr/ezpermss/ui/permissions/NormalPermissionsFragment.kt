@@ -1,15 +1,12 @@
 package com.maxdr.ezpermss.ui.permissions
 
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.maxdr.ezpermss.R
 import com.maxdr.ezpermss.databinding.NormalPermissionsFragmentBinding
-import com.maxdr.ezpermss.util.toBulletedList
 
 class NormalPermissionsFragment : Fragment() {
 
@@ -38,13 +35,8 @@ class NormalPermissionsFragment : Fragment() {
 
 	private fun showNormalPermissions() {
 		viewModel.normalPerssions.observe(viewLifecycleOwner) {
-			if (it.isEmpty()) {
-				binding?.normalPermissions?.text = getString(R.string.no_normal_permissions)
-				binding?.normalPermissions?.gravity = Gravity.CENTER_HORIZONTAL
-			}
-			else {
-				binding?.normalPermissions?.text = it.toBulletedList()
-			}
+			binding?.recyclerView?.adapter = NormalPermissionAdapter(it)
+			viewModel.isEmpty.value = it.isEmpty()
 		}
 	}
 }

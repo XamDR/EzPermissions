@@ -9,6 +9,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.maxdr.ezpermss.core.DangerousPermissionInfo
+import com.maxdr.ezpermss.core.NormalPermissionInfo
 import com.maxdr.ezpermss.util.Empty
 import com.maxdr.ezpermss.util.toTitleCase
 
@@ -22,14 +23,14 @@ class PermissionDetailViewModel(private val app: Application,
 
 	val isEmpty = MutableLiveData(true)
 
-	val normalPerssions: LiveData<List<String>> = fetchNormalPermissions()
+	val normalPerssions: LiveData<List<NormalPermissionInfo>> = fetchNormalPermissions()
 
 	val dangerousPermissions: LiveData<List<DangerousPermissionInfo>> = fetchDangerousPermissions()
 
 	val otherPermissions: LiveData<List<String>> = fetchOtherPermissions()
 
-	private fun fetchNormalPermissions(): LiveData<List<String>> {
-		val normalPermissions = mutableListOf<String>()
+	private fun fetchNormalPermissions(): LiveData<List<NormalPermissionInfo>> {
+		val normalPermissions = mutableListOf<NormalPermissionInfo>()
 		val pm = app.applicationContext.packageManager
 		val permissions: Array<String>? = pm.getPackageInfo(packageFullName, PackageManager.GET_PERMISSIONS).requestedPermissions
 
@@ -38,11 +39,15 @@ class PermissionDetailViewModel(private val app: Application,
 				val protectionLevel = getPermissionProtectionLevel(pm, permission)
 				if (protectionLevel == PermissionInfo.PROTECTION_NORMAL) {
 					val name = getPermissionLabel(pm, permission)
-					normalPermissions.add(name.toString())
+					val summary = getDangerousPermissionDescription(pm, permission)
+					normalPermissions.add(NormalPermissionInfo(
+						name = name.toString(),
+						summary = summary ?: String.Empty
+					))
 				}
 			}
 		}
-		normalPermissions.sortBy { it }
+		normalPermissions.sortBy { it.name }
 		return MutableLiveData(normalPermissions)
 	}
 
@@ -63,7 +68,7 @@ class PermissionDetailViewModel(private val app: Application,
 					dangerousPermissions.add(DangerousPermissionInfo(
 						name = name ?: permission,
 						summary = summary ?: String.Empty,
-						enabled = enabled
+						granted = enabled
 					))
 				}
 			}
