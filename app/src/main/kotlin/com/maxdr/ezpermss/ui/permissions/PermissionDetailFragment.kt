@@ -28,8 +28,7 @@ class PermissionDetailFragment : Fragment() {
 		debug("APP_INFO", appInfo)
 	}
 
-	override fun onCreateView(
-		inflater: LayoutInflater, container: ViewGroup?,
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 		savedInstanceState: Bundle?): View? {
 		binding = PermissionDetailFragmentBinding.inflate(layoutInflater, container, false).apply {
 			lifecycleOwner = this@PermissionDetailFragment.viewLifecycleOwner

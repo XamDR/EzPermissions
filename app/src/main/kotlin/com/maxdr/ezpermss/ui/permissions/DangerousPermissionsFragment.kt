@@ -13,8 +13,7 @@ class DangerousPermissionsFragment : Fragment() {
 	private var binding: DangerousPermissionsFragmentBinding? = null
 	private val viewModel by viewModels<PermissionDetailViewModel> ( { requireParentFragment() } )
 
-	override fun onCreateView(
-		inflater: LayoutInflater, container: ViewGroup?,
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 		savedInstanceState: Bundle?): View? {
 		binding = DangerousPermissionsFragmentBinding.inflate(layoutInflater, container, false).apply {
 			lifecycleOwner = this@DangerousPermissionsFragment.viewLifecycleOwner
