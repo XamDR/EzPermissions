@@ -13,14 +13,19 @@ class DangerousPermissionsFragment : Fragment() {
 	private var binding: DangerousPermissionsFragmentBinding? = null
 	private val viewModel by viewModels<PermissionDetailViewModel> ( { requireParentFragment() } )
 
-	override fun onCreateView(
-		inflater: LayoutInflater, container: ViewGroup?,
-		savedInstanceState: Bundle?): View? {
+	override fun onCreateView(inflater: LayoutInflater,
+							  container: ViewGroup?,
+							  savedInstanceState: Bundle?): View? {
 		binding = DangerousPermissionsFragmentBinding.inflate(layoutInflater, container, false).apply {
 			lifecycleOwner = this@DangerousPermissionsFragment.viewLifecycleOwner
 			viewModel = this@DangerousPermissionsFragment.viewModel
 		}
 		return binding?.root
+	}
+
+	override fun onDestroyView() {
+		super.onDestroyView()
+		binding = null
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -29,10 +34,5 @@ class DangerousPermissionsFragment : Fragment() {
 			binding?.recyclerView?.adapter = DangerousPermissionAdapter(it)
 			viewModel.isEmpty.value = it.isEmpty()
 		}
-	}
-
-	override fun onDestroyView() {
-		super.onDestroyView()
-		binding = null
 	}
 }

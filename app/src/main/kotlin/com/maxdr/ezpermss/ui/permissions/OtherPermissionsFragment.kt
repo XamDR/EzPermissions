@@ -16,9 +16,9 @@ class OtherPermissionsFragment : Fragment() {
 	private var binding: OtherPermissionsFragmentBinding? = null
 	private val viewModel by viewModels<PermissionDetailViewModel> ( { requireParentFragment() } )
 
-	override fun onCreateView(
-		inflater: LayoutInflater, container: ViewGroup?,
-		savedInstanceState: Bundle?): View? {
+	override fun onCreateView(inflater: LayoutInflater,
+							  container: ViewGroup?,
+							  savedInstanceState: Bundle?): View? {
 		binding = OtherPermissionsFragmentBinding.inflate(inflater, container, false).apply {
 			lifecycleOwner = this@OtherPermissionsFragment.viewLifecycleOwner
 			viewModel = this@OtherPermissionsFragment.viewModel
@@ -26,14 +26,14 @@ class OtherPermissionsFragment : Fragment() {
 		return binding?.root
 	}
 
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		super.onViewCreated(view, savedInstanceState)
-		showSystemPermissions()
-	}
-
 	override fun onDestroyView() {
 		super.onDestroyView()
 		binding = null
+	}
+
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
+		showSystemPermissions()
 	}
 
 	private fun showSystemPermissions() {

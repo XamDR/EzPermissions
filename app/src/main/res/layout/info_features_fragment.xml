@@ -6,7 +6,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:orientation="vertical"
-		tools:context=".ui.onboarding.HomeFragment">
+		tools:context=".ui.onboarding.InfoFeaturesFragment">
 
 		<ImageView
 			android:id="@+id/app_logo"
@@ -21,13 +21,13 @@
 			android:src="@drawable/logo"/>
 
 		<TextView
-			android:id="@+id/app_desc"
+			android:id="@+id/app_features"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_margin="20dp"
-			android:gravity="center"
+			android:bufferType="spannable"
 			android:padding="10dp"
-			android:text="@string/description"
-			android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"	/>
+			android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+			tools:text="@string/features"/>
 	</LinearLayout>
 </layout>

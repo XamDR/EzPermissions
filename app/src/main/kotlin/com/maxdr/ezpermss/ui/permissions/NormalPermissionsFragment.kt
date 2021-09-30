@@ -13,9 +13,9 @@ class NormalPermissionsFragment : Fragment() {
 	private var binding: NormalPermissionsFragmentBinding? = null
 	private val viewModel by viewModels<PermissionDetailViewModel> ( { requireParentFragment() } )
 
-	override fun onCreateView(
-		inflater: LayoutInflater, container: ViewGroup?,
-		savedInstanceState: Bundle?): View? {
+	override fun onCreateView(inflater: LayoutInflater,
+							  container: ViewGroup?,
+							  savedInstanceState: Bundle?): View? {
 		binding = NormalPermissionsFragmentBinding.inflate(layoutInflater, container, false).apply {
 			lifecycleOwner = this@NormalPermissionsFragment.viewLifecycleOwner
 			viewModel = this@NormalPermissionsFragment.viewModel
@@ -23,14 +23,14 @@ class NormalPermissionsFragment : Fragment() {
 		return binding?.root
 	}
 
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		super.onViewCreated(view, savedInstanceState)
-		showNormalPermissions()
-	}
-
 	override fun onDestroyView() {
 		super.onDestroyView()
 		binding = null
+	}
+
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
+		showNormalPermissions()
 	}
 
 	private fun showNormalPermissions() {

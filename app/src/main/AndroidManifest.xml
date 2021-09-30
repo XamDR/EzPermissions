@@ -3,14 +3,15 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	package="com.maxdr.ezpermss">
 
-	<uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+	<uses-permission
+		android:name="android.permission.QUERY_ALL_PACKAGES"
 		android:minSdkVersion="30"
 		tools:ignore="QueryAllPackagesPermission" />
-
-	<uses-permission android:name="android.permission.REVOKE_RUNTIME_PERMISSIONS"
+	<uses-permission
+		android:name="android.permission.REVOKE_RUNTIME_PERMISSIONS"
 		tools:ignore="ProtectedPermissions" />
-
-	<uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL"
+	<uses-permission
+		android:name="android.permission.INTERACT_ACROSS_USERS_FULL"
 		tools:ignore="ProtectedPermissions" />
 
 	<application
@@ -22,12 +23,22 @@
 		android:supportsRtl="true"
 		android:theme="@style/Theme.EzPermissions">
 		<activity
-			android:name=".MainActivity"
-			android:exported="true">
+			android:name=".OnboardingActivity"
+			android:exported="true"
+			android:noHistory="true">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
+		</activity>
+		<activity
+			android:name=".MainActivity"
+			android:exported="true">
+<!--			<intent-filter>-->
+<!--				<action android:name="android.intent.action.MAIN" />-->
+
+<!--				<category android:name="android.intent.category.LAUNCHER" />-->
+<!--			</intent-filter>-->
 		</activity>
 	</application>
 

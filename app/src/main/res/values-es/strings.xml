@@ -13,4 +13,11 @@
 	<string name="more_info_summary">Más información</string>
 	<string name="set_schedule">Fijar horario</string>
 	<string name="ok">Aceptar</string>
+	<string name="logo_desc">Logo de la aplicación</string>
+	<string name="description">EzPermissions es un administrador de permisos de aplicaciones que te ayudará a conocer los permisos que utilizan todas las aplicaciones instaladas en tu celular y te permitirá revocar de manera sencilla los permisos considerados peligrosos.</string>
+	<string name="features"><![CDATA[ &#8226; Visualiza todas las aplicaciones instaladas en tu dispositivo.<br /> &#8226; Haz clic en cualquier aplicación de la lista para ver los detalles de sus permisos, agrupados por categoría.<br /> &#8226; Controla el acceso a los permisos peligrosos por cada aplicación instalada.<br /> &#8226; Establece intervalos de tiempo para otorgar acceso temporal a los permisos peligrosos por cada aplicación.<br /> ]]></string>
+	<string name="root_alert">Para obtener la máxima funcionalidad de la aplicación es necesario ser usuario ROOT.</string>
+	<string name="next">Siguiente</string>
+	<string name="alert">Muy importante</string>
+	<string name="root_icon">Ícono del usuario ROOT</string>
 </resources>
