@@ -28,8 +28,9 @@ class PermissionDetailFragment : Fragment() {
 		debug("APP_INFO", appInfo)
 	}
 
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-		savedInstanceState: Bundle?): View? {
+	override fun onCreateView(inflater: LayoutInflater,
+							  container: ViewGroup?,
+							  savedInstanceState: Bundle?): View? {
 		binding = PermissionDetailFragmentBinding.inflate(layoutInflater, container, false).apply {
 			lifecycleOwner = this@PermissionDetailFragment.viewLifecycleOwner
 			appInfo = this@PermissionDetailFragment.appInfo
@@ -39,14 +40,14 @@ class PermissionDetailFragment : Fragment() {
 		return binding?.root
 	}
 
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		super.onViewCreated(view, savedInstanceState)
-		setupViewPagerWithTabLayout()
-	}
-
 	override fun onDestroyView() {
 		super.onDestroyView()
 		binding = null
+	}
+
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
+		setupViewPagerWithTabLayout()
 	}
 
 	private fun setupViewPagerWithTabLayout() {

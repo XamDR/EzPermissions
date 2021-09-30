@@ -17,6 +17,9 @@
 	<string name="ok">OK</string>
 	<string name="logo_desc">App logo</string>
 	<string name="description">EzPermissions is an application permission manager that will help you to know the permissions used by all the applications installed on your smartphone and will allow you to easily revoke permissions considered dangerous.</string>
-	<string name="features">&#8226; View all the applications installed on your device.\n&#8226; Click on any app in the list to see the details of its permissions, grouped by category.\n&#8226; Control access to dangerous permissions for each installed application.\n&#8226; Set time intervals to grant temporary access to dangerous permissions per application.</string>
+	<string name="features"><![CDATA[ &#8226; View all the applications installed on your device.<br /> &#8226; Click on any app in the list to see the details of its permissions, grouped by category.<br /> &#8226; Control access to dangerous permissions for each installed application.<br /> &#8226; Set time intervals to grant temporary access to dangerous permissions per application.<br /> ]]></string>
+	<string name="root_alert">To obtain the maximum functionality of the application it is necessary to be a ROOT user.</string>
 	<string name="next">Next</string>
+	<string name="alert">Very important</string>
+	<string name="root_icon">Root user icon</string>
 </resources>
