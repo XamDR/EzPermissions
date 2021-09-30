@@ -7,6 +7,9 @@
 		<variable
 			name="permissionInfo"
 			type="com.maxdr.ezpermss.core.DangerousPermissionInfo" />
+		<variable
+			name="onCheckedChange"
+			type="android.widget.CompoundButton.OnCheckedChangeListener"/>
 	</data>
 
 	<androidx.constraintlayout.widget.ConstraintLayout
@@ -33,6 +36,7 @@
 			android:layout_height="wrap_content"
 			android:layout_marginStart="10dp"
 			android:checked="@{permissionInfo.granted}"
+			android:onCheckedChanged="@{onCheckedChange}"
 			app:layout_constraintEnd_toStartOf="@id/more_options"
 			app:layout_constraintTop_toBottomOf="@id/permission_name"
 			app:layout_constraintBottom_toBottomOf="parent"/>

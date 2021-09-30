@@ -5,13 +5,17 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.pm.PermissionInfo
 import android.os.Build
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.maxdr.ezpermss.core.DangerousPermissionInfo
 import com.maxdr.ezpermss.core.NormalPermissionInfo
 import com.maxdr.ezpermss.util.Empty
+import com.maxdr.ezpermss.util.debug
+import com.maxdr.ezpermss.util.protectionToString
 import com.maxdr.ezpermss.util.toTitleCase
+import com.topjohnwu.superuser.Shell
 
 class PermissionDetailViewModel(private val app: Application,
 								private val packageFullName: String) : AndroidViewModel(app) {
@@ -60,16 +64,19 @@ class PermissionDetailViewModel(private val app: Application,
 		if (permissions != null) {
 			for ((i, permission) in permissions.withIndex()) {
 				val protectionLevel = getPermissionProtectionLevel(pm, permission)
-				if (protectionLevel == PermissionInfo.PROTECTION_DANGEROUS) {
+				if ((protectionLevel or PermissionInfo.PROTECTION_DANGEROUS) == protectionLevel) {
 					val name = getPermissionLabel(pm, permission)
 					val summary = getDangerousPermissionDescription(pm, permission)
 					val enabled = (pi.requestedPermissionsFlags[i] and PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0
 
-					dangerousPermissions.add(DangerousPermissionInfo(
-						name = name ?: permission,
-						summary = summary ?: String.Empty,
-						granted = enabled
-					))
+					if (!summary.isNullOrEmpty()) {
+						dangerousPermissions.add(DangerousPermissionInfo(
+							realName = permission,
+							name = name ?: permission,
+							summary = summary,
+							granted = enabled
+						))
+					}
 				}
 			}
 		}
@@ -78,7 +85,7 @@ class PermissionDetailViewModel(private val app: Application,
 	}
 
 	private fun fetchOtherPermissions(): LiveData<List<String>> {
-		val systemPermissions = mutableListOf<String>()
+		val otherPermissions = mutableListOf<String>()
 		val pm = app.applicationContext.packageManager
 		val permissions: Array<String>? = pm.getPackageInfo(packageFullName, PackageManager.GET_PERMISSIONS).requestedPermissions
 
@@ -86,14 +93,18 @@ class PermissionDetailViewModel(private val app: Application,
 			for (permission in permissions) {
 				val protectionLevel = getPermissionProtectionLevel(pm, permission)
 				if (protectionLevel != PermissionInfo.PROTECTION_NORMAL &&
-					protectionLevel != PermissionInfo.PROTECTION_DANGEROUS) {
+					(protectionLevel or PermissionInfo.PROTECTION_DANGEROUS) != protectionLevel) {
 					val name = getPermissionLabel(pm, permission)
-					name?.let { systemPermissions.add(it) }
+
+					if (name != null) {
+						val result = "$name - ${protectionToString(protectionLevel)}"
+						otherPermissions.add(result)
+					}
 				}
 			}
 		}
-		systemPermissions.sortBy { it }
-		return MutableLiveData(systemPermissions)
+		otherPermissions.sortBy { it }
+		return MutableLiveData(otherPermissions)
 	}
 
 	private fun getPermissionLabel(pm: PackageManager, permission: String): String? {
@@ -125,6 +136,25 @@ class PermissionDetailViewModel(private val app: Application,
 			}
 			catch (e: PackageManager.NameNotFoundException) { PROTECTION_LEVEL_IF_NAME_NOT_FOUND }
 		}
+
+	fun onPermissionStatusChanged(isChecked: Boolean, position: Int) {
+		if (Shell.rootAccess()) {
+			val dangerousPermission = dangerousPermissions.value?.get(position)
+
+			dangerousPermission?.let {
+				val result = if (!isChecked) {
+					Shell.su("pm revoke $packageFullName ${dangerousPermission.realName}").exec()
+				}
+				else {
+					Shell.su("pm grant $packageFullName ${dangerousPermission.realName}").exec()
+				}
+				debug("SHELL", result.err)
+			}
+		}
+		else {
+			Toast.makeText(app.applicationContext, "No ROOT", Toast.LENGTH_SHORT).show()
+		}
+	}
 
 	companion object {
 		private const val PROTECTION_LEVEL_IF_NAME_NOT_FOUND = -1

@@ -3,6 +3,7 @@ package com.maxdr.ezpermss.ui.permissions
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CompoundButton
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -19,6 +20,9 @@ class DangerousPermissionAdapter(private val dangerousPermissions: List<Dangerou
 		fun bind(permissionInfo: DangerousPermissionInfo) {
 			binding.apply {
 				this.permissionInfo = permissionInfo
+				this.onCheckedChange = CompoundButton.OnCheckedChangeListener { _, isChecked ->
+					onPermissionToggledCallback?.invoke(isChecked, adapterPosition)
+				}
 				executePendingBindings()
 			}
 		}
@@ -64,4 +68,10 @@ class DangerousPermissionAdapter(private val dangerousPermissions: List<Dangerou
 			setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
 		}.show()
 	}
+
+	fun setOnPermissionToggledListener(callback: (checked: Boolean, position: Int) -> Unit) {
+		onPermissionToggledCallback = callback
+	}
+
+	private var onPermissionToggledCallback: ((checked: Boolean, position: Int) -> Unit)? = null
 }

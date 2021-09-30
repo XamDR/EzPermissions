@@ -12,6 +12,7 @@ class DangerousPermissionsFragment : Fragment() {
 
 	private var binding: DangerousPermissionsFragmentBinding? = null
 	private val viewModel by viewModels<PermissionDetailViewModel> ( { requireParentFragment() } )
+	private lateinit var adapter: DangerousPermissionAdapter
 
 	override fun onCreateView(inflater: LayoutInflater,
 							  container: ViewGroup?,
@@ -31,8 +32,12 @@ class DangerousPermissionsFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		viewModel.dangerousPermissions.observe(viewLifecycleOwner) {
-			binding?.recyclerView?.adapter = DangerousPermissionAdapter(it)
+			adapter = DangerousPermissionAdapter(it)
+			binding?.recyclerView?.adapter = adapter
 			viewModel.isEmpty.value = it.isEmpty()
+			adapter.setOnPermissionToggledListener { checked, position ->
+				viewModel.onPermissionStatusChanged(checked, position)
+			}
 		}
 	}
 }
