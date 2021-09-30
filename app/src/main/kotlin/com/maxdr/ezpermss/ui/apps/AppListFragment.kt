@@ -18,9 +18,9 @@ class AppListFragment : Fragment() {
 		ViewModelProvider.AndroidViewModelFactory(requireActivity().application)
 	}
 
-	override fun onCreateView(
-		inflater: LayoutInflater, container: ViewGroup?,
-		savedInstanceState: Bundle?): View? {
+	override fun onCreateView(inflater: LayoutInflater,
+							  container: ViewGroup?,
+							  savedInstanceState: Bundle?): View? {
 		binding = AppListFragmentBinding.inflate(inflater, container, false).apply {
 			lifecycleOwner = this@AppListFragment.viewLifecycleOwner
 			viewModel = this@AppListFragment.viewModel

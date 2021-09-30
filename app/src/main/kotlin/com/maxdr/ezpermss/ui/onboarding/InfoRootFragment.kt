@@ -1,21 +1,21 @@
 package com.maxdr.ezpermss.ui.onboarding
 
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.maxdr.ezpermss.OnboardingActivity
-import com.maxdr.ezpermss.R
-import com.maxdr.ezpermss.databinding.InfoFragmentBinding
+import com.maxdr.ezpermss.databinding.InfoRootFragmentBinding
 
-class InfoFragment : Fragment() {
+class InfoRootFragment : Fragment() {
 
-	private var binding: InfoFragmentBinding? = null
+	private var binding: InfoRootFragmentBinding? = null
 
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-		savedInstanceState: Bundle?): View? {
-		binding = InfoFragmentBinding.inflate(inflater, container, false)
+	override fun onCreateView(inflater: LayoutInflater,
+							  container: ViewGroup?,
+							  savedInstanceState: Bundle?): View? {
+		binding = InfoRootFragmentBinding.inflate(inflater, container, false)
 		return binding?.root
 	}
 
@@ -27,7 +27,6 @@ class InfoFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		goToMainActivity()
-		binding?.appFeatures?.setText(R.string.features)
 	}
 
 	private fun goToMainActivity() {

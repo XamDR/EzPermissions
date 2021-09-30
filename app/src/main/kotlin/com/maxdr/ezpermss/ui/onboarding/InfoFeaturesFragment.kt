@@ -1,0 +1,33 @@
+package com.maxdr.ezpermss.ui.onboarding
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.text.HtmlCompat
+import androidx.fragment.app.Fragment
+import com.maxdr.ezpermss.R
+import com.maxdr.ezpermss.databinding.InfoFeaturesFragmentBinding
+
+class InfoFeaturesFragment : Fragment() {
+
+	private var binding: InfoFeaturesFragmentBinding? = null
+
+	override fun onCreateView(inflater: LayoutInflater,
+							  container: ViewGroup?,
+							  savedInstanceState: Bundle?): View? {
+		binding = InfoFeaturesFragmentBinding.inflate(inflater, container, false)
+		return binding?.root
+	}
+
+	override fun onDestroyView() {
+		super.onDestroyView()
+		binding = null
+	}
+
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
+		val summary = getString(R.string.features)
+		binding?.appFeatures?.text = HtmlCompat.fromHtml(summary, HtmlCompat.FROM_HTML_MODE_COMPACT)
+	}
+}
