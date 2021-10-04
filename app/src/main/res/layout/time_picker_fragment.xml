@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<data>
+
+	</data>
+
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:padding="4dp"
+		tools:context=".reminder.DateTimePickerFragment">
+
+		<TextView
+			android:id="@+id/time_message"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_margin="10dp"
+			android:padding="5dp"
+			android:text="@string/timeout"
+			android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"/>
+
+		<TextView
+			android:id="@+id/time_label"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_margin="10dp"
+			android:text="@string/time"
+			android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/time_message"
+			app:layout_constraintBottom_toBottomOf="parent"/>
+
+		<com.maxdr.ezpermss.views.DropDownView
+			android:id="@+id/spinner_time"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_margin="10dp"
+			android:minHeight="48dp"
+			app:layout_constraintStart_toEndOf="@id/time_label"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/time_message"
+			app:layout_constraintBottom_toBottomOf="parent"/>
+	</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

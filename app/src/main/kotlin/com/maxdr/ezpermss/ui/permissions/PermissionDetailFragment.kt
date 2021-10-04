@@ -6,12 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
 import com.google.android.material.tabs.TabLayoutMediator
 import com.maxdr.ezpermss.R
 import com.maxdr.ezpermss.core.AppInfo
+import com.maxdr.ezpermss.core.DangerousPermissionInfo
 import com.maxdr.ezpermss.databinding.PermissionDetailFragmentBinding
+import com.maxdr.ezpermss.ui.permissions.schedule.RevokePermissionWorker
 import com.maxdr.ezpermss.util.debug
 import com.maxdr.ezpermss.util.mainActivity
+import java.util.concurrent.TimeUnit
 
 class PermissionDetailFragment : Fragment() {
 
@@ -48,6 +54,18 @@ class PermissionDetailFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		setupViewPagerWithTabLayout()
+	}
+
+	fun setupWorker(dangerousPermission: DangerousPermissionInfo, delay: Long) {
+		val packageName = appInfo?.packageFullName
+		val permissionName = dangerousPermission.realName
+		val workerData = workDataOf("PACKAGE_NAME" to packageName, "PERMISSION_NAME" to permissionName)
+
+		val request = OneTimeWorkRequestBuilder<RevokePermissionWorker>()
+			.setInputData(workerData)
+			.setInitialDelay(delay, TimeUnit.MINUTES)
+			.build()
+		WorkManager.getInstance(requireContext()).enqueue(request)
 	}
 
 	private fun setupViewPagerWithTabLayout() {

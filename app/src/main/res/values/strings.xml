@@ -22,4 +22,18 @@
 	<string name="next">Next</string>
 	<string name="alert">Very important</string>
 	<string name="root_icon">Root user icon</string>
+	<string name="cancel">Cancel</string>
+	<string name="timeout">Choose the wait time to revoke the permission.</string>
+	<string name="time">Time:</string>
+	<string name="five_minutes">5 minutes</string>
+	<string name="ten_minutes">10 minutes</string>
+	<string name="fifteen_minutes">15 minutes</string>
+	<string name="thirty_minutes">30 minutes</string>
+	<string name="one_hour">1 hour</string>
+	<string name="two_hours">2 hours</string>
+	<string name="six_hours">6 hours</string>
+	<string name="twelve_hours">12 hours</string>
+	<string name="one_day">1 day</string>
+	<string name="custom_time">Select a time…</string>
+	<string name="timeout_message">The permission will be revoked in %d minutes</string>
 </resources>

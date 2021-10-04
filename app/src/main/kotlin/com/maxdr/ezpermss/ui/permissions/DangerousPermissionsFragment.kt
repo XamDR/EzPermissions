@@ -1,12 +1,14 @@
 package com.maxdr.ezpermss.ui.permissions
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.maxdr.ezpermss.core.DangerousPermissionInfo
 import com.maxdr.ezpermss.databinding.DangerousPermissionsFragmentBinding
+import com.maxdr.ezpermss.ui.permissions.schedule.TimePickerDialogFragment
 
 class DangerousPermissionsFragment : Fragment() {
 
@@ -36,8 +38,27 @@ class DangerousPermissionsFragment : Fragment() {
 			binding?.recyclerView?.adapter = adapter
 			viewModel.isEmpty.value = it.isEmpty()
 			adapter.setOnPermissionToggledListener { checked, position ->
-				viewModel.onPermissionStatusChanged(checked, position)
+				toggleDangerousPermissionStatus(it[position], checked)
 			}
+			adapter.setOnPermissionRevokedListener { position ->
+				showTimePickerDialogFragment(it[position])
+			}
+		}
+	}
+
+	private fun showTimePickerDialogFragment(dangerousPermission: DangerousPermissionInfo) {
+		val dialog = TimePickerDialogFragment.newInstance(dangerousPermission)
+		dialog.show(parentFragmentManager, "TIME_DIALOG")
+	}
+
+	private fun toggleDangerousPermissionStatus(dangerousPermission: DangerousPermissionInfo, checked: Boolean) {
+		val permissionName = dangerousPermission.realName
+
+		if (checked) {
+			viewModel.grantDangerousPermission(permissionName)
+		}
+		else {
+			viewModel.revokeDangerousPermission(permissionName)
 		}
 	}
 }
