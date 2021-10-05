@@ -7,12 +7,6 @@
 		android:name="android.permission.QUERY_ALL_PACKAGES"
 		android:minSdkVersion="30"
 		tools:ignore="QueryAllPackagesPermission" />
-<!--	<uses-permission-->
-<!--		android:name="android.permission.REVOKE_RUNTIME_PERMISSIONS"-->
-<!--		tools:ignore="ProtectedPermissions" />-->
-<!--	<uses-permission-->
-<!--		android:name="android.permission.INTERACT_ACROSS_USERS_FULL"-->
-<!--		tools:ignore="ProtectedPermissions" />-->
 
 	<application
 		android:allowBackup="true"

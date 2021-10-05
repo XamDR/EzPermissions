@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools">
 
 	<data>
@@ -60,7 +61,8 @@
 				android:layout_marginEnd="10dp"
 				android:background="@null"
 				android:src="@drawable/ic_more_info"
-				android:contentDescription="@null"/>
+				android:contentDescription="@null"
+				app:tint="?attr/colorPrimary"/>
 		</LinearLayout>
 	</LinearLayout>
 </layout>

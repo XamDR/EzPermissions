@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.maxdr.ezpermss.databinding.AppListFragmentBinding
+import com.maxdr.ezpermss.ui.permissions.service.ForegroundServiceHandler
 import com.maxdr.ezpermss.util.mainActivity
 
 class AppListFragment : Fragment() {
@@ -23,6 +24,7 @@ class AppListFragment : Fragment() {
 							  savedInstanceState: Bundle?): View? {
 		binding = AppListFragmentBinding.inflate(inflater, container, false).apply {
 			lifecycleOwner = this@AppListFragment.viewLifecycleOwner
+			handler = ForegroundServiceHandler(requireContext())
 			viewModel = this@AppListFragment.viewModel
 		}
 		return binding?.root
