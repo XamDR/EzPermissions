@@ -39,4 +39,6 @@
 	<string name="foreground_service_notification_title">Administrando los permisos peligrosos.</string>
 	<string name="channel_desc">Administra los permisos peligrosos de las aplicaciones</string>
 	<string name="channel_name">Servicio para administrar permisos</string>
+	<string name="manual_permission_management">Para la gestión manual haga clic en el nombre de la aplicación.</string>
+	<string name="service_desc">Este servicio administra los permisos peligrosos.</string>
 </resources>

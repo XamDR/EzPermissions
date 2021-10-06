@@ -10,10 +10,6 @@ import com.maxdr.ezpermss.core.AppInfo
 
 class AppListViewModel(private val app: Application) : AndroidViewModel(app) {
 
-	init {
-		getIntalledApps()
-	}
-
 	val appInfoLiveData: LiveData<List<App>> = getIntalledApps()
 
 	private fun getIntalledApps(): LiveData<List<App>> {

@@ -41,4 +41,6 @@
 	<string name="foreground_service_notification_title">Supervising dangerous permissions.</string>
 	<string name="channel_desc">Manage apps\' dangerous permissions</string>
 	<string name="channel_name">Service to manage permissions</string>
+	<string name="manual_permission_management">For manual management click on the app name.</string>
+	<string name="service_desc">This service manages dangerous permissions.</string>
 </resources>

@@ -7,9 +7,6 @@
 		<variable
 			name="viewModel"
 			type="com.maxdr.ezpermss.ui.apps.AppListViewModel" />
-		<variable
-			name="handler"
-			type="com.maxdr.ezpermss.ui.permissions.service.ForegroundServiceHandler" />
 	</data>
 
 	<androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -26,16 +23,15 @@
 			tools:listitem="@layout/app_row_layout"/>
 
 		<com.google.android.material.floatingactionbutton.FloatingActionButton
+			android:id="@+id/fab_service"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:contentDescription="@string/start_service"
 			android:layout_margin="16dp"
-			android:onClick="@{() -> handler.onClick()}"
 			app:layout_anchor="@id/recycler_view"
 			app:layout_anchorGravity="bottom|end"
 			app:layout_behavior="com.maxdr.ezpermss.ui.helpers.FabScrollingBehavior"
 			app:backgroundTint="?attr/colorPrimary"
-			app:tint="?attr/colorOnPrimary"
-			app:srcCompat="@drawable/ic_start_service"/>
+			app:tint="?attr/colorOnPrimary"/>
 	</androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

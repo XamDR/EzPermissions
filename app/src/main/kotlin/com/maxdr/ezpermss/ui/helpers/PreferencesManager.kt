@@ -11,7 +11,11 @@ class PreferencesManager(context: Context) {
 	var isFirstRun = preferences.getBoolean(FIRST_TIME_PREFERENCE, true)
 		set(value) = preferences.edit { putBoolean(FIRST_TIME_PREFERENCE, value) }
 
+	var isServiceRunning = preferences.getBoolean(SERVICE_RUNNING_PREFERENCE, false)
+		set(value) = preferences.edit { putBoolean(SERVICE_RUNNING_PREFERENCE, value) }
+
 	companion object {
 		private const val FIRST_TIME_PREFERENCE = "isFirstRun"
+		private const val SERVICE_RUNNING_PREFERENCE = "isServiceRunning"
 	}
 }

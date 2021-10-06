@@ -1,34 +1,37 @@
-package com.maxdr.ezpermss.ui.helpers
+package com.maxdr.ezpermss.ui.permissions.service
 
-import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.media.AudioAttributes
 import android.media.RingtoneManager
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import androidx.work.WorkManager
+import com.maxdr.ezpermss.MainActivity
 import com.maxdr.ezpermss.R
-import java.util.UUID
 
 object NotificationHelper {
 
 	private const val CHANNEL_ID = "SERVICE_CHANNEL"
+	private const val REQUEST_CODE = 0
 
-	@SuppressLint("UnspecifiedImmutableFlag")
-	fun createNotification(context: Context, id: UUID): Notification {
-		// This PendingIntent can be used to cancel the Worker.
-		val intent = WorkManager.getInstance(context).createCancelPendingIntent(id)
+	fun createNotification(context: Context): Notification {
+		val notificationIntent = Intent(context, MainActivity::class.java).apply {
+			flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+		}
+		val pendingIntent = PendingIntent.getActivity(context, REQUEST_CODE, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
 
 		val builder = NotificationCompat.Builder(context, CHANNEL_ID)
 			.setContentTitle(context.getString(R.string.foreground_service_notification_title))
 			.setTicker(context.getString(R.string.foreground_service_notification_title))
+			.setContentIntent(pendingIntent)
 			.setSmallIcon(R.drawable.ic_small_icon)
 			.setOngoing(true)
-			.addAction(R.drawable.ic_stop_service, context.getString(R.string.stop_service), intent)
+			.setShowWhen(true)
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			createNotificationChannel(context).also {
