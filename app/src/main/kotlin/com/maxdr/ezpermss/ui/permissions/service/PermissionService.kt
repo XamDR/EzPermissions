@@ -36,14 +36,14 @@ class PermissionService : Service() {
 
 	private fun start() {
 		if (!isRunning) {
-			debug("SERVICE", "Starting permission service.")
+			debug("SERVICE", "Iniciando servicio.")
 			isRunning = true
 			startForeground(NOTIFICATION_ID, NotificationHelper.createNotification(this))
 		}
 	}
 
 	private fun stop() {
-		debug("SERVICE", "Stopping permission service.")
+		debug("SERVICE", "Deteniendo servicio.")
 		stopForeground(true)
 		stopSelf()
 		isRunning = false
