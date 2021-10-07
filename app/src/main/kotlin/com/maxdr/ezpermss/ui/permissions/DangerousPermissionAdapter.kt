@@ -51,7 +51,7 @@ class DangerousPermissionAdapter(private val dangerousPermissions: List<Dangerou
 						showFullSummary(view, position); true
 					}
 					R.id.set_schedule -> {
-						android.util.Log.d("ITEM", position.toString()); true
+						onPermissionRevokedCallback?.invoke(position); true
 					}
 					else -> false
 				}
@@ -73,5 +73,11 @@ class DangerousPermissionAdapter(private val dangerousPermissions: List<Dangerou
 		onPermissionToggledCallback = callback
 	}
 
+	fun setOnPermissionRevokedListener(callback: (position: Int) -> Unit) {
+		onPermissionRevokedCallback = callback
+	}
+
 	private var onPermissionToggledCallback: ((checked: Boolean, position: Int) -> Unit)? = null
+
+	private var onPermissionRevokedCallback: ((position: Int) -> Unit)? = null
 }
