@@ -12,17 +12,11 @@ import com.maxdr.ezpermss.core.DangerousPermissionInfo
 import com.maxdr.ezpermss.core.NormalPermissionInfo
 import com.maxdr.ezpermss.util.Empty
 import com.maxdr.ezpermss.util.debug
-import com.maxdr.ezpermss.util.protectionToString
 import com.maxdr.ezpermss.util.toTitleCase
 import com.topjohnwu.superuser.Shell
 
 class PermissionDetailViewModel(private val app: Application,
 								private val packageFullName: String) : AndroidViewModel(app) {
-
-	init {
-		fetchNormalPermissions()
-		fetchDangerousPermissions()
-	}
 
 	val isEmpty = MutableLiveData(true)
 
@@ -104,11 +98,7 @@ class PermissionDetailViewModel(private val app: Application,
 				if (protectionLevel != PermissionInfo.PROTECTION_NORMAL &&
 					(protectionLevel or PermissionInfo.PROTECTION_DANGEROUS) != protectionLevel) {
 					val name = getPermissionLabel(pm, permission)
-
-					if (name != null) {
-						val result = "$name - ${protectionToString(protectionLevel)}"
-						otherPermissions.add(result)
-					}
+					name?.let { otherPermissions.add(it) }
 				}
 			}
 		}

@@ -56,18 +56,6 @@ class PermissionDetailFragment : Fragment() {
 		setupViewPagerWithTabLayout()
 	}
 
-	fun setupWorker(dangerousPermission: DangerousPermissionInfo, delay: Long) {
-		val packageName = appInfo?.packageFullName
-		val permissionName = dangerousPermission.realName
-		val workerData = workDataOf("PACKAGE_NAME" to packageName, "PERMISSION_NAME" to permissionName)
-
-		val request = OneTimeWorkRequestBuilder<RevokePermissionWorker>()
-			.setInputData(workerData)
-			.setInitialDelay(delay, TimeUnit.MINUTES)
-			.build()
-		WorkManager.getInstance(requireContext()).enqueue(request)
-	}
-
 	private fun setupViewPagerWithTabLayout() {
 		adapter = PermissionStateAdapter(this,
 			listOf(NormalPermissionsFragment(), DangerousPermissionsFragment(), OtherPermissionsFragment()))
@@ -79,5 +67,17 @@ class PermissionDetailFragment : Fragment() {
 				else -> getString(R.string.other_permission)
 			}
 		}.attach()
+	}
+
+	fun setupWorker(dangerousPermission: DangerousPermissionInfo, delay: Long) {
+		val packageName = appInfo?.packageFullName
+		val permissionName = dangerousPermission.realName
+		val workerData = workDataOf("PACKAGE_NAME" to packageName, "PERMISSION_NAME" to permissionName)
+
+		val request = OneTimeWorkRequestBuilder<RevokePermissionWorker>()
+			.setInputData(workerData)
+			.setInitialDelay(delay, TimeUnit.MINUTES)
+			.build()
+		WorkManager.getInstance(requireContext()).enqueue(request)
 	}
 }

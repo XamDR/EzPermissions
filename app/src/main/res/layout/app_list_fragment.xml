@@ -9,22 +9,29 @@
 			type="com.maxdr.ezpermss.ui.apps.AppListViewModel" />
 	</data>
 
-	<androidx.constraintlayout.widget.ConstraintLayout
+	<androidx.coordinatorlayout.widget.CoordinatorLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		tools:context=".ui.apps.AppListFragment">
 
 		<androidx.recyclerview.widget.RecyclerView
 			android:id="@+id/recycler_view"
-			android:layout_width="0dp"
-			android:layout_height="0dp"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
 			android:orientation="vertical"
 			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
 			tools:listitem="@layout/app_row_layout"/>
 
-	</androidx.constraintlayout.widget.ConstraintLayout>
+		<com.google.android.material.floatingactionbutton.FloatingActionButton
+			android:id="@+id/fab_service"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:contentDescription="@string/start_service"
+			android:layout_margin="16dp"
+			app:layout_anchor="@id/recycler_view"
+			app:layout_anchorGravity="bottom|end"
+			app:layout_behavior="com.maxdr.ezpermss.ui.helpers.FabScrollingBehavior"
+			app:backgroundTint="?attr/colorPrimary"
+			app:tint="?attr/colorOnPrimary"/>
+	</androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

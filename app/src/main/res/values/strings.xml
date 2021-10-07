@@ -13,7 +13,7 @@
 	<string name="no_other_permissions">There aren\'t privileged or signature permissions for this app.</string>
 	<string name="permission_summary" translatable="false">Allows an application to call any phone number, including emergency numbers, without going through the Dialer user interface for the user to confirm the call being placed.</string>
 	<string name="more_info_summary">More info</string>
-	<string name="set_schedule">Set schedule</string>
+	<string name="set_schedule">Wait time</string>
 	<string name="ok">OK</string>
 	<string name="logo_desc">App logo</string>
 	<string name="description">EzPermissions is an application permission manager that will help you to know the permissions used by all the applications installed on your smartphone and will allow you to easily revoke permissions considered dangerous.</string>
@@ -36,4 +36,11 @@
 	<string name="one_day">1 day</string>
 	<string name="custom_time">Select a time…</string>
 	<string name="timeout_message">The permission will be revoked in %d minutes</string>
+	<string name="start_service">Start service to grant and revoke dangerous permissions.</string>
+	<string name="stop_service">Stop service</string>
+	<string name="foreground_service_notification_title">Supervising dangerous permissions.</string>
+	<string name="channel_desc">Manage apps\' dangerous permissions</string>
+	<string name="channel_name">Service to manage permissions</string>
+	<string name="manual_permission_management">For manual management click on the app name.</string>
+	<string name="service_desc">This service manages dangerous permissions.</string>
 </resources>
