@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.flowOn
 
 class AppRepository(context: Context) {
 
-	fun getAppInfoPermissions()
-		= appDao.getAppInfoPermissions().flowOn(Dispatchers.Main).conflate()
+	fun getAppInfo()
+		= appDao.getAppInfo().flowOn(Dispatchers.Main).conflate()
 
 	suspend fun insertAppInfoPermissions(app: AppInfo, permissions: List<PermissionInfo>)
 		= appDao.insertAppInfoPermissions(app, permissions)

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools">
+
+	<data>
+		<variable
+			name="app"
+			type="com.maxdr.ezpermss.core.AppInfo" />
+	</data>
+
+	<GridLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:minHeight="?android:attr/listPreferredItemHeight"
+		android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+		android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+		android:paddingTop="8dp"
+		android:paddingBottom="8dp"
+		android:columnCount="3"
+		android:rowCount="2">
+
+		<ImageView
+			android:id="@+id/app_icon"
+			android:layout_width="@android:dimen/app_icon_size"
+			android:layout_height="@android:dimen/app_icon_size"
+			android:layout_rowSpan="2"
+			android:layout_marginEnd="8dp"
+			android:contentDescription="@null"
+			android:scaleType="centerInside"
+			app:src="@{app.drawableIconPath}"
+			tools:src="@drawable/ic_launcher_foreground"/>
+
+		<TextView
+			android:id="@+id/app_name"
+			android:layout_width="0dp"
+			android:layout_gravity="fill_horizontal"
+			android:layout_marginTop="2dp"
+			android:singleLine="true"
+			android:ellipsize="end"
+			android:text="@{app.name}"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			tools:text="Youtube Music"/>
+
+		<TextView
+			android:id="@+id/app_number_permissions"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_column="1"
+			android:layout_row="1"
+			android:text="@{@string/package_permissions_number(app.numberOfPermissions)}"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			tools:text="Número total de permisos: 10"/>
+
+		<ImageButton
+			android:id="@+id/next"
+			android:layout_width="@android:dimen/app_icon_size"
+			android:layout_height="@android:dimen/app_icon_size"
+			android:layout_gravity="end|center_vertical"
+			android:layout_column="2"
+			android:layout_row="0"
+			android:layout_rowSpan="2"
+			android:background="?selectableItemBackgroundBorderless"
+			android:contentDescription="@null"
+			android:src="@drawable/ic_next"/>
+	</GridLayout>
+</layout>

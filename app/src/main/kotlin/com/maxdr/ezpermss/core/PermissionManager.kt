@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.graphics.drawable.toBitmap
 import com.maxdr.ezpermss.data.AppRepository
+import com.maxdr.ezpermss.ui.helpers.ImageStorageManager
 import com.maxdr.ezpermss.util.Empty
 import com.maxdr.ezpermss.util.toTitleCase
 
@@ -43,11 +44,14 @@ class PermissionManager(private val context: Context) {
 						permissionsInfo.add(permissionInfo)
 					}
 				}
+				ImageStorageManager.saveToInternalStorage(context, drawableIcon.toBitmap(), packageName)
+
 				val appInfo = AppInfo(
 					name = packageName,
 					fullName = packageFullName,
 					icon = icon,
-					drawableIcon = drawableIcon.toBitmap()
+					numberOfPermissions = permissions?.size ?: 0,
+					drawableIconPath = packageName
 				)
 				AppRepository.Instance.insertAppInfoPermissions(appInfo, permissionsInfo)
 			}
