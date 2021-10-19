@@ -5,9 +5,8 @@
 	<string name="list_apps">List apps</string>
 	<string name="package_permissions_number">Total permissions number: %d</string>
 	<string name="normal_permissions" translatable="false">&#8226; android.permission.ACCESS_WIFI_STATE\n&#8226; android.permission.VIBRATE\n&#8226; android.permission.WAKE_LOCK\n&#8226; android.permission.SET_WALLPAPER\n&#8226; android.permission.NFC</string>
-	<string name="normal_permission">Normal</string>
+	<string name="nondangerous_permission">Non dangerous</string>
 	<string name="dangerous_permission">Dangerous</string>
-	<string name="other_permission">Others</string>
 	<string name="no_normal_permissions">There aren\'t normal permissions for this app.</string>
 	<string name="no_dangerous_permissions">There aren\'t dangerous permissions for this app.</string>
 	<string name="no_other_permissions">There aren\'t privileged or signature permissions for this app.</string>

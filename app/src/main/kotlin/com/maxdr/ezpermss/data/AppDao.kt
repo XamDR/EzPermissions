@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import com.maxdr.ezpermss.core.AppInfo
+import com.maxdr.ezpermss.core.AppInfoPermissions
 import com.maxdr.ezpermss.core.PermissionInfo
 import kotlinx.coroutines.flow.Flow
 
@@ -14,6 +15,9 @@ interface AppDao {
 	@Transaction
 	@Query("SELECT * FROM ApplicationInfo")
 	fun getAppInfo(): Flow<List<AppInfo>>
+
+	@Query("SELECT * FROM ApplicationInfo where fullName=:appFullName")
+	fun getPermissionInfoForApp(appFullName: String): Flow<List<AppInfoPermissions>>
 
 	@Transaction
 	suspend fun insertAppInfoPermissions(appInfo: AppInfo, permissions: List<PermissionInfo>) {

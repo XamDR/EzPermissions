@@ -4,9 +4,8 @@
 	<string name="package_icon">App Icon</string>
 	<string name="list_apps">Ver aplicaciones</string>
 	<string name="package_permissions_number">Número total de permisos: %d</string>
-	<string name="normal_permission">Normal</string>
+	<string name="nondangerous_permission">No peligroso</string>
 	<string name="dangerous_permission">Peligroso</string>
-	<string name="other_permission">Otros</string>
 	<string name="no_normal_permissions">No hay permisos normales para está aplicación.</string>
 	<string name="no_dangerous_permissions">No hay permisos peligrosos para está aplicación.</string>
 	<string name="no_other_permissions">No hay permisos privilegiados o de firma para está aplicación.</string>

@@ -13,6 +13,9 @@ class AppRepository(context: Context) {
 	fun getAppInfo()
 		= appDao.getAppInfo().flowOn(Dispatchers.Main).conflate()
 
+	fun getPermissionInfoForApp(appFullName: String)
+		= appDao.getPermissionInfoForApp(appFullName).flowOn(Dispatchers.Main).conflate()
+
 	suspend fun insertAppInfoPermissions(app: AppInfo, permissions: List<PermissionInfo>)
 		= appDao.insertAppInfoPermissions(app, permissions)
 
