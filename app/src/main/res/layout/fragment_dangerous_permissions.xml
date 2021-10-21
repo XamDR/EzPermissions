@@ -34,7 +34,7 @@
 			android:padding="20dp"
 			android:text="@string/no_dangerous_permissions"
 			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:visibility="@{viewModel.isEmpty ? View.VISIBLE : View.GONE}"
+			android:visibility="@{viewModel.hasDangerousPermissions ? View.VISIBLE : View.GONE}"
 			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"/>

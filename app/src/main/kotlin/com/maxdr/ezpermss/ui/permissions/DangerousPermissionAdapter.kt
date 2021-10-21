@@ -3,6 +3,7 @@ package com.maxdr.ezpermss.ui.permissions
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CompoundButton
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -19,9 +20,9 @@ class DangerousPermissionAdapter(private val dangerousPermissions: List<Permissi
 		fun bind(permissionInfo: PermissionInfo) {
 			binding.apply {
 				this.permissionInfo = permissionInfo
-//				this.onCheckedChange = CompoundButton.OnCheckedChangeListener { _, isChecked ->
-//					onPermissionToggledCallback?.invoke(isChecked, adapterPosition)
-//				}
+				this.onCheckedChange = CompoundButton.OnCheckedChangeListener { _, isChecked ->
+					onPermissionToggledCallback?.invoke(isChecked, bindingAdapterPosition)
+				}
 				executePendingBindings()
 			}
 		}
@@ -30,7 +31,7 @@ class DangerousPermissionAdapter(private val dangerousPermissions: List<Permissi
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DangerousPermissionViewHolder {
 		val binding = DangerousPermissionRowLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 		return DangerousPermissionViewHolder(binding).apply {
-			binding.moreOptions.setOnClickListener { buildPopupMenu(it, adapterPosition) }
+			binding.moreOptions.setOnClickListener { buildPopupMenu(it, bindingAdapterPosition) }
 		}
 	}
 
@@ -50,7 +51,7 @@ class DangerousPermissionAdapter(private val dangerousPermissions: List<Permissi
 						showFullSummary(view, position); true
 					}
 					R.id.set_schedule -> {
-						onPermissionRevokedCallback?.invoke(position); true
+						true
 					}
 					else -> false
 				}
@@ -72,11 +73,5 @@ class DangerousPermissionAdapter(private val dangerousPermissions: List<Permissi
 		onPermissionToggledCallback = callback
 	}
 
-	fun setOnPermissionRevokedListener(callback: (position: Int) -> Unit) {
-		onPermissionRevokedCallback = callback
-	}
-
 	private var onPermissionToggledCallback: ((checked: Boolean, position: Int) -> Unit)? = null
-
-	private var onPermissionRevokedCallback: ((position: Int) -> Unit)? = null
 }

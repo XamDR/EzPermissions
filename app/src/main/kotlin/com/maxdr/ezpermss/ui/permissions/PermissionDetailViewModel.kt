@@ -9,9 +9,11 @@ import androidx.lifecycle.map
 import com.maxdr.ezpermss.core.PermissionInfo
 import com.maxdr.ezpermss.data.AppRepository
 
-class PermissionDetailViewModel(appFullName: String) : ViewModel() {
+class PermissionDetailViewModel(val appFullName: String) : ViewModel() {
 
-	val isEmpty = MutableLiveData(true)
+	val hasNonDangerousPermissions = MutableLiveData(false)
+
+	val hasDangerousPermissions = MutableLiveData(false)
 
 	val nonDangerousPermissions: LiveData<List<PermissionInfo>> = fetchNormalPermissions(appFullName)
 

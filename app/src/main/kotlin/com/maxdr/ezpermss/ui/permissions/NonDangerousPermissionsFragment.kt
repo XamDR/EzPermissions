@@ -36,7 +36,7 @@ class NonDangerousPermissionsFragment : Fragment() {
 	private fun showNonDangerousPermissions() {
 		viewModel.nonDangerousPermissions.observe(viewLifecycleOwner) {
 			binding?.recyclerView?.adapter = NonDangerousPermissionAdapter(it)
-			viewModel.isEmpty.value = it.isEmpty()
+			viewModel.hasNonDangerousPermissions.value = it.isEmpty()
 		}
 	}
 }
