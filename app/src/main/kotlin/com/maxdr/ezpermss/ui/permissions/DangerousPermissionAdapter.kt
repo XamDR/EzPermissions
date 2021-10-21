@@ -51,13 +51,26 @@ class DangerousPermissionAdapter(private val dangerousPermissions: List<Permissi
 						showFullSummary(view, position); true
 					}
 					R.id.set_schedule -> {
-						true
+						revokeDangerousPermission(view, position); true
 					}
 					else -> false
 				}
 			}
 			show()
 		}
+	}
+
+	private fun revokeDangerousPermission(view: View, position: Int) {
+		MaterialAlertDialogBuilder(view.context).apply {
+			setTitle(R.string.timeout_message)
+			setSingleChoiceItems(R.array.timeout_names, -1) { dialog, which ->
+				val timeoutValues = context.resources.getIntArray(R.array.timeout_values)
+				val delayInMinutes = timeoutValues[which].toLong()
+				onPermissionRevokedCallback?.invoke(position, delayInMinutes)
+				dialog.dismiss()
+			}
+			setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+		}.show()
 	}
 
 	private fun showFullSummary(view: View, position: Int) {
@@ -73,5 +86,11 @@ class DangerousPermissionAdapter(private val dangerousPermissions: List<Permissi
 		onPermissionToggledCallback = callback
 	}
 
+	fun setOnPermissionRevokedListener(callback: (position: Int, delay: Long) -> Unit) {
+		onPermissionRevokedCallback = callback
+	}
+
 	private var onPermissionToggledCallback: ((checked: Boolean, position: Int) -> Unit)? = null
+
+	private var onPermissionRevokedCallback: ((position: Int, delay: Long) -> Unit)? = null
 }
