@@ -27,6 +27,7 @@
 			android:layout_margin="20dp"
 			android:gravity="center"
 			android:padding="10dp"
+			android:text="@string/description"
 			android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"	/>
 	</LinearLayout>
 </layout>

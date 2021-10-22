@@ -15,21 +15,19 @@ class PermissionDetailViewModel(val appFullName: String) : ViewModel() {
 
 	val hasDangerousPermissions = MutableLiveData(false)
 
-	val nonDangerousPermissions: LiveData<List<PermissionInfo>> = fetchNormalPermissions(appFullName)
+	val nonDangerousPermissions: LiveData<List<PermissionInfo>> = fetchNonDangerousPermissions(appFullName)
 
 	val dangerousPermissions: LiveData<List<PermissionInfo>> = fetchDangerousPermissions(appFullName)
 
 	private fun fetchDangerousPermissions(appFullName: String): LiveData<List<PermissionInfo>> {
-		return AppRepository.Instance.getPermissionInfoForApp(appFullName).asLiveData().map { list ->
-			list.first { it.appInfo.fullName == appFullName }.permissions
-				.filter { pi -> pi.protectionLevel == PROTECTION_DANGEROUS }
+		return AppRepository.Instance.getPermissionInfoForApp(appFullName).asLiveData().map {
+			it.permissions.filter { pi -> (pi.protectionLevel or PROTECTION_DANGEROUS) == pi.protectionLevel }
 		}
 	}
 
-	private fun fetchNormalPermissions(appFullName: String): LiveData<List<PermissionInfo>> {
-		return AppRepository.Instance.getPermissionInfoForApp(appFullName).asLiveData().map { list ->
-			list.first { it.appInfo.fullName == appFullName }.permissions
-				.filter { pi -> pi.protectionLevel != PROTECTION_DANGEROUS }
+	private fun fetchNonDangerousPermissions(appFullName: String): LiveData<List<PermissionInfo>> {
+		return AppRepository.Instance.getPermissionInfoForApp(appFullName).asLiveData().map {
+			it.permissions.filter { pi -> (pi.protectionLevel or PROTECTION_DANGEROUS) != pi.protectionLevel }
 		}
 	}
 }

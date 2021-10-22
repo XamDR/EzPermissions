@@ -14,10 +14,10 @@ interface AppDao {
 
 	@Transaction
 	@Query("SELECT * FROM ApplicationInfo")
-	fun getAppInfo(): Flow<List<AppInfo>>
+	fun getAppInfo(): Flow<List<AppInfoPermissions>>
 
 	@Query("SELECT * FROM ApplicationInfo where fullName=:appFullName")
-	fun getPermissionInfoForApp(appFullName: String): Flow<List<AppInfoPermissions>>
+	fun getPermissionInfoForApp(appFullName: String): Flow<AppInfoPermissions>
 
 	@Transaction
 	suspend fun insertAppInfoPermissions(appInfo: AppInfo, permissions: List<PermissionInfo>) {
