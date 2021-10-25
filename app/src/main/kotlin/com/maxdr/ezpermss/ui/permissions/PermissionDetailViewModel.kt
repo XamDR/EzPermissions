@@ -1,15 +1,15 @@
 package com.maxdr.ezpermss.ui.permissions
 
-import android.content.pm.PermissionInfo.PROTECTION_DANGEROUS
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import androidx.lifecycle.map
+import com.maxdr.ezpermss.core.PackageManagerHelper
 import com.maxdr.ezpermss.core.PermissionInfo
-import com.maxdr.ezpermss.data.AppRepository
 
-class PermissionDetailViewModel(val appFullName: String) : ViewModel() {
+class PermissionDetailViewModel(private val app: Application,
+								val appFullName: String) : AndroidViewModel(app) {
 
 	val hasNonDangerousPermissions = MutableLiveData(false)
 
@@ -20,14 +20,10 @@ class PermissionDetailViewModel(val appFullName: String) : ViewModel() {
 	val dangerousPermissions: LiveData<List<PermissionInfo>> = fetchDangerousPermissions(appFullName)
 
 	private fun fetchDangerousPermissions(appFullName: String): LiveData<List<PermissionInfo>> {
-		return AppRepository.Instance.getPermissionInfoForApp(appFullName).asLiveData().map {
-			it.permissions.filter { pi -> (pi.protectionLevel or PROTECTION_DANGEROUS) == pi.protectionLevel }
-		}
+		return PackageManagerHelper(app.applicationContext).fetchDangerousPermissions(appFullName).asLiveData()
 	}
 
 	private fun fetchNonDangerousPermissions(appFullName: String): LiveData<List<PermissionInfo>> {
-		return AppRepository.Instance.getPermissionInfoForApp(appFullName).asLiveData().map {
-			it.permissions.filter { pi -> (pi.protectionLevel or PROTECTION_DANGEROUS) != pi.protectionLevel }
-		}
+		return PackageManagerHelper(app.applicationContext).fetchNonDangerousPermissions(appFullName).asLiveData()
 	}
 }

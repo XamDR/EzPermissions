@@ -10,7 +10,6 @@ import kotlinx.parcelize.Parcelize
 data class AppInfo @JvmOverloads constructor(
 	val name: String,
 	val fullName: String,
-	val icon: Int,
 	val numberOfPermissions: Int,
 	val drawableIconPath: String,
 	@PrimaryKey(autoGenerate = true) var id: Long = 0

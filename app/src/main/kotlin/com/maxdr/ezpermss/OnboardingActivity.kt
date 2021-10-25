@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.maxdr.ezpermss.core.PermissionManager
+import com.maxdr.ezpermss.core.PackageManagerHelper
 import com.maxdr.ezpermss.databinding.ActivityOnboardingBinding
 import com.maxdr.ezpermss.ui.helpers.PreferencesManager
 import com.topjohnwu.superuser.Shell
@@ -14,21 +14,19 @@ class OnboardingActivity : AppCompatActivity() {
 
 	private lateinit var binding: ActivityOnboardingBinding
 	private lateinit var preferencesManager: PreferencesManager
-	private lateinit var permissionManager: PermissionManager
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		binding = ActivityOnboardingBinding.inflate(layoutInflater)
 		setContentView(binding.root)
 		preferencesManager = PreferencesManager(this)
-		permissionManager = PermissionManager(this)
 		showOnboardingOrMain()
 	}
 
 	private fun showOnboardingOrMain() {
 		if (preferencesManager.isFirstRun) {
 			lifecycleScope.launch {
-				permissionManager.insertAppPermissionsInfo()
+				PackageManagerHelper(this@OnboardingActivity).insertAppsInfo()
 			}
 			preferencesManager.isFirstRun = false
 		}

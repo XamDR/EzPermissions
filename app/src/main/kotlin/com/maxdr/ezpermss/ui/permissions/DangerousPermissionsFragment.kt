@@ -45,25 +45,25 @@ class DangerousPermissionsFragment : Fragment() {
 					toggleDangerousPermissionStatus(checked, it[position])
 				}
 				setOnPermissionRevokedListener { position, delay ->
-					revokeDangerousPermissionAfterDelay(position, delay)
+					revokeDangerousPermissionAfterDelay(it[position], delay)
 				}
 			}
 			viewModel.hasDangerousPermissions.value = it.isEmpty()
 		}
 	}
 
-	private fun toggleDangerousPermissionStatus(grant: Boolean, permissionInfo: PermissionInfo) {
+	private fun toggleDangerousPermissionStatus(grant: Boolean, dangerousPermission: PermissionInfo) {
 		if (grant) {
-			PermissionHelper.grantDangerousPermission(requireContext(), viewModel.appFullName, permissionInfo.name)
+			PermissionHelper.grantDangerousPermission(requireContext(), viewModel.appFullName, dangerousPermission.name)
 		}
 		else {
-			PermissionHelper.revokeDangerousPermission(requireContext(), viewModel.appFullName, permissionInfo.name)
+			PermissionHelper.revokeDangerousPermission(requireContext(), viewModel.appFullName, dangerousPermission.name)
 		}
 	}
 
-	private fun revokeDangerousPermissionAfterDelay(position: Int, delay: Long) {
+	private fun revokeDangerousPermissionAfterDelay(dangerousPermission: PermissionInfo, delay: Long) {
 		val message = getString(R.string.timeout_message, delay)
 		Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-		(requireParentFragment() as PermissionDetailFragment).setupWorker(position, delay)
+		(requireParentFragment() as PermissionDetailFragment).setupWorker(dangerousPermission, delay)
 	}
 }

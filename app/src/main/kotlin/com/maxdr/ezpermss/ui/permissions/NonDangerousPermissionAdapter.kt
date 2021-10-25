@@ -26,7 +26,7 @@ class NonDangerousPermissionAdapter(private val permissions: List<PermissionInfo
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NonDangerousPermissionViewHolder {
 		val binding = NondangerousPermissionRowLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 		return NonDangerousPermissionViewHolder(binding).apply {
-			binding.moreInfo.setOnClickListener { showFullSummary(it, adapterPosition) }
+			binding.moreInfo.setOnClickListener { showFullSummary(it, bindingAdapterPosition) }
 		}
 	}
 
