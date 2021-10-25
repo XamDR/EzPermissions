@@ -92,8 +92,8 @@ class PackageManagerHelper(private val context: Context) {
 		return MutableStateFlow(dangerousPermissions)
 	}
 
-	fun fetchNonDangerousPermissions(appFullName: String): Flow<List<PermissionInfo>> {
-		val normalPermissions = mutableListOf<PermissionInfo>()
+	fun fetchNonDangerousPermissions(appFullName: String): Flow<List<NonDangerousPermissionInfo>> {
+		val nonDangerousPermissions = mutableListOf<NonDangerousPermissionInfo>()
 		val pm = context.packageManager
 		val permissions: Array<String>? = pm.getPackageInfo(appFullName, PackageManager.GET_PERMISSIONS).requestedPermissions
 
@@ -104,18 +104,17 @@ class PackageManagerHelper(private val context: Context) {
 					val name = getPermissionLabel(pm, permission)
 					val summary = getPermissionDescription(pm, permission)
 
-					normalPermissions.add(PermissionInfo(
+					nonDangerousPermissions.add(NonDangerousPermissionInfo(
 						name = permission,
 						simpleName = name.toString(),
 						summary = summary ?: String.Empty,
-						protectionLevel = protectionLevel,
-						granted = true
+						protectionLevel = protectionLevel
 					))
 				}
 			}
 		}
-		normalPermissions.sortBy { it.simpleName }
-		return MutableStateFlow(normalPermissions)
+		nonDangerousPermissions.sortBy { it.simpleName }
+		return MutableStateFlow(nonDangerousPermissions)
 	}
 
 	@Suppress("DEPRECATION")

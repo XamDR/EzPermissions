@@ -10,3 +10,9 @@ data class PermissionInfo(
 	val summary: String,
 	val protectionLevel: Int,
 	val granted: Boolean = false) : Parcelable
+
+data class NonDangerousPermissionInfo(
+	val name: String,
+	val simpleName: String,
+	val summary: String,
+	val protectionLevel: Int)

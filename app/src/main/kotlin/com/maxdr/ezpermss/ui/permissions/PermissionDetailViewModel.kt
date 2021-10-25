@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
+import com.maxdr.ezpermss.core.NonDangerousPermissionInfo
 import com.maxdr.ezpermss.core.PackageManagerHelper
 import com.maxdr.ezpermss.core.PermissionInfo
 
@@ -15,7 +16,7 @@ class PermissionDetailViewModel(private val app: Application,
 
 	val hasDangerousPermissions = MutableLiveData(false)
 
-	val nonDangerousPermissions: LiveData<List<PermissionInfo>> = fetchNonDangerousPermissions(appFullName)
+	val nonDangerousPermissions: LiveData<List<NonDangerousPermissionInfo>> = fetchNonDangerousPermissions(appFullName)
 
 	val dangerousPermissions: LiveData<List<PermissionInfo>> = fetchDangerousPermissions(appFullName)
 
@@ -23,7 +24,7 @@ class PermissionDetailViewModel(private val app: Application,
 		return PackageManagerHelper(app.applicationContext).fetchDangerousPermissions(appFullName).asLiveData()
 	}
 
-	private fun fetchNonDangerousPermissions(appFullName: String): LiveData<List<PermissionInfo>> {
+	private fun fetchNonDangerousPermissions(appFullName: String): LiveData<List<NonDangerousPermissionInfo>> {
 		return PackageManagerHelper(app.applicationContext).fetchNonDangerousPermissions(appFullName).asLiveData()
 	}
 }

@@ -42,4 +42,5 @@
 	<string name="channel_name">Service to manage permissions</string>
 	<string name="manual_permission_management">For manual management click on the app name.</string>
 	<string name="service_desc">This service manages dangerous permissions.</string>
+	<string name="permission_protection_level">Protection level: %s</string>
 </resources>
