@@ -12,7 +12,7 @@ import androidx.work.workDataOf
 import com.google.android.material.tabs.TabLayoutMediator
 import com.maxdr.ezpermss.R
 import com.maxdr.ezpermss.core.AppInfo
-import com.maxdr.ezpermss.core.PermissionInfo
+import com.maxdr.ezpermss.core.DangerousPermissionInfo
 import com.maxdr.ezpermss.databinding.FragmentPermissionDetailBinding
 import com.maxdr.ezpermss.ui.permissions.schedule.RevokePermissionWorker
 import com.maxdr.ezpermss.util.debug
@@ -66,9 +66,9 @@ class PermissionDetailFragment : Fragment() {
 		}.attach()
 	}
 
-	fun setupWorker(dangerousPermission: PermissionInfo, delay: Long) {
+	fun setupWorker(dangerousDangerousPermission: DangerousPermissionInfo, delay: Long) {
 		val packageName = appInfo?.fullName
-		val permissionName = dangerousPermission.name
+		val permissionName = dangerousDangerousPermission.name
 		val workerData = workDataOf("PACKAGE_NAME" to packageName, "PERMISSION_NAME" to permissionName)
 
 		val request = OneTimeWorkRequestBuilder<RevokePermissionWorker>()

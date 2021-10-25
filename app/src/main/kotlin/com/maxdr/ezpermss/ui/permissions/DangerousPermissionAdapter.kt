@@ -8,18 +8,18 @@ import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.maxdr.ezpermss.R
-import com.maxdr.ezpermss.core.PermissionInfo
+import com.maxdr.ezpermss.core.DangerousPermissionInfo
 import com.maxdr.ezpermss.databinding.DangerousPermissionRowLayoutBinding
 
-class DangerousPermissionAdapter(private val dangerousPermissions: List<PermissionInfo>) :
+class DangerousPermissionAdapter(private val dangerousDangerousPermissions: List<DangerousPermissionInfo>) :
 	RecyclerView.Adapter<DangerousPermissionAdapter.DangerousPermissionViewHolder>() {
 
 	inner class DangerousPermissionViewHolder(
 		private val binding: DangerousPermissionRowLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
 
-		fun bind(permissionInfo: PermissionInfo) {
+		fun bind(dangerousPermissionInfo: DangerousPermissionInfo) {
 			binding.apply {
-				this.permissionInfo = permissionInfo
+				this.permissionInfo = dangerousPermissionInfo
 				this.onCheckedChange = CompoundButton.OnCheckedChangeListener { _, isChecked ->
 					onPermissionToggledCallback?.invoke(isChecked, bindingAdapterPosition)
 				}
@@ -36,11 +36,11 @@ class DangerousPermissionAdapter(private val dangerousPermissions: List<Permissi
 	}
 
 	override fun onBindViewHolder(holder: DangerousPermissionViewHolder, position: Int) {
-		val dangerousPermission = dangerousPermissions[position]
+		val dangerousPermission = dangerousDangerousPermissions[position]
 		holder.bind(dangerousPermission)
 	}
 
-	override fun getItemCount() = dangerousPermissions.size
+	override fun getItemCount() = dangerousDangerousPermissions.size
 
 	private fun buildPopupMenu(view: View, position: Int) {
 		PopupMenu(view.context, view).apply {
@@ -74,7 +74,7 @@ class DangerousPermissionAdapter(private val dangerousPermissions: List<Permissi
 	}
 
 	private fun showFullSummary(view: View, position: Int) {
-		val dangerousPermission = dangerousPermissions[position]
+		val dangerousPermission = dangerousDangerousPermissions[position]
 		MaterialAlertDialogBuilder(view.context).apply {
 			setTitle(dangerousPermission.name)
 			setMessage(dangerousPermission.summary)

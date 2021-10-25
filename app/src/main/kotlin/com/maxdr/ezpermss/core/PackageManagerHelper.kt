@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.content.pm.PermissionInfo.PROTECTION_DANGEROUS
 import android.os.Build
 import androidx.core.graphics.drawable.toBitmap
+import com.maxdr.ezpermss.R
 import com.maxdr.ezpermss.data.AppRepository
 import com.maxdr.ezpermss.ui.helpers.ImageStorageManager
 import com.maxdr.ezpermss.util.Empty
@@ -64,8 +65,8 @@ class PackageManagerHelper(private val context: Context) {
 		}
 	}
 
-	fun fetchDangerousPermissions(appFullName: String): Flow<List<PermissionInfo>> {
-		val dangerousPermissions = mutableListOf<PermissionInfo>()
+	fun fetchDangerousPermissions(appFullName: String): Flow<List<DangerousPermissionInfo>> {
+		val dangerousPermissions = mutableListOf<DangerousPermissionInfo>()
 		val pm = context.packageManager
 		val pi = pm.getPackageInfo(appFullName, PackageManager.GET_PERMISSIONS)
 		val permissions: Array<String>? = pi.requestedPermissions
@@ -78,10 +79,10 @@ class PackageManagerHelper(private val context: Context) {
 					val summary = getPermissionDescription(pm, permission)
 					val enabled = (pi.requestedPermissionsFlags[i] and PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0
 
-					dangerousPermissions.add(PermissionInfo(
+					dangerousPermissions.add(DangerousPermissionInfo(
 						name = permission,
 						simpleName = name ?: permission,
-						summary = summary ?: String.Empty,
+						summary = summary ?: context.getString(R.string.no_permission_summary),
 						protectionLevel = protectionLevel,
 						granted = enabled
 					))

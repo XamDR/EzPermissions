@@ -41,4 +41,5 @@
 	<string name="manual_permission_management">Para la gestión manual haga clic en el nombre de la aplicación.</string>
 	<string name="service_desc">Este servicio administra los permisos peligrosos.</string>
 	<string name="permission_protection_level">Nivel de protección: %s</string>
+	<string name="no_permission_summary">No hay más información sobre este permiso.</string>
 </resources>

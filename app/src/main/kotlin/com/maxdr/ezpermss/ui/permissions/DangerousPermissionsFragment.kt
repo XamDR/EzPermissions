@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.maxdr.ezpermss.R
-import com.maxdr.ezpermss.core.PermissionInfo
+import com.maxdr.ezpermss.core.DangerousPermissionInfo
 import com.maxdr.ezpermss.databinding.FragmentDangerousPermissionsBinding
 
 class DangerousPermissionsFragment : Fragment() {
@@ -52,18 +52,18 @@ class DangerousPermissionsFragment : Fragment() {
 		}
 	}
 
-	private fun toggleDangerousPermissionStatus(grant: Boolean, dangerousPermission: PermissionInfo) {
+	private fun toggleDangerousPermissionStatus(grant: Boolean, dangerousDangerousPermission: DangerousPermissionInfo) {
 		if (grant) {
-			PermissionHelper.grantDangerousPermission(requireContext(), viewModel.appFullName, dangerousPermission.name)
+			PermissionHelper.grantDangerousPermission(requireContext(), viewModel.appFullName, dangerousDangerousPermission.name)
 		}
 		else {
-			PermissionHelper.revokeDangerousPermission(requireContext(), viewModel.appFullName, dangerousPermission.name)
+			PermissionHelper.revokeDangerousPermission(requireContext(), viewModel.appFullName, dangerousDangerousPermission.name)
 		}
 	}
 
-	private fun revokeDangerousPermissionAfterDelay(dangerousPermission: PermissionInfo, delay: Long) {
+	private fun revokeDangerousPermissionAfterDelay(dangerousDangerousPermission: DangerousPermissionInfo, delay: Long) {
 		val message = getString(R.string.timeout_message, delay)
 		Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-		(requireParentFragment() as PermissionDetailFragment).setupWorker(dangerousPermission, delay)
+		(requireParentFragment() as PermissionDetailFragment).setupWorker(dangerousDangerousPermission, delay)
 	}
 }
