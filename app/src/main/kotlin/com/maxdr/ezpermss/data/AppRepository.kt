@@ -16,7 +16,16 @@ class AppRepository(context: Context) {
 
 	suspend fun removeAppInfo(appFullName: String) = appDao.removeAppInfo(appFullName)
 
-	fun getDangerousPermissionInfo() = appDao.getDangerousPermissionInfo().flowOn(Dispatchers.Main).conflate()
+	suspend fun deleteTableDangerousPermissionInfo() {
+		appDao.deleteTableDangerousPermissionInfo()
+		database.resetPointer()
+	}
+
+	suspend fun updateDangerousPermissionInfo(appFullName: String, permissionName: String, value: Boolean)
+		= appDao.updateDangerousPermissionInfo(appFullName, permissionName, value)
+
+	fun getDangerousPermissionInfo(appFullName: String)
+		= appDao.getDangerousPermissionInfoForApp(appFullName).flowOn(Dispatchers.Main).conflate()
 
 	suspend fun insertDangerousPermissionInfo(dangerousPermissionInfo: DangerousPermissionInfo)
 		= appDao.insertDangerousPermissionInfo(dangerousPermissionInfo)

@@ -15,7 +15,7 @@ data class DangerousPermissionInfo(
 	@ColumnInfo(name = "protection_level") val protectionLevel: Int,
 	val granted: Boolean,
 	val modified: Boolean = false,
-	@ColumnInfo(name = "app_id", index = true) var appId: Long = 0,
+	@ColumnInfo(name = "app_id", index = true) var appId: String,
 	@PrimaryKey(autoGenerate = true) val id: Long = 0) : Parcelable
 
 data class NonDangerousPermissionInfo(

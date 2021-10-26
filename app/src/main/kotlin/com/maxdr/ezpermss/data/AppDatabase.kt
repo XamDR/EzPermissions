@@ -9,4 +9,8 @@ import com.maxdr.ezpermss.core.DangerousPermissionInfo
 abstract class AppDatabase : RoomDatabase() {
 
 	abstract fun appDao(): AppDao
+
+	fun resetPointer(){
+		openHelper.writableDatabase.execSQL("DELETE FROM sqlite_sequence")
+	}
 }

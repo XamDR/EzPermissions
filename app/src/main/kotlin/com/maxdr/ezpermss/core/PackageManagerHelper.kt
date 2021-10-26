@@ -65,6 +65,44 @@ class PackageManagerHelper(private val context: Context) {
 		}
 	}
 
+	suspend fun insertDangerousPermissions() {
+		AppRepository.Instance.deleteTableDangerousPermissionInfo()
+
+		val pm = context.packageManager
+		val packages = pm.getInstalledApplications(PackageManager.GET_META_DATA)
+
+		for (packageInfo in packages) {
+			val packageFullName = packageInfo.packageName
+			val icon = pm.getApplicationInfo(packageFullName, 0).icon
+
+			if (icon != 0 && pm.getLaunchIntentForPackage(packageFullName) != null) {
+				val pi	= pm.getPackageInfo(packageFullName, PackageManager.GET_PERMISSIONS)
+				val permissions: Array<String>? = pi.requestedPermissions
+
+				if (permissions != null) {
+					for ((i, permission) in permissions.withIndex()) {
+						val protectionLevel = getPermissionProtectionLevel(pm, permission)
+						if ((protectionLevel or PROTECTION_DANGEROUS) == protectionLevel) {
+							val name = getPermissionLabel(pm, permission)
+							val summary = getPermissionDescription(pm, permission)
+							val enabled = (pi.requestedPermissionsFlags[i] and PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0
+
+							val dangerousPermissionInfo = DangerousPermissionInfo(
+								name = permission,
+								simpleName = name ?: permission,
+								summary = summary ?: context.getString(R.string.no_permission_summary),
+								protectionLevel = protectionLevel,
+								granted = enabled,
+								appId = packageFullName
+							)
+							AppRepository.Instance.insertDangerousPermissionInfo(dangerousPermissionInfo)
+						}
+					}
+				}
+			}
+		}
+	}
+
 	fun fetchDangerousPermissions(appFullName: String): Flow<List<DangerousPermissionInfo>> {
 		val dangerousPermissions = mutableListOf<DangerousPermissionInfo>()
 		val pm = context.packageManager
@@ -84,7 +122,8 @@ class PackageManagerHelper(private val context: Context) {
 						simpleName = name ?: permission,
 						summary = summary ?: context.getString(R.string.no_permission_summary),
 						protectionLevel = protectionLevel,
-						granted = enabled
+						granted = enabled,
+						appId = appFullName
 					))
 				}
 			}

@@ -7,9 +7,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.maxdr.ezpermss.R
 import com.maxdr.ezpermss.core.DangerousPermissionInfo
+import com.maxdr.ezpermss.data.AppRepository
 import com.maxdr.ezpermss.databinding.FragmentDangerousPermissionsBinding
+import com.maxdr.ezpermss.ui.helpers.PreferencesManager
+import kotlinx.coroutines.launch
 
 class DangerousPermissionsFragment : Fragment() {
 
@@ -38,17 +42,34 @@ class DangerousPermissionsFragment : Fragment() {
 	}
 
 	private fun showDangerousPermissions() {
-		viewModel.dangerousPermissions.observe(viewLifecycleOwner) {
-			adapter = DangerousPermissionAdapter(it).apply {
-				binding?.recyclerView?.adapter = this
-				setOnPermissionToggledListener { checked, position ->
-					toggleDangerousPermissionStatus(checked, it[position])
+		val manager = PreferencesManager(requireContext())
+		if (manager.isServiceRunning) {
+			viewModel.dangerousPermissionsFromDb.observe(viewLifecycleOwner) {
+				adapter = DangerousPermissionAdapter(it).apply {
+					binding?.recyclerView?.adapter = this
+					setOnPermissionToggledListener { checked, position ->
+						toggleDangerousPermissionStatusDb(checked, it[position])
+					}
+					setOnPermissionRevokedListener { position, delay ->
+						revokeDangerousPermissionAfterDelay(it[position], delay)
+					}
 				}
-				setOnPermissionRevokedListener { position, delay ->
-					revokeDangerousPermissionAfterDelay(it[position], delay)
-				}
+				viewModel.hasDangerousPermissions.value = it.isEmpty()
 			}
-			viewModel.hasDangerousPermissions.value = it.isEmpty()
+		}
+		else {
+			viewModel.dangerousPermissions.observe(viewLifecycleOwner) {
+				adapter = DangerousPermissionAdapter(it).apply {
+					binding?.recyclerView?.adapter = this
+					setOnPermissionToggledListener { checked, position ->
+						toggleDangerousPermissionStatus(checked, it[position])
+					}
+					setOnPermissionRevokedListener { position, delay ->
+						revokeDangerousPermissionAfterDelay(it[position], delay)
+					}
+				}
+				viewModel.hasDangerousPermissions.value = it.isEmpty()
+			}
 		}
 	}
 
@@ -58,6 +79,18 @@ class DangerousPermissionsFragment : Fragment() {
 		}
 		else {
 			PermissionHelper.revokeDangerousPermission(requireContext(), viewModel.appFullName, dangerousDangerousPermission.name)
+		}
+	}
+
+	private fun toggleDangerousPermissionStatusDb(grant: Boolean, dangerousDangerousPermission: DangerousPermissionInfo) {
+		viewLifecycleOwner.lifecycleScope.launch {
+			if (grant) {
+				PermissionHelper.grantDangerousPermission(requireContext(), viewModel.appFullName, dangerousDangerousPermission.name)
+			}
+			else {
+				PermissionHelper.revokeDangerousPermission(requireContext(), viewModel.appFullName, dangerousDangerousPermission.name)
+			}
+			AppRepository.Instance.updateDangerousPermissionInfo(viewModel.appFullName, dangerousDangerousPermission.name, grant)
 		}
 	}
 

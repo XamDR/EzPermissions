@@ -11,7 +11,7 @@ import com.maxdr.ezpermss.R
 import com.maxdr.ezpermss.core.DangerousPermissionInfo
 import com.maxdr.ezpermss.databinding.DangerousPermissionRowLayoutBinding
 
-class DangerousPermissionAdapter(private val dangerousDangerousPermissions: List<DangerousPermissionInfo>) :
+class DangerousPermissionAdapter(private val dangerousPermissions: List<DangerousPermissionInfo>) :
 	RecyclerView.Adapter<DangerousPermissionAdapter.DangerousPermissionViewHolder>() {
 
 	inner class DangerousPermissionViewHolder(
@@ -36,11 +36,11 @@ class DangerousPermissionAdapter(private val dangerousDangerousPermissions: List
 	}
 
 	override fun onBindViewHolder(holder: DangerousPermissionViewHolder, position: Int) {
-		val dangerousPermission = dangerousDangerousPermissions[position]
+		val dangerousPermission = dangerousPermissions[position]
 		holder.bind(dangerousPermission)
 	}
 
-	override fun getItemCount() = dangerousDangerousPermissions.size
+	override fun getItemCount() = dangerousPermissions.size
 
 	private fun buildPopupMenu(view: View, position: Int) {
 		PopupMenu(view.context, view).apply {
@@ -74,7 +74,7 @@ class DangerousPermissionAdapter(private val dangerousDangerousPermissions: List
 	}
 
 	private fun showFullSummary(view: View, position: Int) {
-		val dangerousPermission = dangerousDangerousPermissions[position]
+		val dangerousPermission = dangerousPermissions[position]
 		MaterialAlertDialogBuilder(view.context).apply {
 			setTitle(dangerousPermission.name)
 			setMessage(dangerousPermission.summary)
