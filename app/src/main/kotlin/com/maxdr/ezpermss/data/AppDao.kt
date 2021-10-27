@@ -19,15 +19,21 @@ interface AppDao {
 	@Query("SELECT * FROM DangerousPermissionInfo where app_id=:appFullName ORDER BY simple_name")
 	fun getDangerousPermissionInfoForApp(appFullName: String): Flow<List<DangerousPermissionInfo>>
 
+	@Query("SELECT modified FROM DANGEROUSPERMISSIONINFO where app_id=:packageName")
+	fun getDangerousPermissionModifiedStatus(packageName: String): Flow<List<Boolean>>
+
 	@Insert
 	suspend fun insertDangerousPermissionInfo(dangerousPermissionInfo: DangerousPermissionInfo)
 
-	@Query("UPDATE DangerousPermissionInfo SET granted=:value WHERE app_id=:appFullName AND name=:permissionName")
-	suspend fun updateDangerousPermissionInfo(appFullName: String, permissionName: String, value: Boolean)
+	@Query("UPDATE DangerousPermissionInfo SET granted=:granted WHERE app_id=:packageName AND name=:permissionName")
+	suspend fun updateDangerousPermissionInfoGrantStatus(packageName: String, permissionName: String, granted: Boolean)
+
+	@Query("UPDATE DangerousPermissionInfo SET granted=:granted, modified=:modified WHERE app_id=:packageName AND name=:permissionName")
+	suspend fun updateDangerousPermissionInfo(packageName: String, permissionName: String, granted: Boolean, modified: Boolean)
 
 	@Query("DELETE FROM DangerousPermissionInfo")
 	suspend fun deleteTableDangerousPermissionInfo()
 
-	@Query("DELETE FROM ApplicationInfo WHERE fullName=:appFullName")
-	suspend fun removeAppInfo(appFullName: String)
+	@Query("DELETE FROM ApplicationInfo WHERE fullName=:packageName")
+	suspend fun removeAppInfo(packageName: String)
 }

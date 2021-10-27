@@ -75,22 +75,42 @@ class DangerousPermissionsFragment : Fragment() {
 
 	private fun toggleDangerousPermissionStatus(grant: Boolean, dangerousDangerousPermission: DangerousPermissionInfo) {
 		if (grant) {
-			PermissionHelper.grantDangerousPermission(requireContext(), viewModel.appFullName, dangerousDangerousPermission.name)
+			PermissionHelper.grantDangerousPermission(
+				context = requireContext(),
+				packageName = viewModel.appFullName,
+				permissionName = dangerousDangerousPermission.name
+			)
 		}
 		else {
-			PermissionHelper.revokeDangerousPermission(requireContext(), viewModel.appFullName, dangerousDangerousPermission.name)
+			PermissionHelper.revokeDangerousPermission(
+				context = requireContext(),
+				packageName = viewModel.appFullName,
+				permissionName = dangerousDangerousPermission.name
+			)
 		}
 	}
 
 	private fun toggleDangerousPermissionStatusDb(grant: Boolean, dangerousDangerousPermission: DangerousPermissionInfo) {
 		viewLifecycleOwner.lifecycleScope.launch {
 			if (grant) {
-				PermissionHelper.grantDangerousPermission(requireContext(), viewModel.appFullName, dangerousDangerousPermission.name)
+				PermissionHelper.grantDangerousPermission(
+					context = requireContext(),
+					packageName = viewModel.appFullName,
+					permissionName = dangerousDangerousPermission.name
+				)
 			}
 			else {
-				PermissionHelper.revokeDangerousPermission(requireContext(), viewModel.appFullName, dangerousDangerousPermission.name)
+				PermissionHelper.revokeDangerousPermission(
+					context = requireContext(),
+					packageName = viewModel.appFullName,
+					permissionName = dangerousDangerousPermission.name
+				)
 			}
-			AppRepository.Instance.updateDangerousPermissionInfo(viewModel.appFullName, dangerousDangerousPermission.name, grant)
+			AppRepository.Instance.updateDangerousPermissionInfoGrantStatus(
+				packageName = viewModel.appFullName,
+				permissionName = dangerousDangerousPermission.name,
+				granted = grant
+			)
 		}
 	}
 

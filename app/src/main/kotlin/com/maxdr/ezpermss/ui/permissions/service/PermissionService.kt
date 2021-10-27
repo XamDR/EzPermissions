@@ -1,24 +1,37 @@
 package com.maxdr.ezpermss.ui.permissions.service
 
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.IBinder
 import com.maxdr.ezpermss.core.PackageManagerHelper
+import com.maxdr.ezpermss.data.AppRepository
+import com.maxdr.ezpermss.ui.permissions.PermissionHelper
 import com.maxdr.ezpermss.util.debug
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.*
 
 class PermissionService : Service() {
 
-	private var receiver: ScreenOnOffReceiver? = null
 	private var isRunning = false
 	private val job = SupervisorJob()
 	private val scope = CoroutineScope(Dispatchers.IO + job)
 	private val timer = Timer()
+	private var receiver: ScreenOnOffReceiver = ScreenOnOffReceiver { context, isScreenOn ->
+		scope.launch {
+			if (isScreenOn) {
+				grantDangerousPermissions(context)
+			}
+			else {
+				revokeDangerousPermissions(context)
+			}
+		}
+	}
 
 	override fun onBind(intent: Intent): IBinder? = null
 
@@ -73,7 +86,6 @@ class PermissionService : Service() {
 	}
 
 	private fun registerScreenStatusReceiver() {
-		receiver = ScreenOnOffReceiver()
 		val filter = IntentFilter().apply {
 			addAction(Intent.ACTION_SCREEN_OFF)
 			addAction(Intent.ACTION_SCREEN_ON)
@@ -82,8 +94,42 @@ class PermissionService : Service() {
 	}
 
 	private fun unregisterScreenStatusReceiver() {
-		if (receiver != null) {
-			unregisterReceiver(receiver)
+		unregisterReceiver(receiver)
+	}
+
+	private suspend fun grantDangerousPermissions(context: Context) {
+//		val appFullName = "com.google.android.keep"
+		val appFullName = "com.android.camera2"
+		AppRepository.Instance.getDangerousPermissionInfo(appFullName).collect { permissions ->
+			for (permission in permissions) {
+				if (permission.modified) {
+					PermissionHelper.grantDangerousPermission(context, appFullName, permission.name)
+					AppRepository.Instance.updateDangerousPermissionInfo(
+						packageName = appFullName,
+						permissionName = permission.name,
+						granted = true,
+						modified = false
+					)
+				}
+			}
+		}
+	}
+
+	private suspend fun revokeDangerousPermissions(context: Context) {
+//		val appFullName = "com.google.android.keep"
+		val appFullName = "com.android.camera2"
+		AppRepository.Instance.getDangerousPermissionInfo(appFullName).collect { permissions ->
+			for (permission in permissions) {
+				if (permission.granted) {
+					PermissionHelper.revokeDangerousPermission(context, appFullName, permission.name)
+					AppRepository.Instance.updateDangerousPermissionInfo(
+						packageName = appFullName,
+						permissionName = permission.name,
+						granted = false,
+						modified = true
+					)
+				}
+			}
 		}
 	}
 

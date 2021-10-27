@@ -7,9 +7,9 @@ import com.topjohnwu.superuser.Shell
 
 object PermissionHelper {
 
-	fun grantDangerousPermission(context: Context, packageFullName: String, permissionName: String) {
+	fun grantDangerousPermission(context: Context, packageName: String, permissionName: String) {
 		if (Shell.rootAccess()) {
-			val result = Shell.su("pm grant $packageFullName $permissionName").exec()
+			val result = Shell.su("pm grant $packageName $permissionName").exec()
 			debug("RESULT", result.err)
 		}
 		else {
@@ -17,9 +17,9 @@ object PermissionHelper {
 		}
 	}
 
-	fun revokeDangerousPermission(context: Context, packageFullName: String, permissionName: String) {
+	fun revokeDangerousPermission(context: Context, packageName: String, permissionName: String) {
 		if (Shell.rootAccess()) {
-			val result = Shell.su("pm revoke $packageFullName $permissionName").exec()
+			val result = Shell.su("pm revoke $packageName $permissionName").exec()
 			debug("RESULT", result.err)
 		}
 		else {
