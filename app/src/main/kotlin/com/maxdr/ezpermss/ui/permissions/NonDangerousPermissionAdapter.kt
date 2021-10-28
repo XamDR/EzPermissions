@@ -6,18 +6,18 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.maxdr.ezpermss.R
-import com.maxdr.ezpermss.core.PermissionInfo
+import com.maxdr.ezpermss.core.NonDangerousPermissionInfo
 import com.maxdr.ezpermss.databinding.NondangerousPermissionRowLayoutBinding
 
-class NonDangerousPermissionAdapter(private val permissions: List<PermissionInfo>) :
+class NonDangerousPermissionAdapter(private val permissions: List<NonDangerousPermissionInfo>) :
 	RecyclerView.Adapter<NonDangerousPermissionAdapter.NonDangerousPermissionViewHolder>() {
 
 	inner class NonDangerousPermissionViewHolder(
 		private val binding: NondangerousPermissionRowLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
 
-		fun bind(permissionInfo: PermissionInfo) {
+		fun bind(nonDangerousPermissionInfo: NonDangerousPermissionInfo) {
 			binding.apply {
-				this.permissionInfo = permissionInfo
+				this.permissionInfo = nonDangerousPermissionInfo
 				executePendingBindings()
 			}
 		}
@@ -26,7 +26,7 @@ class NonDangerousPermissionAdapter(private val permissions: List<PermissionInfo
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NonDangerousPermissionViewHolder {
 		val binding = NondangerousPermissionRowLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 		return NonDangerousPermissionViewHolder(binding).apply {
-			binding.moreInfo.setOnClickListener { showFullSummary(it, adapterPosition) }
+			binding.moreInfo.setOnClickListener { showFullSummary(it, bindingAdapterPosition) }
 		}
 	}
 

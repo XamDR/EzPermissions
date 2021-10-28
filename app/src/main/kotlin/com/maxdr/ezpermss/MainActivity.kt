@@ -1,20 +1,42 @@
 package com.maxdr.ezpermss
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.maxdr.ezpermss.core.PackageManagerHelper
+import com.maxdr.ezpermss.data.AppRepository
 import com.maxdr.ezpermss.databinding.ActivityMainBinding
+import com.maxdr.ezpermss.ui.apps.PackageReceiver
 import com.maxdr.ezpermss.ui.helpers.NavigationService
 import com.maxdr.ezpermss.util.instantiate
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), NavigationService {
 
 	private lateinit var binding: ActivityMainBinding
+	private val packageReceiver = PackageReceiver { appFullName, added ->
+		lifecycleScope.launch {
+			if (added) {
+				PackageManagerHelper(this@MainActivity).insertAppInfo(appFullName)
+			}
+			else {
+				AppRepository.Instance.removeAppInfo(appFullName)
+			}
+		}
+	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		binding = ActivityMainBinding.inflate(layoutInflater)
 		setContentView(binding.root)
 		setSupportActionBar(binding.toolbar)
+		registerReceiver(packageReceiver, IntentFilter().apply {
+			addAction(Intent.ACTION_PACKAGE_ADDED)
+			addAction(Intent.ACTION_PACKAGE_REMOVED)
+			addDataScheme("package")
+		})
 	}
 
 	override fun navigate(className: String, args: Bundle?) {
@@ -23,5 +45,10 @@ class MainActivity : AppCompatActivity(), NavigationService {
 			.replace(R.id.fragment_container, fragment)
 			.addToBackStack(null)
 			.commit()
+	}
+
+	override fun onDestroy() {
+		super.onDestroy()
+		unregisterReceiver(packageReceiver)
 	}
 }

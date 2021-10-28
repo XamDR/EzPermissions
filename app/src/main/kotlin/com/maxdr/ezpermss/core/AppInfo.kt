@@ -7,11 +7,9 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @Entity(tableName = "ApplicationInfo")
-data class AppInfo @JvmOverloads constructor(
+data class AppInfo constructor(
 	val name: String,
-	val fullName: String,
-	val icon: Int,
+	@PrimaryKey val fullName: String,
 	val numberOfPermissions: Int,
-	val drawableIconPath: String,
-	@PrimaryKey(autoGenerate = true) var id: Long = 0
+	val drawableIconPath: String
 ) : Parcelable

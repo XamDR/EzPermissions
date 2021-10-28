@@ -6,9 +6,10 @@
 	<data>
 		<import type="android.view.View"/>
 		<import type="android.text.TextUtils"/>
+		<import type="com.maxdr.ezpermss.util.Converter"/>
 		<variable
 			name="permissionInfo"
-			type="com.maxdr.ezpermss.core.PermissionInfo" />
+			type="com.maxdr.ezpermss.core.NonDangerousPermissionInfo" />
 	</data>
 
 	<LinearLayout
@@ -25,10 +26,23 @@
 			android:layout_marginTop="5dp"
 			android:layout_marginBottom="5dp"
 			android:maxLines="2"
-			android:text="@{permissionInfo.name}"
-			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text="@{permissionInfo.simpleName}"
+			android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
 			android:textStyle="bold"
 			tools:text="Access precise location only in the foreground" />
+
+		<TextView
+			android:id="@+id/permission_protection_level"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="15dp"
+			android:layout_marginEnd="15dp"
+			android:layout_marginTop="5dp"
+			android:layout_marginBottom="5dp"
+			android:maxLines="1"
+			android:text="@{@string/permission_protection_level(Converter.protectionToString(permissionInfo.protectionLevel))}"
+			android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+			tools:text="Protection level: normal|development" />
 
 		<LinearLayout
 			android:layout_width="match_parent"
@@ -49,7 +63,7 @@
 				android:justificationMode="inter_word"
 				android:maxLines="2"
 				android:text="@{permissionInfo.summary}"
-				android:textAppearance="?android:attr/textAppearanceSmall"
+				android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
 				tools:text="@string/permission_summary"
 				tools:targetApi="o" />
 

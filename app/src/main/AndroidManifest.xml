@@ -20,21 +20,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EzPermissions" >
 
-<!--        <service-->
-<!--            android:name=".ui.permissions.service.PermissionService"-->
-<!--            android:enabled="true"-->
-<!--            android:exported="false"-->
-<!--            android:description="@string/service_desc"/>-->
+        <service
+            android:name=".ui.permissions.service.PermissionService"
+            android:enabled="true"
+            android:exported="false"
+            android:description="@string/service_desc"/>
 
-<!--        <receiver-->
-<!--            android:name=".ui.permissions.service.BootCompletedReceiver"-->
-<!--            android:enabled="true"-->
-<!--            android:exported="false">-->
+        <receiver
+            android:name=".ui.permissions.service.BootCompletedReceiver"
+            android:enabled="true"
+            android:exported="false">
 
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.BOOT_COMPLETED"/>-->
-<!--            </intent-filter>-->
-<!--        </receiver>-->
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name=".OnboardingActivity"

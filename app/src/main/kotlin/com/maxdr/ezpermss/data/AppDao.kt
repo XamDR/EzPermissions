@@ -3,34 +3,34 @@ package com.maxdr.ezpermss.data
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Transaction
 import com.maxdr.ezpermss.core.AppInfo
-import com.maxdr.ezpermss.core.AppInfoPermissions
-import com.maxdr.ezpermss.core.PermissionInfo
+import com.maxdr.ezpermss.core.DangerousPermissionInfo
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AppDao {
 
-	@Transaction
-	@Query("SELECT * FROM ApplicationInfo")
-	fun getAppInfo(): Flow<List<AppInfoPermissions>>
-
-	@Query("SELECT * FROM ApplicationInfo where fullName=:appFullName")
-	fun getPermissionInfoForApp(appFullName: String): Flow<AppInfoPermissions>
-
-	@Transaction
-	suspend fun insertAppInfoPermissions(appInfo: AppInfo, permissions: List<PermissionInfo>) {
-		val appId = insertAppInfo(appInfo)
-		for (permission in permissions) {
-			permission.appId = appId
-			insertPermissionInfo(permission)
-		}
-	}
+	@Query("SELECT * FROM ApplicationInfo ORDER BY name")
+	fun getAppInfo(): Flow<List<AppInfo>>
 
 	@Insert
-	suspend fun insertAppInfo(appInfo: AppInfo): Long
+	suspend fun insertAppInfo(appInfo: AppInfo)
+
+	@Query("SELECT * FROM DangerousPermissionInfo where app_id=:appFullName ORDER BY simple_name")
+	fun getDangerousPermissionInfoForApp(appFullName: String): Flow<List<DangerousPermissionInfo>>
 
 	@Insert
-	suspend fun insertPermissionInfo(permissionInfo: PermissionInfo)
+	suspend fun insertDangerousPermissionInfo(dangerousPermissionInfo: DangerousPermissionInfo)
+
+	@Query("UPDATE DangerousPermissionInfo SET granted=:granted WHERE app_id=:packageName AND name=:permissionName")
+	suspend fun updateDangerousPermissionInfoGrantStatus(packageName: String, permissionName: String, granted: Boolean)
+
+	@Query("UPDATE DangerousPermissionInfo SET granted=:granted, modified=:modified WHERE app_id=:packageName AND name=:permissionName")
+	suspend fun updateDangerousPermissionInfo(packageName: String, permissionName: String, granted: Boolean, modified: Boolean)
+
+	@Query("DELETE FROM DangerousPermissionInfo")
+	suspend fun deleteTableDangerousPermissionInfo()
+
+	@Query("DELETE FROM ApplicationInfo WHERE fullName=:packageName")
+	suspend fun removeAppInfo(packageName: String)
 }

@@ -1,37 +1,40 @@
 package com.maxdr.ezpermss.ui.permissions
 
-import android.content.pm.PermissionInfo.PROTECTION_DANGEROUS
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
 import com.google.android.material.tabs.TabLayoutMediator
 import com.maxdr.ezpermss.R
-import com.maxdr.ezpermss.core.AppInfoPermissions
+import com.maxdr.ezpermss.core.AppInfo
+import com.maxdr.ezpermss.core.DangerousPermissionInfo
+import com.maxdr.ezpermss.core.PackageManagerHelper
 import com.maxdr.ezpermss.databinding.FragmentPermissionDetailBinding
 import com.maxdr.ezpermss.ui.permissions.schedule.RevokePermissionWorker
 import com.maxdr.ezpermss.util.debug
 import com.maxdr.ezpermss.util.mainActivity
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 class PermissionDetailFragment : Fragment() {
 
 	private var binding: FragmentPermissionDetailBinding? = null
 	private val viewModel by viewModels<PermissionDetailViewModel>{
-		PermissionDetailViewModelFactory(appInfoPermissions?.appInfo?.fullName!!)
+		PermissionDetailViewModelFactory(requireActivity().application, appInfo?.fullName!!)
 	}
-	private var appInfoPermissions: AppInfoPermissions? = null
+	private var appInfo: AppInfo? = null
 	private lateinit var adapter: PermissionStateAdapter
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		appInfoPermissions = arguments?.getParcelable("info")
-		debug("APP_INFO", appInfoPermissions)
+		appInfo = arguments?.getParcelable("info")
+		debug("APP_INFO", appInfo)
 	}
 
 	override fun onCreateView(inflater: LayoutInflater,
@@ -39,7 +42,7 @@ class PermissionDetailFragment : Fragment() {
 							  savedInstanceState: Bundle?): View? {
 		binding = FragmentPermissionDetailBinding.inflate(inflater, container, false).apply {
 			lifecycleOwner = this@PermissionDetailFragment.viewLifecycleOwner
-			appInfo = this@PermissionDetailFragment.appInfoPermissions?.appInfo
+			appInfo = this@PermissionDetailFragment.appInfo
 			viewModel = this@PermissionDetailFragment.viewModel
 			handler = AppSettingsHandler(mainActivity)
 		}
@@ -54,6 +57,14 @@ class PermissionDetailFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		setupViewPagerWithTabLayout()
+		insertDangerousPermisionInfo()
+	}
+
+	private fun insertDangerousPermisionInfo() {
+		viewLifecycleOwner.lifecycleScope.launch {
+			PackageManagerHelper(requireContext()).insertDangerousPermissions()
+			debug("TAG", "Insertion done")
+		}
 	}
 
 	private fun setupViewPagerWithTabLayout() {
@@ -66,9 +77,9 @@ class PermissionDetailFragment : Fragment() {
 		}.attach()
 	}
 
-	fun setupWorker(position: Int, delay: Long) {
-		val packageName = appInfoPermissions?.appInfo?.fullName
-		val permissionName = getPermissionName(position)
+	fun setupWorker(dangerousDangerousPermission: DangerousPermissionInfo, delay: Long) {
+		val packageName = appInfo?.fullName
+		val permissionName = dangerousDangerousPermission.name
 		val workerData = workDataOf("PACKAGE_NAME" to packageName, "PERMISSION_NAME" to permissionName)
 
 		val request = OneTimeWorkRequestBuilder<RevokePermissionWorker>()
@@ -76,11 +87,5 @@ class PermissionDetailFragment : Fragment() {
 			.setInitialDelay(delay, TimeUnit.MINUTES)
 			.build()
 		WorkManager.getInstance(requireContext()).enqueue(request)
-	}
-
-	private fun getPermissionName(position: Int): String? {
-		return appInfoPermissions?.permissions?.filter {
-			(it.protectionLevel or PROTECTION_DANGEROUS) == it.protectionLevel
-		}?.get(position)?.name
 	}
 }

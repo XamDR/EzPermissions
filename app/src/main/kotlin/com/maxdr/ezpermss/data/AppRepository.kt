@@ -3,25 +3,39 @@ package com.maxdr.ezpermss.data
 import android.content.Context
 import androidx.room.Room
 import com.maxdr.ezpermss.core.AppInfo
-import com.maxdr.ezpermss.core.PermissionInfo
+import com.maxdr.ezpermss.core.DangerousPermissionInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.flowOn
 
 class AppRepository(context: Context) {
 
-	fun getAppInfo()
-		= appDao.getAppInfo().flowOn(Dispatchers.Main).conflate()
+	fun getAppInfo() = appDao.getAppInfo().flowOn(Dispatchers.Main).conflate()
 
-	fun getPermissionInfoForApp(appFullName: String)
-		= appDao.getPermissionInfoForApp(appFullName).flowOn(Dispatchers.Main).conflate()
+	suspend fun insertAppInfo(app: AppInfo) = appDao.insertAppInfo(app)
 
-	suspend fun insertAppInfoPermissions(app: AppInfo, permissions: List<PermissionInfo>)
-		= appDao.insertAppInfoPermissions(app, permissions)
+	suspend fun removeAppInfo(packageName: String) = appDao.removeAppInfo(packageName)
 
-	private val database = Room
-		.databaseBuilder(context.applicationContext, AppDatabase::class.java, DATABASE_NAME)
-		.build()
+	suspend fun deleteTableDangerousPermissionInfo() {
+		appDao.deleteTableDangerousPermissionInfo()
+		database.resetPointer()
+	}
+
+	suspend fun updateDangerousPermissionInfoGrantStatus(packageName: String, permissionName: String, granted: Boolean)
+		= appDao.updateDangerousPermissionInfoGrantStatus(packageName, permissionName, granted)
+
+	suspend fun updateDangerousPermissionInfo(packageName: String, permissionName: String, granted: Boolean, modified: Boolean)
+			= appDao.updateDangerousPermissionInfo(packageName, permissionName, granted, modified)
+
+	fun getDangerousPermissionInfo(packageName: String)
+		= appDao.getDangerousPermissionInfoForApp(packageName).flowOn(Dispatchers.Main).conflate()
+
+	suspend fun insertDangerousPermissionInfo(dangerousPermissionInfo: DangerousPermissionInfo)
+		= appDao.insertDangerousPermissionInfo(dangerousPermissionInfo)
+
+	private val database =
+		Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, DATABASE_NAME)
+			.build()
 
 	private val appDao = database.appDao()
 
