@@ -1,39 +1,30 @@
 package com.maxdr.ezpermss.ui.permissions.service
 
-import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.IBinder
+import androidx.lifecycle.LifecycleService
+import androidx.lifecycle.lifecycleScope
 import com.maxdr.ezpermss.core.PackageManagerHelper
 import com.maxdr.ezpermss.data.AppRepository
 import com.maxdr.ezpermss.ui.permissions.PermissionHelper
 import com.maxdr.ezpermss.util.debug
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.*
 
-class PermissionService : Service() {
+class PermissionService : LifecycleService() {
 
 	private var isRunning = false
-	private val job = SupervisorJob()
-	private val scope = CoroutineScope(Dispatchers.IO + job)
-	private val timer = Timer()
-	private var receiver: ScreenOnOffReceiver = ScreenOnOffReceiver { context, isScreenOn ->
-		scope.launch {
+	private var receiver: ScreenOnOffReceiver = ScreenOnOffReceiver { isScreenOn ->
+		lifecycleScope.launch {
 			if (isScreenOn) {
-				grantDangerousPermissions(context)
+				grantDangerousPermissions()
 			}
 			else {
-				revokeDangerousPermissions(context)
+				revokeDangerousPermissions()
 			}
 		}
 	}
-
-	override fun onBind(intent: Intent): IBinder? = null
 
 	override fun onCreate() {
 		super.onCreate()
@@ -43,11 +34,10 @@ class PermissionService : Service() {
 	override fun onDestroy() {
 		super.onDestroy()
 		unregisterScreenStatusReceiver()
-		job.cancel()
-		timer.cancel()
 	}
 
 	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+		super.onStartCommand(intent, flags, startId)
 		if (intent != null) {
 			when (intent.action) {
 				SERVICE_START_ACTION -> start()
@@ -63,19 +53,7 @@ class PermissionService : Service() {
 			debug("SERVICE", "Starting service...")
 			isRunning = true
 			startForeground(NOTIFICATION_ID, NotificationHelper.createNotification(this))
-			schedulePeriodicInsertionDangerousPermissionInfo()
 		}
-	}
-
-	private fun schedulePeriodicInsertionDangerousPermissionInfo() {
-		val timerTask = object : TimerTask() {
-			override fun run() {
-				scope.launch {
-					PackageManagerHelper(this@PermissionService).insertDangerousPermissions()
-				}
-			}
-		}
-		timer.schedule(timerTask, DELAY, PERIOD) // schedule to run periodically every minute
 	}
 
 	private fun stop() {
@@ -97,15 +75,18 @@ class PermissionService : Service() {
 		unregisterReceiver(receiver)
 	}
 
-	private suspend fun grantDangerousPermissions(context: Context) {
-//		val appFullName = "com.google.android.keep"
-		val appFullName = "com.android.camera2"
-		AppRepository.Instance.getDangerousPermissionInfo(appFullName).collect { permissions ->
+	private fun grantDangerousPermissions() {
+		lifecycleScope.launch {
+			debug("PERMISSION", "Granting permissions")
+			val permissions = AppRepository.Instance.getDangerousPermissionInfo("com.google.android.keep")
+				.stateIn(lifecycleScope).value
+			debug("RESULT", permissions.size)
+
 			for (permission in permissions) {
 				if (permission.modified) {
-					PermissionHelper.grantDangerousPermission(context, appFullName, permission.name)
+					PermissionHelper.grantDangerousPermission(this@PermissionService, "com.google.android.keep", permission.name)
 					AppRepository.Instance.updateDangerousPermissionInfo(
-						packageName = appFullName,
+						packageName = "com.google.android.keep",
 						permissionName = permission.name,
 						granted = true,
 						modified = false
@@ -115,15 +96,20 @@ class PermissionService : Service() {
 		}
 	}
 
-	private suspend fun revokeDangerousPermissions(context: Context) {
-//		val appFullName = "com.google.android.keep"
-		val appFullName = "com.android.camera2"
-		AppRepository.Instance.getDangerousPermissionInfo(appFullName).collect { permissions ->
+	private fun revokeDangerousPermissions() {
+		lifecycleScope.launch {
+			PackageManagerHelper(this@PermissionService).insertDangerousPermissions()
+			debug("TAG", "Insertion done")
+			debug("PERMISSION", "Revoking permissions")
+			val permissions = AppRepository.Instance.getDangerousPermissionInfo("com.google.android.keep")
+				.stateIn(lifecycleScope).value
+			debug("RESULT", permissions.size)
+
 			for (permission in permissions) {
 				if (permission.granted) {
-					PermissionHelper.revokeDangerousPermission(context, appFullName, permission.name)
+					PermissionHelper.revokeDangerousPermission(this@PermissionService, "com.google.android.keep", permission.name)
 					AppRepository.Instance.updateDangerousPermissionInfo(
-						packageName = appFullName,
+						packageName = "com.google.android.keep",
 						permissionName = permission.name,
 						granted = false,
 						modified = true
@@ -137,7 +123,5 @@ class PermissionService : Service() {
 		const val SERVICE_START_ACTION= "START"
 		const val SERVICE_STOP_ACTION= "STOP"
 		private const val NOTIFICATION_ID = 1
-		private const val DELAY = 0L
-		private const val PERIOD = 60000L
 	}
 }

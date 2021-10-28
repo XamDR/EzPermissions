@@ -19,9 +19,6 @@ interface AppDao {
 	@Query("SELECT * FROM DangerousPermissionInfo where app_id=:appFullName ORDER BY simple_name")
 	fun getDangerousPermissionInfoForApp(appFullName: String): Flow<List<DangerousPermissionInfo>>
 
-	@Query("SELECT modified FROM DANGEROUSPERMISSIONINFO where app_id=:packageName")
-	fun getDangerousPermissionModifiedStatus(packageName: String): Flow<List<Boolean>>
-
 	@Insert
 	suspend fun insertDangerousPermissionInfo(dangerousPermissionInfo: DangerousPermissionInfo)
 

@@ -39,13 +39,17 @@ class AppListFragment : Fragment() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
+		setupRecyclerView()
+		setupFab()
+	}
+
+	private fun setupRecyclerView() {
 		viewModel.appInfoLiveData.observe(viewLifecycleOwner) {
 			binding?.recyclerView?.adapter = AppInfoAdapter(it, mainActivity).apply {
 				stateRestorationPolicy = StateRestorationPolicy.PREVENT_WHEN_EMPTY
 			}
 		}
 		binding?.recyclerView?.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-		setupFab()
 	}
 
 	private fun setupFab() {
