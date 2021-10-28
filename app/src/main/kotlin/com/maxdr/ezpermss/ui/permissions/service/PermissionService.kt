@@ -78,19 +78,22 @@ class PermissionService : LifecycleService() {
 	private fun grantDangerousPermissions() {
 		lifecycleScope.launch {
 			debug("PERMISSION", "Granting permissions")
-			val permissions = AppRepository.Instance.getDangerousPermissionInfo("com.google.android.keep")
-				.stateIn(lifecycleScope).value
-			debug("RESULT", permissions.size)
+			val apps = AppRepository.Instance.getAppInfo().stateIn(lifecycleScope).value
 
-			for (permission in permissions) {
-				if (permission.modified) {
-					PermissionHelper.grantDangerousPermission(this@PermissionService, "com.google.android.keep", permission.name)
-					AppRepository.Instance.updateDangerousPermissionInfo(
-						packageName = "com.google.android.keep",
-						permissionName = permission.name,
-						granted = true,
-						modified = false
-					)
+			for (app in apps) {
+				val permissions = AppRepository.Instance.getDangerousPermissionInfo(app.fullName)
+					.stateIn(lifecycleScope).value
+
+				for (permission in permissions) {
+					if (permission.modified) {
+						PermissionHelper.grantDangerousPermission(this@PermissionService, app.fullName, permission.name)
+						AppRepository.Instance.updateDangerousPermissionInfo(
+							packageName = app.fullName,
+							permissionName = permission.name,
+							granted = true,
+							modified = false
+						)
+					}
 				}
 			}
 		}
@@ -98,22 +101,28 @@ class PermissionService : LifecycleService() {
 
 	private fun revokeDangerousPermissions() {
 		lifecycleScope.launch {
+			// We first update the database for possible changes the user might have done in other apps' permissions
 			PackageManagerHelper(this@PermissionService).insertDangerousPermissions()
 			debug("TAG", "Insertion done")
-			debug("PERMISSION", "Revoking permissions")
-			val permissions = AppRepository.Instance.getDangerousPermissionInfo("com.google.android.keep")
-				.stateIn(lifecycleScope).value
-			debug("RESULT", permissions.size)
 
-			for (permission in permissions) {
-				if (permission.granted) {
-					PermissionHelper.revokeDangerousPermission(this@PermissionService, "com.google.android.keep", permission.name)
-					AppRepository.Instance.updateDangerousPermissionInfo(
-						packageName = "com.google.android.keep",
-						permissionName = permission.name,
-						granted = false,
-						modified = true
-					)
+			// Then we proceed to revoke the permissions using the most up to date data
+			debug("PERMISSION", "Revoking permissions")
+			val apps = AppRepository.Instance.getAppInfo().stateIn(lifecycleScope).value
+
+			for (app in apps) {
+				val permissions = AppRepository.Instance.getDangerousPermissionInfo(app.fullName)
+					.stateIn(lifecycleScope).value
+
+				for (permission in permissions) {
+					if (permission.granted) {
+						PermissionHelper.revokeDangerousPermission(this@PermissionService, app.fullName, permission.name)
+						AppRepository.Instance.updateDangerousPermissionInfo(
+							packageName = app.fullName,
+							permissionName = permission.name,
+							granted = false,
+							modified = true
+						)
+					}
 				}
 			}
 		}
