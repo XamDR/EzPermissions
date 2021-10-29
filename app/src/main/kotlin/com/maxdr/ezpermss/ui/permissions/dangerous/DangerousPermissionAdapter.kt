@@ -11,7 +11,7 @@ import com.maxdr.ezpermss.R
 import com.maxdr.ezpermss.core.DangerousPermissionInfo
 import com.maxdr.ezpermss.databinding.DangerousPermissionRowLayoutBinding
 
-class DangerousPermissionAdapter(private val dangerousPermissions: List<DangerousPermissionInfo>) :
+class DangerousPermissionAdapter(private val dangerousPermissions: MutableList<DangerousPermissionInfo>) :
 	RecyclerView.Adapter<DangerousPermissionAdapter.DangerousPermissionViewHolder>() {
 
 	inner class DangerousPermissionViewHolder(
@@ -41,6 +41,21 @@ class DangerousPermissionAdapter(private val dangerousPermissions: List<Dangerou
 	}
 
 	override fun getItemCount() = dangerousPermissions.size
+
+	fun moveItem(from: Int, to: Int) {
+		val fromPermissionItem = dangerousPermissions[from]
+		dangerousPermissions.removeAt(from)
+		dangerousPermissions.add(to, fromPermissionItem)
+		notifyItemMoved(from, to)
+	}
+
+	fun setOnPermissionToggledListener(callback: (checked: Boolean, position: Int) -> Unit) {
+		onPermissionToggledCallback = callback
+	}
+
+	fun setOnPermissionRevokedListener(callback: (position: Int, delay: Long) -> Unit) {
+		onPermissionRevokedCallback = callback
+	}
 
 	private fun buildPopupMenu(view: View, position: Int) {
 		PopupMenu(view.context, view).apply {
@@ -80,14 +95,6 @@ class DangerousPermissionAdapter(private val dangerousPermissions: List<Dangerou
 			setMessage(dangerousPermission.summary)
 			setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
 		}.show()
-	}
-
-	fun setOnPermissionToggledListener(callback: (checked: Boolean, position: Int) -> Unit) {
-		onPermissionToggledCallback = callback
-	}
-
-	fun setOnPermissionRevokedListener(callback: (position: Int, delay: Long) -> Unit) {
-		onPermissionRevokedCallback = callback
 	}
 
 	private var onPermissionToggledCallback: ((checked: Boolean, position: Int) -> Unit)? = null

@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
+import androidx.recyclerview.widget.ItemTouchHelper
 import com.maxdr.ezpermss.R
 import com.maxdr.ezpermss.core.DangerousPermissionInfo
 import com.maxdr.ezpermss.data.AppRepository
@@ -26,6 +27,7 @@ class DangerousPermissionsFragment : Fragment() {
 	private lateinit var adapter: DangerousPermissionAdapter
 	private val bottomHeaderAdapter = HeaderDangerousPermissionAdapter(mostUsed = false)
 	private val topHeaderAdapter = HeaderDangerousPermissionAdapter(mostUsed = true)
+	private val itemTouchHelper = ItemTouchHelper(DragDropCallback())
 
 	override fun onCreateView(inflater: LayoutInflater,
 							  container: ViewGroup?,
@@ -49,13 +51,14 @@ class DangerousPermissionsFragment : Fragment() {
 
 	private fun showDangerousPermissions() {
 		val manager = PreferencesManager(requireContext())
-		binding?.topRecyclerView?.adapter = ConcatAdapter(topHeaderAdapter)
+		itemTouchHelper.attachToRecyclerView(binding?.recyclerView!!)
 
 		if (manager.isServiceRunning) {
 			viewModel.dangerousPermissionsFromDb.observe(viewLifecycleOwner) {
-				adapter = DangerousPermissionAdapter(it).apply {
-					val concatAdapter = ConcatAdapter(bottomHeaderAdapter, this)
-					binding?.bottomRecyclerView?.adapter = concatAdapter
+				adapter = DangerousPermissionAdapter(it.toMutableList()).apply {
+					val concatAdapter = if (it.isEmpty()) ConcatAdapter(this)
+										else ConcatAdapter(topHeaderAdapter, bottomHeaderAdapter, this)
+					binding?.recyclerView?.adapter = concatAdapter
 					setOnPermissionToggledListener { checked, position ->
 						toggleDangerousPermissionStatusDb(checked, it[position])
 					}
@@ -68,9 +71,10 @@ class DangerousPermissionsFragment : Fragment() {
 		}
 		else {
 			viewModel.dangerousPermissions.observe(viewLifecycleOwner) {
-				adapter = DangerousPermissionAdapter(it).apply {
-					val concatAdapter = ConcatAdapter(bottomHeaderAdapter, this)
-					binding?.bottomRecyclerView?.adapter = concatAdapter
+				adapter = DangerousPermissionAdapter(it.toMutableList()).apply {
+					val concatAdapter = if (it.isEmpty()) ConcatAdapter(this)
+										else ConcatAdapter(topHeaderAdapter, bottomHeaderAdapter, this)
+					binding?.recyclerView?.adapter = concatAdapter
 					setOnPermissionToggledListener { checked, position ->
 						toggleDangerousPermissionStatus(checked, it[position])
 					}
