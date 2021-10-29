@@ -21,11 +21,8 @@ class AppRepository(context: Context) {
 		database.resetPointer()
 	}
 
-	suspend fun updateDangerousPermissionInfoGrantStatus(packageName: String, permissionName: String, granted: Boolean)
-		= appDao.updateDangerousPermissionInfoGrantStatus(packageName, permissionName, granted)
-
-	suspend fun updateDangerousPermissionInfo(packageName: String, permissionName: String, granted: Boolean, modified: Boolean)
-			= appDao.updateDangerousPermissionInfo(packageName, permissionName, granted, modified)
+	suspend fun updateDangerousPermissionInfo(packageName: String, permissionName: String, granted: Boolean)
+		= appDao.updateDangerousPermissionInfo(packageName, permissionName, granted)
 
 	fun getDangerousPermissionInfo(packageName: String)
 		= appDao.getDangerousPermissionInfoForApp(packageName).flowOn(Dispatchers.Main).conflate()

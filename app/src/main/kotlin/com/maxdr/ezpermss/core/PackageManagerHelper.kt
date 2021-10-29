@@ -66,8 +66,6 @@ class PackageManagerHelper(private val context: Context) {
 	}
 
 	suspend fun insertDangerousPermissions() {
-		AppRepository.Instance.deleteTableDangerousPermissionInfo()
-
 		val pm = context.packageManager
 		val packages = pm.getInstalledApplications(PackageManager.GET_META_DATA)
 

@@ -10,20 +10,12 @@ import com.maxdr.ezpermss.ui.permissions.PermissionHelper
 import com.maxdr.ezpermss.util.debug
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.util.*
 
 class PermissionService : LifecycleService() {
 
 	private var isRunning = false
-	private var receiver: ScreenOnOffReceiver = ScreenOnOffReceiver { isScreenOn ->
-		lifecycleScope.launch {
-			if (isScreenOn) {
-				grantDangerousPermissions()
-			}
-			else {
-				revokeDangerousPermissions()
-			}
-		}
+	private var receiver = ScreenOffReceiver {
+		lifecycleScope.launch { revokeDangerousPermissions() }
 	}
 
 	override fun onCreate() {
@@ -66,37 +58,12 @@ class PermissionService : LifecycleService() {
 	private fun registerScreenStatusReceiver() {
 		val filter = IntentFilter().apply {
 			addAction(Intent.ACTION_SCREEN_OFF)
-			addAction(Intent.ACTION_SCREEN_ON)
 		}
 		registerReceiver(receiver, filter)
 	}
 
 	private fun unregisterScreenStatusReceiver() {
 		unregisterReceiver(receiver)
-	}
-
-	private fun grantDangerousPermissions() {
-		lifecycleScope.launch {
-			debug("PERMISSION", "Granting permissions")
-			val apps = AppRepository.Instance.getAppInfo().stateIn(lifecycleScope).value
-
-			for (app in apps) {
-				val permissions = AppRepository.Instance.getDangerousPermissionInfo(app.fullName)
-					.stateIn(lifecycleScope).value
-
-				for (permission in permissions) {
-					if (permission.modified) {
-						PermissionHelper.grantDangerousPermission(this@PermissionService, app.fullName, permission.name)
-						AppRepository.Instance.updateDangerousPermissionInfo(
-							packageName = app.fullName,
-							permissionName = permission.name,
-							granted = true,
-							modified = false
-						)
-					}
-				}
-			}
-		}
 	}
 
 	private fun revokeDangerousPermissions() {
@@ -114,13 +81,12 @@ class PermissionService : LifecycleService() {
 					.stateIn(lifecycleScope).value
 
 				for (permission in permissions) {
-					if (permission.granted) {
+					if (permission.granted && !permission.mostUsed) {
 						PermissionHelper.revokeDangerousPermission(this@PermissionService, app.fullName, permission.name)
 						AppRepository.Instance.updateDangerousPermissionInfo(
 							packageName = app.fullName,
 							permissionName = permission.name,
-							granted = false,
-							modified = true
+							granted = false
 						)
 					}
 				}

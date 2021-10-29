@@ -23,10 +23,7 @@ interface AppDao {
 	suspend fun insertDangerousPermissionInfo(dangerousPermissionInfo: DangerousPermissionInfo)
 
 	@Query("UPDATE DangerousPermissionInfo SET granted=:granted WHERE app_id=:packageName AND name=:permissionName")
-	suspend fun updateDangerousPermissionInfoGrantStatus(packageName: String, permissionName: String, granted: Boolean)
-
-	@Query("UPDATE DangerousPermissionInfo SET granted=:granted, modified=:modified WHERE app_id=:packageName AND name=:permissionName")
-	suspend fun updateDangerousPermissionInfo(packageName: String, permissionName: String, granted: Boolean, modified: Boolean)
+	suspend fun updateDangerousPermissionInfo(packageName: String, permissionName: String, granted: Boolean)
 
 	@Query("DELETE FROM DangerousPermissionInfo")
 	suspend fun deleteTableDangerousPermissionInfo()

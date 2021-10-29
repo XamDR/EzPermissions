@@ -1,4 +1,4 @@
-package com.maxdr.ezpermss.ui.permissions
+package com.maxdr.ezpermss.ui.permissions.dangerous
 
 import android.view.LayoutInflater
 import android.view.View

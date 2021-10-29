@@ -7,10 +7,12 @@ import android.net.Uri
 import android.provider.Settings
 import android.text.SpannableString
 import android.text.style.BulletSpan
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.RecyclerView
 import com.maxdr.ezpermss.MainActivity
-import java.util.Locale
+import java.util.*
 
 val String.Companion.Empty: String
 	get() = ""
@@ -44,4 +46,13 @@ fun Context.openAppSystemSettings(packageName: String) {
 		})
 	}
 	catch (e: ActivityNotFoundException) { }
+}
+
+fun <T : RecyclerView.ViewHolder> T.setOnClickListener(callback: (position: Int, type: Int) -> Unit): T {
+	itemView.setOnClickListener {
+		ViewCompat.postOnAnimationDelayed(itemView, {
+			callback.invoke(bindingAdapterPosition, itemViewType)
+		}, 100)
+	}
+	return this
 }

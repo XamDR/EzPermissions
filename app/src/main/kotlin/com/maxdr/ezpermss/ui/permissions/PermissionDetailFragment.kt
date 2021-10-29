@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
@@ -14,12 +13,11 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.maxdr.ezpermss.R
 import com.maxdr.ezpermss.core.AppInfo
 import com.maxdr.ezpermss.core.DangerousPermissionInfo
-import com.maxdr.ezpermss.core.PackageManagerHelper
 import com.maxdr.ezpermss.databinding.FragmentPermissionDetailBinding
+import com.maxdr.ezpermss.ui.permissions.dangerous.DangerousPermissionsFragment
 import com.maxdr.ezpermss.ui.permissions.schedule.RevokePermissionWorker
 import com.maxdr.ezpermss.util.debug
 import com.maxdr.ezpermss.util.mainActivity
-import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 class PermissionDetailFragment : Fragment() {
@@ -57,14 +55,6 @@ class PermissionDetailFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		setupViewPagerWithTabLayout()
-		insertDangerousPermisionInfo()
-	}
-
-	private fun insertDangerousPermisionInfo() {
-		viewLifecycleOwner.lifecycleScope.launch {
-			PackageManagerHelper(requireContext()).insertDangerousPermissions()
-			debug("TAG", "Insertion done")
-		}
 	}
 
 	private fun setupViewPagerWithTabLayout() {

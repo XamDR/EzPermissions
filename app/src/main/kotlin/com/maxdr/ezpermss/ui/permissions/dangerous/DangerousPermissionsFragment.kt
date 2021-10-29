@@ -1,4 +1,4 @@
-package com.maxdr.ezpermss.ui.permissions
+package com.maxdr.ezpermss.ui.permissions.dangerous
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,11 +8,15 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.ConcatAdapter
 import com.maxdr.ezpermss.R
 import com.maxdr.ezpermss.core.DangerousPermissionInfo
 import com.maxdr.ezpermss.data.AppRepository
 import com.maxdr.ezpermss.databinding.FragmentDangerousPermissionsBinding
 import com.maxdr.ezpermss.ui.helpers.PreferencesManager
+import com.maxdr.ezpermss.ui.permissions.PermissionDetailFragment
+import com.maxdr.ezpermss.ui.permissions.PermissionDetailViewModel
+import com.maxdr.ezpermss.ui.permissions.PermissionHelper
 import kotlinx.coroutines.launch
 
 class DangerousPermissionsFragment : Fragment() {
@@ -20,6 +24,8 @@ class DangerousPermissionsFragment : Fragment() {
 	private var binding: FragmentDangerousPermissionsBinding? = null
 	private val viewModel by viewModels<PermissionDetailViewModel> ( { requireParentFragment() } )
 	private lateinit var adapter: DangerousPermissionAdapter
+	private val bottomHeaderAdapter = HeaderDangerousPermissionAdapter(mostUsed = false)
+	private val topHeaderAdapter = HeaderDangerousPermissionAdapter(mostUsed = true)
 
 	override fun onCreateView(inflater: LayoutInflater,
 							  container: ViewGroup?,
@@ -43,10 +49,13 @@ class DangerousPermissionsFragment : Fragment() {
 
 	private fun showDangerousPermissions() {
 		val manager = PreferencesManager(requireContext())
+		binding?.topRecyclerView?.adapter = ConcatAdapter(topHeaderAdapter)
+
 		if (manager.isServiceRunning) {
 			viewModel.dangerousPermissionsFromDb.observe(viewLifecycleOwner) {
 				adapter = DangerousPermissionAdapter(it).apply {
-					binding?.recyclerView?.adapter = this
+					val concatAdapter = ConcatAdapter(bottomHeaderAdapter, this)
+					binding?.bottomRecyclerView?.adapter = concatAdapter
 					setOnPermissionToggledListener { checked, position ->
 						toggleDangerousPermissionStatusDb(checked, it[position])
 					}
@@ -60,7 +69,8 @@ class DangerousPermissionsFragment : Fragment() {
 		else {
 			viewModel.dangerousPermissions.observe(viewLifecycleOwner) {
 				adapter = DangerousPermissionAdapter(it).apply {
-					binding?.recyclerView?.adapter = this
+					val concatAdapter = ConcatAdapter(bottomHeaderAdapter, this)
+					binding?.bottomRecyclerView?.adapter = concatAdapter
 					setOnPermissionToggledListener { checked, position ->
 						toggleDangerousPermissionStatus(checked, it[position])
 					}
@@ -106,7 +116,7 @@ class DangerousPermissionsFragment : Fragment() {
 					permissionName = dangerousDangerousPermission.name
 				)
 			}
-			AppRepository.Instance.updateDangerousPermissionInfoGrantStatus(
+			AppRepository.Instance.updateDangerousPermissionInfo(
 				packageName = viewModel.appFullName,
 				permissionName = dangerousDangerousPermission.name,
 				granted = grant
