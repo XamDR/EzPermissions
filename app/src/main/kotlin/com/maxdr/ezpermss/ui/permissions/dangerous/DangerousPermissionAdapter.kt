@@ -42,13 +42,6 @@ class DangerousPermissionAdapter(private val dangerousPermissions: MutableList<D
 
 	override fun getItemCount() = dangerousPermissions.size
 
-	fun moveItem(from: Int, to: Int) {
-		val fromPermissionItem = dangerousPermissions[from]
-		dangerousPermissions.removeAt(from)
-		dangerousPermissions.add(to, fromPermissionItem)
-		notifyItemMoved(from, to)
-	}
-
 	fun setOnPermissionToggledListener(callback: (checked: Boolean, position: Int) -> Unit) {
 		onPermissionToggledCallback = callback
 	}
@@ -68,11 +61,18 @@ class DangerousPermissionAdapter(private val dangerousPermissions: MutableList<D
 					R.id.set_schedule -> {
 						revokeDangerousPermission(view, position); true
 					}
+					R.id.add_most_used -> {
+						markPermissionAsVeryUsed(); true
+					}
 					else -> false
 				}
 			}
 			show()
 		}
+	}
+
+	private fun markPermissionAsVeryUsed() {
+
 	}
 
 	private fun revokeDangerousPermission(view: View, position: Int) {

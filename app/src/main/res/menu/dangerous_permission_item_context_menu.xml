@@ -9,4 +9,9 @@
 		android:id="@+id/set_schedule"
 		android:orderInCategory="5"
 		android:title="@string/set_schedule"/>
+
+	<item
+		android:id="@+id/add_most_used"
+		android:orderInCategory="10"
+		android:title="@string/add_most_used"/>
 </menu>

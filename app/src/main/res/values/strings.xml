@@ -44,4 +44,5 @@
 	<string name="service_desc">This service manages dangerous permissions.</string>
 	<string name="permission_protection_level">Protection level: %s</string>
 	<string name="no_permission_summary">There is no summary for this permission.</string>
+	<string name="add_most_used">Add to favorites</string>
 </resources>

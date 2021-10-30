@@ -42,4 +42,5 @@
 	<string name="service_desc">Este servicio administra los permisos peligrosos.</string>
 	<string name="permission_protection_level">Nivel de protección: %s</string>
 	<string name="no_permission_summary">No hay más información sobre este permiso.</string>
+	<string name="add_most_used">Add to favorites</string>
 </resources>
