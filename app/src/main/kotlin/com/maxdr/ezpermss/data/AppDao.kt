@@ -11,25 +11,28 @@ import kotlinx.coroutines.flow.Flow
 interface AppDao {
 
 	@Query("SELECT * FROM ApplicationInfo ORDER BY name")
-	fun getAppInfo(): Flow<List<AppInfo>>
+	fun getAppInfoByName(): Flow<List<AppInfo>>
 
 	@Insert
 	suspend fun insertAppInfo(appInfo: AppInfo)
 
-	@Query("SELECT * FROM DangerousPermissionInfo where app_id=:appFullName ORDER BY simple_name")
+	@Query("SELECT * FROM DangerousPermissionInfo where app_id=:appFullName")
 	fun getDangerousPermissionInfoForApp(appFullName: String): Flow<List<DangerousPermissionInfo>>
+
+	@Query("SELECT * FROM DangerousPermissionInfo where app_id=:appFullName ORDER BY simple_name")
+	fun getDangerousPermissionInfoForAppByName(appFullName: String): Flow<List<DangerousPermissionInfo>>
 
 	@Insert
 	suspend fun insertDangerousPermissionInfo(dangerousPermissionInfo: DangerousPermissionInfo)
 
 	@Query("UPDATE DangerousPermissionInfo SET granted=:granted WHERE app_id=:packageName AND name=:permissionName")
-	suspend fun updateDangerousPermissionInfoGrantStatus(packageName: String, permissionName: String, granted: Boolean)
+	suspend fun updateDangerousPermissionInfo(packageName: String, permissionName: String, granted: Boolean)
 
-	@Query("UPDATE DangerousPermissionInfo SET granted=:granted, modified=:modified WHERE app_id=:packageName AND name=:permissionName")
-	suspend fun updateDangerousPermissionInfo(packageName: String, permissionName: String, granted: Boolean, modified: Boolean)
+	@Query("UPDATE DangerousPermissionInfo SET favorite=:favorite WHERE app_id=:packageName AND name=:permissionName")
+	suspend fun updateDangerousPermissionFavoriteInfo(packageName: String, permissionName: String, favorite: Boolean)
 
-	@Query("DELETE FROM DangerousPermissionInfo")
-	suspend fun deleteTableDangerousPermissionInfo()
+	@Query("SELECT favorite FROM DangerousPermissionInfo WHERE app_id=:packageName AND name=:permissionName")
+	suspend fun getDangerousPermissionFavoriteInfo(packageName: String, permissionName: String) : Boolean?
 
 	@Query("DELETE FROM ApplicationInfo WHERE fullName=:packageName")
 	suspend fun removeAppInfo(packageName: String)

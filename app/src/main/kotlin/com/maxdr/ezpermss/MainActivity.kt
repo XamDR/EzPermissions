@@ -39,16 +39,16 @@ class MainActivity : AppCompatActivity(), NavigationService {
 		})
 	}
 
+	override fun onDestroy() {
+		super.onDestroy()
+		unregisterReceiver(packageReceiver)
+	}
+
 	override fun navigate(className: String, args: Bundle?) {
 		val fragment = supportFragmentManager.instantiate(className).apply { arguments = args }
 		supportFragmentManager.beginTransaction()
 			.replace(R.id.fragment_container, fragment)
 			.addToBackStack(null)
 			.commit()
-	}
-
-	override fun onDestroy() {
-		super.onDestroy()
-		unregisterReceiver(packageReceiver)
 	}
 }

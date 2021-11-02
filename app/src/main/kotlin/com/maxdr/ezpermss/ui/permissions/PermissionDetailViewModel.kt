@@ -19,16 +19,8 @@ class PermissionDetailViewModel(private val app: Application,
 
 	val nonDangerousPermissions: LiveData<List<NonDangerousPermissionInfo>> = fetchNonDangerousPermissions(appFullName)
 
-	val dangerousPermissions: LiveData<List<DangerousPermissionInfo>> = fetchDangerousPermissions(appFullName)
-
-	val dangerousPermissionsFromDb: LiveData<List<DangerousPermissionInfo>> = fetchDangerousPermissionsFromDatabase(appFullName)
-
-	private fun fetchDangerousPermissions(appFullName: String): LiveData<List<DangerousPermissionInfo>> {
-		return PackageManagerHelper(app.applicationContext).fetchDangerousPermissions(appFullName).asLiveData()
-	}
-
-	private fun fetchDangerousPermissionsFromDatabase(appFullName: String): LiveData<List<DangerousPermissionInfo>> {
-		return AppRepository.Instance.getDangerousPermissionInfo(appFullName).asLiveData()
+	fun fetchDangerousPermissions(appFullName: String): LiveData<List<DangerousPermissionInfo>> {
+		return AppRepository.Instance.getDangerousPermissionInfoForAppByName(appFullName).asLiveData()
 	}
 
 	private fun fetchNonDangerousPermissions(appFullName: String): LiveData<List<NonDangerousPermissionInfo>> {

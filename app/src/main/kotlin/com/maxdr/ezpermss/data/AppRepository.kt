@@ -10,28 +10,29 @@ import kotlinx.coroutines.flow.flowOn
 
 class AppRepository(context: Context) {
 
-	fun getAppInfo() = appDao.getAppInfo().flowOn(Dispatchers.Main).conflate()
+	fun getAppInfoByName() = appDao.getAppInfoByName().flowOn(Dispatchers.Main).conflate()
 
 	suspend fun insertAppInfo(app: AppInfo) = appDao.insertAppInfo(app)
 
 	suspend fun removeAppInfo(packageName: String) = appDao.removeAppInfo(packageName)
 
-	suspend fun deleteTableDangerousPermissionInfo() {
-		appDao.deleteTableDangerousPermissionInfo()
-		database.resetPointer()
-	}
-
-	suspend fun updateDangerousPermissionInfoGrantStatus(packageName: String, permissionName: String, granted: Boolean)
-		= appDao.updateDangerousPermissionInfoGrantStatus(packageName, permissionName, granted)
-
-	suspend fun updateDangerousPermissionInfo(packageName: String, permissionName: String, granted: Boolean, modified: Boolean)
-			= appDao.updateDangerousPermissionInfo(packageName, permissionName, granted, modified)
-
-	fun getDangerousPermissionInfo(packageName: String)
-		= appDao.getDangerousPermissionInfoForApp(packageName).flowOn(Dispatchers.Main).conflate()
-
 	suspend fun insertDangerousPermissionInfo(dangerousPermissionInfo: DangerousPermissionInfo)
-		= appDao.insertDangerousPermissionInfo(dangerousPermissionInfo)
+			= appDao.insertDangerousPermissionInfo(dangerousPermissionInfo)
+
+	suspend fun updateDangerousPermissionInfo(packageName: String, permissionName: String, granted: Boolean)
+		= appDao.updateDangerousPermissionInfo(packageName, permissionName, granted)
+
+	suspend fun updateDangerousPermissionFavoriteInfo(packageName: String, permissionName: String, favorite: Boolean)
+		= appDao.updateDangerousPermissionFavoriteInfo(packageName, permissionName, favorite)
+
+	fun getDangerousPermissionInfoForApp(packageName: String)
+			= appDao.getDangerousPermissionInfoForApp(packageName).flowOn(Dispatchers.Main).conflate()
+
+	fun getDangerousPermissionInfoForAppByName(packageName: String)
+			= appDao.getDangerousPermissionInfoForAppByName(packageName).flowOn(Dispatchers.Main).conflate()
+
+	suspend fun getDangerousPermissionFavoriteInfo(packageName: String, permissionName: String)
+		= appDao.getDangerousPermissionFavoriteInfo(packageName, permissionName)
 
 	private val database =
 		Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, DATABASE_NAME)

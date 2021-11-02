@@ -19,7 +19,7 @@ class RevokePermissionWorker(context: Context, params: WorkerParameters) : Corou
 
 		if (packageName != null && permissionName != null) {
 			PermissionHelper.revokeDangerousPermission(context, packageName, permissionName)
-			AppRepository.Instance.updateDangerousPermissionInfoGrantStatus(packageName, permissionName, false)
+			AppRepository.Instance.updateDangerousPermissionInfo(packageName, permissionName, false)
 		}
 	}
 }

@@ -1,4 +1,4 @@
-package com.maxdr.ezpermss.ui.permissions
+package com.maxdr.ezpermss.ui.permissions.dangerous
 
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +11,7 @@ import com.maxdr.ezpermss.R
 import com.maxdr.ezpermss.core.DangerousPermissionInfo
 import com.maxdr.ezpermss.databinding.DangerousPermissionRowLayoutBinding
 
-class DangerousPermissionAdapter(private val dangerousPermissions: List<DangerousPermissionInfo>) :
+class DangerousPermissionAdapter(private val dangerousPermissions: MutableList<DangerousPermissionInfo>) :
 	RecyclerView.Adapter<DangerousPermissionAdapter.DangerousPermissionViewHolder>() {
 
 	inner class DangerousPermissionViewHolder(
@@ -42,18 +42,55 @@ class DangerousPermissionAdapter(private val dangerousPermissions: List<Dangerou
 
 	override fun getItemCount() = dangerousPermissions.size
 
+	fun setOnPermissionToggledListener(callback: (checked: Boolean, position: Int) -> Unit) {
+		onPermissionToggledCallback = callback
+	}
+
+	fun setOnPermissionRevokedListener(callback: (position: Int, delay: Long) -> Unit) {
+		onPermissionRevokedCallback = callback
+	}
+
+	fun setOnPermissionMovedListener(callback: (dangerousPermission: DangerousPermissionInfo) -> Unit) {
+		onPermissionMovedCallback = callback
+	}
+
+	fun addPermission(dangerousPermission: DangerousPermissionInfo) {
+		dangerousPermissions.add(dangerousPermission)
+		notifyItemInserted(dangerousPermissions.size - 1)
+	}
+
 	private fun buildPopupMenu(view: View, position: Int) {
+		val dangerousPermission = dangerousPermissions[position]
 		PopupMenu(view.context, view).apply {
-			inflate(R.menu.dangerous_permission_item_context_menu)
-			setOnMenuItemClickListener { item ->
-				when (item.itemId) {
-					R.id.more_info_summary -> {
-						showFullSummary(view, position); true
+			if (!dangerousPermission.favorite) {
+				inflate(R.menu.favorite_dangerous_permission_context_menu)
+				setOnMenuItemClickListener { item ->
+					when (item.itemId) {
+						R.id.more_info_summary -> {
+							showFullSummary(view, position); true
+						}
+						R.id.set_timeout -> {
+							revokeDangerousPermission(view, position); true
+						}
+						R.id.add_favorites -> {
+							movePermission(position); true
+						}
+						else -> false
 					}
-					R.id.set_schedule -> {
-						revokeDangerousPermission(view, position); true
+				}
+			}
+			else {
+				inflate(R.menu.non_favorite_dangerous_permission_context_menu)
+				setOnMenuItemClickListener { item ->
+					when (item.itemId) {
+						R.id.more_info_summary -> {
+							showFullSummary(view, position); true
+						}
+						R.id.add_others -> {
+							movePermission(position); true
+						}
+						else -> false
 					}
-					else -> false
 				}
 			}
 			show()
@@ -82,15 +119,16 @@ class DangerousPermissionAdapter(private val dangerousPermissions: List<Dangerou
 		}.show()
 	}
 
-	fun setOnPermissionToggledListener(callback: (checked: Boolean, position: Int) -> Unit) {
-		onPermissionToggledCallback = callback
-	}
-
-	fun setOnPermissionRevokedListener(callback: (position: Int, delay: Long) -> Unit) {
-		onPermissionRevokedCallback = callback
+	private fun movePermission(position: Int) {
+		val dangerousPermission = dangerousPermissions[position]
+		dangerousPermissions.remove(dangerousPermission)
+		notifyItemRemoved(position)
+		onPermissionMovedCallback?.invoke(dangerousPermission)
 	}
 
 	private var onPermissionToggledCallback: ((checked: Boolean, position: Int) -> Unit)? = null
 
 	private var onPermissionRevokedCallback: ((position: Int, delay: Long) -> Unit)? = null
+
+	private var onPermissionMovedCallback: ((dangerousPermission: DangerousPermissionInfo) -> Unit?)? = null
 }

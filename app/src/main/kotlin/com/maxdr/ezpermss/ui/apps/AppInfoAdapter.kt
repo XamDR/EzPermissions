@@ -8,6 +8,7 @@ import com.maxdr.ezpermss.core.AppInfo
 import com.maxdr.ezpermss.databinding.AppRowLayoutBinding
 import com.maxdr.ezpermss.ui.helpers.NavigationService
 import com.maxdr.ezpermss.ui.permissions.PermissionDetailFragment
+import com.maxdr.ezpermss.util.setOnClickListener
 
 class AppInfoAdapter(
 	private val apps: List<AppInfo>,
@@ -26,7 +27,7 @@ class AppInfoAdapter(
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppViewHolder {
 		val binding = AppRowLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 		return AppViewHolder(binding).apply {
-			binding.next.setOnClickListener { navigateToPermissionDetails(bindingAdapterPosition) }
+			setOnClickListener { position, _ -> navigateToPermissionDetails(position) }
 		}
 	}
 

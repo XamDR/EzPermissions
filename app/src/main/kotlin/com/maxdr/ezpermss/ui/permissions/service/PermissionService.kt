@@ -4,18 +4,15 @@ import android.content.Intent
 import android.content.IntentFilter
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
-import com.maxdr.ezpermss.core.PackageManagerHelper
 import com.maxdr.ezpermss.data.AppRepository
-import com.maxdr.ezpermss.ui.permissions.PermissionHelper
 import com.maxdr.ezpermss.util.debug
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.util.*
 
 class PermissionService : LifecycleService() {
 
 	private var isRunning = false
-	private var receiver: ScreenOnOffReceiver = ScreenOnOffReceiver { isScreenOn ->
+	private var receiver = ScreenOnOffReceiver { isScreenOn ->
 		lifecycleScope.launch {
 			if (isScreenOn) {
 				grantDangerousPermissions()
@@ -65,8 +62,8 @@ class PermissionService : LifecycleService() {
 
 	private fun registerScreenStatusReceiver() {
 		val filter = IntentFilter().apply {
-			addAction(Intent.ACTION_SCREEN_OFF)
 			addAction(Intent.ACTION_SCREEN_ON)
+			addAction(Intent.ACTION_SCREEN_OFF)
 		}
 		registerReceiver(receiver, filter)
 	}
@@ -78,53 +75,48 @@ class PermissionService : LifecycleService() {
 	private fun grantDangerousPermissions() {
 		lifecycleScope.launch {
 			debug("PERMISSION", "Granting permissions")
-			val apps = AppRepository.Instance.getAppInfo().stateIn(lifecycleScope).value
+			val apps = AppRepository.Instance.getAppInfoByName().stateIn(this).value
 
 			for (app in apps) {
-				val permissions = AppRepository.Instance.getDangerousPermissionInfo(app.fullName)
+				val permissions = AppRepository.Instance.getDangerousPermissionInfoForAppByName(app.fullName)
 					.stateIn(lifecycleScope).value
 
 				for (permission in permissions) {
-					if (permission.modified) {
-						PermissionHelper.grantDangerousPermission(this@PermissionService, app.fullName, permission.name)
+					if (permission.favorite) {
+//						PermissionHelper.grantDangerousPermission(this@PermissionService, app.fullName, permission.name)
 						AppRepository.Instance.updateDangerousPermissionInfo(
 							packageName = app.fullName,
 							permissionName = permission.name,
-							granted = true,
-							modified = false
+							granted = true
 						)
 					}
 				}
 			}
+			debug("PERMISSION", "Permissions granted")
 		}
 	}
 
 	private fun revokeDangerousPermissions() {
 		lifecycleScope.launch {
-			// We first update the database for possible changes the user might have done in other apps' permissions
-			PackageManagerHelper(this@PermissionService).insertDangerousPermissions()
-			debug("TAG", "Insertion done")
-
-			// Then we proceed to revoke the permissions using the most up to date data
 			debug("PERMISSION", "Revoking permissions")
-			val apps = AppRepository.Instance.getAppInfo().stateIn(lifecycleScope).value
+			val apps = AppRepository.Instance.getAppInfoByName().stateIn(this).value
 
 			for (app in apps) {
-				val permissions = AppRepository.Instance.getDangerousPermissionInfo(app.fullName)
+				val permissions = AppRepository.Instance.getDangerousPermissionInfoForAppByName(app.fullName)
 					.stateIn(lifecycleScope).value
 
 				for (permission in permissions) {
 					if (permission.granted) {
-						PermissionHelper.revokeDangerousPermission(this@PermissionService, app.fullName, permission.name)
+//						PermissionHelper.revokeDangerousPermission(this@PermissionService, app.fullName, permission.name)
 						AppRepository.Instance.updateDangerousPermissionInfo(
 							packageName = app.fullName,
 							permissionName = permission.name,
-							granted = false,
-							modified = true
+							granted = false
 						)
 					}
 				}
 			}
+			debug("PERMISSION", "Permissions revoked")
 		}
 	}
 
