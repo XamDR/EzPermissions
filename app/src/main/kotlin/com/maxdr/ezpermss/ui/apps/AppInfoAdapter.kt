@@ -3,6 +3,8 @@ package com.maxdr.ezpermss.ui.apps
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.maxdr.ezpermss.core.AppInfo
 import com.maxdr.ezpermss.databinding.AppRowLayoutBinding
@@ -10,9 +12,7 @@ import com.maxdr.ezpermss.ui.helpers.NavigationService
 import com.maxdr.ezpermss.ui.permissions.PermissionDetailFragment
 import com.maxdr.ezpermss.util.setOnClickListener
 
-class AppInfoAdapter(
-	private val apps: List<AppInfo>,
-	private val navigator: NavigationService) : RecyclerView.Adapter<AppInfoAdapter.AppViewHolder>() {
+class AppInfoAdapter(private val navigator: NavigationService) : ListAdapter<AppInfo, AppInfoAdapter.AppViewHolder>(AppInfoCallback()) {
 
 	inner class AppViewHolder(private val binding: AppRowLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
 
@@ -32,15 +32,20 @@ class AppInfoAdapter(
 	}
 
 	override fun onBindViewHolder(holder: AppViewHolder, position: Int) {
-		val appInfo = apps[position]
+		val appInfo = getItem(position)
 		holder.bind(appInfo)
 	}
 
-	override fun getItemCount() = apps.size
-
 	private fun navigateToPermissionDetails(position: Int) {
-		val appInfo = apps[position]
+		val appInfo = getItem(position)
 		val args = bundleOf("info" to appInfo)
 		navigator.navigate(PermissionDetailFragment::class.java.name, args)
+	}
+
+	private class AppInfoCallback : DiffUtil.ItemCallback<AppInfo>() {
+
+		override fun areItemsTheSame(oldAppInfo: AppInfo, newAppInfo: AppInfo) = oldAppInfo.fullName == newAppInfo.fullName
+
+		override fun areContentsTheSame(oldAppInfo: AppInfo, newAppInfo: AppInfo) = oldAppInfo == newAppInfo
 	}
 }

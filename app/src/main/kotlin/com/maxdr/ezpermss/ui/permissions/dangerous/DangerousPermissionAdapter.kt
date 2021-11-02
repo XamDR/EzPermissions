@@ -5,6 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.PopupMenu
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.maxdr.ezpermss.R
@@ -12,7 +14,7 @@ import com.maxdr.ezpermss.core.DangerousPermissionInfo
 import com.maxdr.ezpermss.databinding.DangerousPermissionRowLayoutBinding
 
 class DangerousPermissionAdapter(private val dangerousPermissions: MutableList<DangerousPermissionInfo>) :
-	RecyclerView.Adapter<DangerousPermissionAdapter.DangerousPermissionViewHolder>() {
+	ListAdapter<DangerousPermissionInfo, DangerousPermissionAdapter.DangerousPermissionViewHolder>(DangerousPermissionsCallback()) {
 
 	inner class DangerousPermissionViewHolder(
 		private val binding: DangerousPermissionRowLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -36,11 +38,9 @@ class DangerousPermissionAdapter(private val dangerousPermissions: MutableList<D
 	}
 
 	override fun onBindViewHolder(holder: DangerousPermissionViewHolder, position: Int) {
-		val dangerousPermission = dangerousPermissions[position]
+		val dangerousPermission = getItem(position)
 		holder.bind(dangerousPermission)
 	}
-
-	override fun getItemCount() = dangerousPermissions.size
 
 	fun setOnPermissionToggledListener(callback: (checked: Boolean, position: Int) -> Unit) {
 		onPermissionToggledCallback = callback
@@ -55,12 +55,13 @@ class DangerousPermissionAdapter(private val dangerousPermissions: MutableList<D
 	}
 
 	fun addPermission(dangerousPermission: DangerousPermissionInfo) {
-		dangerousPermissions.add(dangerousPermission)
-		notifyItemInserted(dangerousPermissions.size - 1)
+		currentList
+//		dangerousPermissions.add(dangerousPermission)
+//		notifyItemInserted(dangerousPermissions.size - 1)
 	}
 
 	private fun buildPopupMenu(view: View, position: Int) {
-		val dangerousPermission = dangerousPermissions[position]
+		val dangerousPermission = getItem(position)
 		PopupMenu(view.context, view).apply {
 			if (!dangerousPermission.favorite) {
 				inflate(R.menu.favorite_dangerous_permission_context_menu)
@@ -111,7 +112,7 @@ class DangerousPermissionAdapter(private val dangerousPermissions: MutableList<D
 	}
 
 	private fun showFullSummary(view: View, position: Int) {
-		val dangerousPermission = dangerousPermissions[position]
+		val dangerousPermission = getItem(position)
 		MaterialAlertDialogBuilder(view.context).apply {
 			setTitle(dangerousPermission.name)
 			setMessage(dangerousPermission.summary)
@@ -120,9 +121,9 @@ class DangerousPermissionAdapter(private val dangerousPermissions: MutableList<D
 	}
 
 	private fun movePermission(position: Int) {
-		val dangerousPermission = dangerousPermissions[position]
-		dangerousPermissions.remove(dangerousPermission)
-		notifyItemRemoved(position)
+		val dangerousPermission = getItem(position)
+//		dangerousPermissions.remove(dangerousPermission)
+//		notifyItemRemoved(position)
 		onPermissionMovedCallback?.invoke(dangerousPermission)
 	}
 
@@ -131,4 +132,13 @@ class DangerousPermissionAdapter(private val dangerousPermissions: MutableList<D
 	private var onPermissionRevokedCallback: ((position: Int, delay: Long) -> Unit)? = null
 
 	private var onPermissionMovedCallback: ((dangerousPermission: DangerousPermissionInfo) -> Unit?)? = null
+
+	private class DangerousPermissionsCallback : DiffUtil.ItemCallback<DangerousPermissionInfo>() {
+
+		override fun areItemsTheSame(oldPermissionInfo: DangerousPermissionInfo, newPermissionInfo: DangerousPermissionInfo)
+				= oldPermissionInfo.name == newPermissionInfo.name
+
+		override fun areContentsTheSame(oldPermissionInfo: DangerousPermissionInfo, newPermissionInfo: DangerousPermissionInfo)
+				= oldPermissionInfo == newPermissionInfo
+	}
 }

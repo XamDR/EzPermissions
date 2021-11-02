@@ -26,4 +26,16 @@ object PermissionHelper {
 			Toast.makeText(context,"No Root", Toast.LENGTH_SHORT).show()
 		}
 	}
+
+	fun grantDangerousPermissions(packageName: String, permissions: String) {
+		val command = "PACKAGE='${packageName}'; IN='${permissions}'; for i in \$(IFS=',';echo \$IN); do pm grant \$PACKAGE \$i; done;"
+		val result = Shell.su(command).exec()
+		debug("RESULT", result.err)
+	}
+
+	fun revokeDangerousPermissions(packageName: String, permissions: String) {
+		val command = "PACKAGE='${packageName}'; IN='${permissions}'; for i in \$(IFS=',';echo \$IN); do pm revoke \$PACKAGE \$i; done;"
+		val result = Shell.su(command).exec()
+		debug("RESULT", result.err)
+	}
 }

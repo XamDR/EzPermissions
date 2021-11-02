@@ -21,6 +21,14 @@ class AppListFragment : Fragment() {
 
 	private var binding: FragmentAppListBinding? = null
 	private val viewModel by viewModels<AppListViewModel>()
+	private lateinit var adapter: AppInfoAdapter
+
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		adapter = AppInfoAdapter(mainActivity).apply {
+			stateRestorationPolicy = StateRestorationPolicy.PREVENT_WHEN_EMPTY
+		}
+	}
 
 	override fun onCreateView(inflater: LayoutInflater,
 							  container: ViewGroup?,
@@ -44,12 +52,11 @@ class AppListFragment : Fragment() {
 	}
 
 	private fun setupRecyclerView() {
-		viewModel.appInfoLiveData.observe(viewLifecycleOwner) {
-			binding?.recyclerView?.adapter = AppInfoAdapter(it, mainActivity).apply {
-				stateRestorationPolicy = StateRestorationPolicy.PREVENT_WHEN_EMPTY
-			}
+		binding?.recyclerView?.apply {
+			adapter = this@AppListFragment.adapter
+			addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
 		}
-		binding?.recyclerView?.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+		viewModel.appInfoLiveData.observe(viewLifecycleOwner) { adapter.submitList(it) }
 	}
 
 	private fun setupFab() {

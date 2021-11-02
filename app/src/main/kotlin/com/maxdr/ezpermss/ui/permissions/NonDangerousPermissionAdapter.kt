@@ -3,14 +3,17 @@ package com.maxdr.ezpermss.ui.permissions
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.maxdr.ezpermss.R
 import com.maxdr.ezpermss.core.NonDangerousPermissionInfo
 import com.maxdr.ezpermss.databinding.NondangerousPermissionRowLayoutBinding
 
-class NonDangerousPermissionAdapter(private val permissions: List<NonDangerousPermissionInfo>) :
-	RecyclerView.Adapter<NonDangerousPermissionAdapter.NonDangerousPermissionViewHolder>() {
+class NonDangerousPermissionAdapter : ListAdapter<
+		NonDangerousPermissionInfo, NonDangerousPermissionAdapter.NonDangerousPermissionViewHolder
+		>(NonDangerousPermissionsCallback()) {
 
 	inner class NonDangerousPermissionViewHolder(
 		private val binding: NondangerousPermissionRowLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -31,18 +34,25 @@ class NonDangerousPermissionAdapter(private val permissions: List<NonDangerousPe
 	}
 
 	override fun onBindViewHolder(holder: NonDangerousPermissionViewHolder, position: Int) {
-		val normalPermission = permissions[position]
+		val normalPermission = getItem(position)
 		holder.bind(normalPermission)
 	}
 
-	override fun getItemCount() = permissions.size
-
 	private fun showFullSummary(view: View, position: Int) {
-		val nonDangerousPermission = permissions[position]
+		val nonDangerousPermission = getItem(position)
 		MaterialAlertDialogBuilder(view.context).apply {
 			setTitle(nonDangerousPermission.name)
 			setMessage(nonDangerousPermission.summary)
 			setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
 		}.show()
+	}
+
+	private class NonDangerousPermissionsCallback : DiffUtil.ItemCallback<NonDangerousPermissionInfo>() {
+
+		override fun areItemsTheSame(oldPermissionInfo: NonDangerousPermissionInfo, newPermissionInfo: NonDangerousPermissionInfo)
+			= oldPermissionInfo.name == newPermissionInfo.name
+
+		override fun areContentsTheSame(oldPermissionInfo: NonDangerousPermissionInfo, newPermissionInfo: NonDangerousPermissionInfo)
+			= oldPermissionInfo == newPermissionInfo
 	}
 }

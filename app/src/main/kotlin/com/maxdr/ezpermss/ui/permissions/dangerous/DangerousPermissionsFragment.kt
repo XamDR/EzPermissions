@@ -130,4 +130,12 @@ class DangerousPermissionsFragment : Fragment() {
 		Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
 		(requireParentFragment() as PermissionDetailFragment).setupWorker(dangerousDangerousPermission, delay)
 	}
+
+	private fun fillAdapters() {
+		viewModel.fetchDangerousPermissions(viewModel.appFullName).observe(viewLifecycleOwner) {
+			viewModel.hasDangerousPermissions.value = it.isEmpty()
+			topAdapter.submitList(it.filter { pi -> pi.favorite })
+			bottomAdapter.submitList(it.filter { pi -> !pi.favorite })
+		}
+	}
 }
