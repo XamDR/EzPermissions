@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
@@ -13,11 +14,15 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.maxdr.ezpermss.R
 import com.maxdr.ezpermss.core.AppInfo
 import com.maxdr.ezpermss.core.DangerousPermissionInfo
+import com.maxdr.ezpermss.core.PackageManagerHelper
+import com.maxdr.ezpermss.data.AppRepository
 import com.maxdr.ezpermss.databinding.FragmentPermissionDetailBinding
 import com.maxdr.ezpermss.ui.permissions.dangerous.DangerousPermissionsFragment
 import com.maxdr.ezpermss.ui.permissions.schedule.RevokePermissionWorker
 import com.maxdr.ezpermss.util.debug
 import com.maxdr.ezpermss.util.mainActivity
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 class PermissionDetailFragment : Fragment() {
@@ -52,6 +57,13 @@ class PermissionDetailFragment : Fragment() {
 		binding = null
 	}
 
+	override fun onStart() {
+		super.onStart()
+		viewLifecycleOwner.lifecycleScope.launch {
+			updatePermissionsInfo()
+		}
+	}
+
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		setupViewPagerWithTabLayout()
@@ -77,5 +89,22 @@ class PermissionDetailFragment : Fragment() {
 			.setInitialDelay(delay, TimeUnit.MINUTES)
 			.build()
 		WorkManager.getInstance(requireContext()).enqueue(request)
+	}
+
+	private suspend fun updatePermissionsInfo() {
+		appInfo?.fullName?.let {
+			val grantedValues = PackageManagerHelper(requireContext()).fetchGrantValues(it)
+			val permissions = AppRepository.Instance.getDangerousPermissionInfoForApp(it)
+				.stateIn(viewLifecycleOwner.lifecycleScope).value
+
+			for ((i, permission) in permissions.withIndex()) {
+				AppRepository.Instance.updateDangerousPermissionInfo(
+					packageName = it,
+					permissionName = permission.name,
+					granted = grantedValues[i]
+				)
+			}
+		}
+		debug("PERMISSIONS", "Permission info updated")
 	}
 }

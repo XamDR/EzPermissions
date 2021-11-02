@@ -10,7 +10,6 @@ import com.maxdr.ezpermss.data.AppRepository
 import com.maxdr.ezpermss.databinding.ActivityMainBinding
 import com.maxdr.ezpermss.ui.apps.PackageReceiver
 import com.maxdr.ezpermss.ui.helpers.NavigationService
-import com.maxdr.ezpermss.util.debug
 import com.maxdr.ezpermss.util.instantiate
 import kotlinx.coroutines.launch
 
@@ -40,18 +39,6 @@ class MainActivity : AppCompatActivity(), NavigationService {
 		})
 	}
 
-	override fun onStart() {
-		super.onStart()
-		insertDangerousPermisionInfo()
-	}
-
-	override fun onStop() {
-		super.onStop()
-		lifecycleScope.launch {
-			AppRepository.Instance.deleteTableDangerousPermissionInfo()
-		}
-	}
-
 	override fun onDestroy() {
 		super.onDestroy()
 		unregisterReceiver(packageReceiver)
@@ -63,12 +50,5 @@ class MainActivity : AppCompatActivity(), NavigationService {
 			.replace(R.id.fragment_container, fragment)
 			.addToBackStack(null)
 			.commit()
-	}
-
-	private fun insertDangerousPermisionInfo() {
-		lifecycleScope.launch {
-			PackageManagerHelper(this@MainActivity).insertDangerousPermissions()
-			debug("TAG", "Insertion done")
-		}
 	}
 }

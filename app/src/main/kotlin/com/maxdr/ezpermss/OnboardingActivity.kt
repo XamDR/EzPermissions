@@ -7,6 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import com.maxdr.ezpermss.core.PackageManagerHelper
 import com.maxdr.ezpermss.databinding.ActivityOnboardingBinding
 import com.maxdr.ezpermss.ui.helpers.PreferencesManager
+import com.maxdr.ezpermss.util.debug
 import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.launch
 
@@ -27,6 +28,8 @@ class OnboardingActivity : AppCompatActivity() {
 		if (preferencesManager.isFirstRun) {
 			lifecycleScope.launch {
 				PackageManagerHelper(this@OnboardingActivity).insertAppsInfo()
+				PackageManagerHelper(this@OnboardingActivity).insertDangerousPermissions()
+				debug("TAG", "Insertion done")
 			}
 			preferencesManager.isFirstRun = false
 		}

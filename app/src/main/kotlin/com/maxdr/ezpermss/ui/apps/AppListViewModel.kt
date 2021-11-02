@@ -8,5 +8,5 @@ import com.maxdr.ezpermss.data.AppRepository
 
 class AppListViewModel : ViewModel() {
 
-	val appInfoLiveData: LiveData<List<AppInfo>> = AppRepository.Instance.getAppInfo().asLiveData()
+	val appInfoLiveData: LiveData<List<AppInfo>> = AppRepository.Instance.getAppInfoByName().asLiveData()
 }

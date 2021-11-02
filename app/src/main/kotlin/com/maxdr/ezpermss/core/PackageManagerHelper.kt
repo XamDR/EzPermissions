@@ -9,7 +9,6 @@ import androidx.core.graphics.drawable.toBitmap
 import com.maxdr.ezpermss.R
 import com.maxdr.ezpermss.data.AppRepository
 import com.maxdr.ezpermss.ui.helpers.ImageStorageManager
-import com.maxdr.ezpermss.util.Empty
 import com.maxdr.ezpermss.util.toTitleCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -80,10 +79,11 @@ class PackageManagerHelper(private val context: Context) {
 				if (permissions != null) {
 					for ((i, permission) in permissions.withIndex()) {
 						val protectionLevel = getPermissionProtectionLevel(pm, permission)
-						if ((protectionLevel or PROTECTION_DANGEROUS) == protectionLevel) {
+						if ((protectionLevel or PROTECTION_DANGEROUS) == protectionLevel && protectionLevel != -1) {
 							val name = getPermissionLabel(pm, permission)
 							val summary = getPermissionDescription(pm, permission)
 							val enabled = (pi.requestedPermissionsFlags[i] and PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0
+							val favorite = AppRepository.Instance.getDangerousPermissionFavoriteInfo(packageFullName, permission)
 
 							val dangerousPermissionInfo = DangerousPermissionInfo(
 								name = permission,
@@ -91,6 +91,7 @@ class PackageManagerHelper(private val context: Context) {
 								summary = summary ?: context.getString(R.string.no_permission_summary),
 								protectionLevel = protectionLevel,
 								granted = enabled,
+								favorite = favorite ?: false,
 								appId = packageFullName
 							)
 							AppRepository.Instance.insertDangerousPermissionInfo(dangerousPermissionInfo)
@@ -101,8 +102,8 @@ class PackageManagerHelper(private val context: Context) {
 		}
 	}
 
-	fun fetchDangerousPermissions(appFullName: String): Flow<List<DangerousPermissionInfo>> {
-		val dangerousPermissions = mutableListOf<DangerousPermissionInfo>()
+	fun fetchGrantValues(appFullName: String): List<Boolean> {
+		val grantedValues = mutableListOf<Boolean>()
 		val pm = context.packageManager
 		val pi = pm.getPackageInfo(appFullName, PackageManager.GET_PERMISSIONS)
 		val permissions: Array<String>? = pi.requestedPermissions
@@ -110,24 +111,13 @@ class PackageManagerHelper(private val context: Context) {
 		if (permissions != null) {
 			for ((i, permission) in permissions.withIndex()) {
 				val protectionLevel = getPermissionProtectionLevel(pm, permission)
-				if ((protectionLevel or PROTECTION_DANGEROUS) == protectionLevel) {
-					val name = getPermissionLabel(pm, permission)
-					val summary = getPermissionDescription(pm, permission)
+				if ((protectionLevel or PROTECTION_DANGEROUS) == protectionLevel && protectionLevel != -1) {
 					val enabled = (pi.requestedPermissionsFlags[i] and PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0
-
-					dangerousPermissions.add(DangerousPermissionInfo(
-						name = permission,
-						simpleName = name ?: permission,
-						summary = summary ?: context.getString(R.string.no_permission_summary),
-						protectionLevel = protectionLevel,
-						granted = enabled,
-						appId = appFullName
-					))
+					grantedValues.add(enabled)
 				}
 			}
 		}
-		dangerousPermissions.sortBy { it.simpleName }
-		return MutableStateFlow(dangerousPermissions)
+		return grantedValues
 	}
 
 	fun fetchNonDangerousPermissions(appFullName: String): Flow<List<NonDangerousPermissionInfo>> {
@@ -138,14 +128,14 @@ class PackageManagerHelper(private val context: Context) {
 		if (permissions != null) {
 			for (permission in permissions) {
 				val protectionLevel = getPermissionProtectionLevel(pm, permission)
-				if ((protectionLevel or PROTECTION_DANGEROUS) != protectionLevel) {
+				if ((protectionLevel or PROTECTION_DANGEROUS) != protectionLevel || protectionLevel == -1) {
 					val name = getPermissionLabel(pm, permission)
 					val summary = getPermissionDescription(pm, permission)
 
 					nonDangerousPermissions.add(NonDangerousPermissionInfo(
 						name = permission,
-						simpleName = name.toString(),
-						summary = summary ?: String.Empty,
+						simpleName = name ?: permission,
+						summary = summary ?: context.getString(R.string.no_permission_summary),
 						protectionLevel = protectionLevel
 					))
 				}

@@ -1,5 +1,6 @@
 package com.maxdr.ezpermss.ui.permissions.dangerous
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,11 +9,11 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.ConcatAdapter
 import com.maxdr.ezpermss.R
 import com.maxdr.ezpermss.core.DangerousPermissionInfo
 import com.maxdr.ezpermss.data.AppRepository
 import com.maxdr.ezpermss.databinding.FragmentDangerousPermissionsBinding
-import com.maxdr.ezpermss.ui.helpers.PreferencesManager
 import com.maxdr.ezpermss.ui.permissions.PermissionDetailFragment
 import com.maxdr.ezpermss.ui.permissions.PermissionDetailViewModel
 import com.maxdr.ezpermss.ui.permissions.PermissionHelper
@@ -22,7 +23,16 @@ class DangerousPermissionsFragment : Fragment() {
 
 	private var binding: FragmentDangerousPermissionsBinding? = null
 	private val viewModel by viewModels<PermissionDetailViewModel> ( { requireParentFragment() } )
-	private lateinit var adapter: DangerousPermissionAdapter
+	private lateinit var bottomAdapter: DangerousPermissionAdapter
+	private lateinit var topAdapter: DangerousPermissionAdapter
+	private lateinit var topHeaderAdapter: HeaderDangerousPermissionAdapter
+	private lateinit var bottomHeaderAdapter: HeaderDangerousPermissionAdapter
+
+	override fun onAttach(context: Context) {
+		super.onAttach(context)
+		topHeaderAdapter = HeaderDangerousPermissionAdapter(getString(R.string.favorites_title))
+		bottomHeaderAdapter = HeaderDangerousPermissionAdapter(getString(R.string.others_title))
+	}
 
 	override fun onCreateView(inflater: LayoutInflater,
 							  container: ViewGroup?,
@@ -45,81 +55,78 @@ class DangerousPermissionsFragment : Fragment() {
 	}
 
 	private fun showDangerousPermissions() {
-		val manager = PreferencesManager(requireContext())
-
-		if (manager.isServiceRunning) {
-			viewModel.dangerousPermissionsFromDb.observe(viewLifecycleOwner) {
-				adapter = DangerousPermissionAdapter(it.toMutableList()).apply {
-					binding?.recyclerView?.adapter = this
-					setOnPermissionToggledListener { checked, position ->
-						toggleDangerousPermissionStatusDb(checked, it[position])
-					}
-					setOnPermissionRevokedListener { position, delay ->
-						revokeDangerousPermissionAfterDelay(it[position], delay)
-					}
-				}
-				viewModel.hasDangerousPermissions.value = it.isEmpty()
+		viewModel.fetchDangerousPermissions(viewModel.appFullName).observe(viewLifecycleOwner) {
+			topAdapter = DangerousPermissionAdapter(
+				it.filter { pi -> pi.favorite }.toMutableList()
+			)
+			bottomAdapter = DangerousPermissionAdapter(
+				it.filter { pi -> !pi.favorite }.toMutableList()
+			).apply {
+				val concatAdapter = if (it.isNotEmpty()) ConcatAdapter(topHeaderAdapter, topAdapter, bottomHeaderAdapter, this)
+									else ConcatAdapter(this)
+				binding?.recyclerView?.adapter = concatAdapter
 			}
-		}
-		else {
-			viewModel.dangerousPermissions.observe(viewLifecycleOwner) {
-				adapter = DangerousPermissionAdapter(it.toMutableList()).apply {
-					binding?.recyclerView?.adapter = this
-					setOnPermissionToggledListener { checked, position ->
-						toggleDangerousPermissionStatus(checked, it[position])
-					}
-					setOnPermissionRevokedListener { position, delay ->
-						revokeDangerousPermissionAfterDelay(it[position], delay)
-					}
-				}
-				viewModel.hasDangerousPermissions.value = it.isEmpty()
-			}
+			viewModel.hasDangerousPermissions.value = it.isEmpty()
+			hookListeners(it)
 		}
 	}
 
-	private fun toggleDangerousPermissionStatus(grant: Boolean, dangerousDangerousPermission: DangerousPermissionInfo) {
-		if (grant) {
-			PermissionHelper.grantDangerousPermission(
-				context = requireContext(),
-				packageName = viewModel.appFullName,
-				permissionName = dangerousDangerousPermission.name
-			)
+	private fun hookListeners(dangerousPermissions: List<DangerousPermissionInfo>) {
+		bottomAdapter.setOnPermissionToggledListener { checked, position ->
+			toggleDangerousPermissionStatus(checked, dangerousPermissions[position])
 		}
-		else {
-			PermissionHelper.revokeDangerousPermission(
-				context = requireContext(),
+		bottomAdapter.setOnPermissionRevokedListener { position, delay ->
+			revokeDangerousPermissionAfterDelay(dangerousPermissions[position], delay)
+		}
+		bottomAdapter.setOnPermissionMovedListener { dangerousPermission ->
+			topAdapter.addPermission(dangerousPermission)
+			toggleDangerousPermissionFavorite(dangerousPermission, favorite = true)
+		}
+		topAdapter.setOnPermissionMovedListener { dangerousPermission ->
+			bottomAdapter.addPermission(dangerousPermission)
+			toggleDangerousPermissionFavorite(dangerousPermission, favorite = false)
+		}
+		topAdapter.setOnPermissionToggledListener { checked, position ->
+			toggleDangerousPermissionStatus(checked, dangerousPermissions[position])
+		}
+	}
+
+	private fun toggleDangerousPermissionFavorite(dangerousPermission: DangerousPermissionInfo, favorite: Boolean) {
+		viewLifecycleOwner.lifecycleScope.launch {
+			AppRepository.Instance.updateDangerousPermissionFavoriteInfo(
 				packageName = viewModel.appFullName,
-				permissionName = dangerousDangerousPermission.name
+				permissionName = dangerousPermission.name,
+				favorite = favorite
 			)
 		}
 	}
 
-	private fun toggleDangerousPermissionStatusDb(grant: Boolean, dangerousDangerousPermission: DangerousPermissionInfo) {
+	private fun toggleDangerousPermissionStatus(grant: Boolean, dangerousPermission: DangerousPermissionInfo) {
 		viewLifecycleOwner.lifecycleScope.launch {
 			if (grant) {
 				PermissionHelper.grantDangerousPermission(
 					context = requireContext(),
 					packageName = viewModel.appFullName,
-					permissionName = dangerousDangerousPermission.name
+					permissionName = dangerousPermission.name
 				)
 			}
 			else {
 				PermissionHelper.revokeDangerousPermission(
 					context = requireContext(),
 					packageName = viewModel.appFullName,
-					permissionName = dangerousDangerousPermission.name
+					permissionName = dangerousPermission.name
 				)
 			}
 			AppRepository.Instance.updateDangerousPermissionInfo(
 				packageName = viewModel.appFullName,
-				permissionName = dangerousDangerousPermission.name,
+				permissionName = dangerousPermission.name,
 				granted = grant
 			)
 		}
 	}
 
 	private fun revokeDangerousPermissionAfterDelay(dangerousDangerousPermission: DangerousPermissionInfo, delay: Long) {
-		val message = getString(R.string.timeout_message, delay)
+		val message = getString(R.string.toast_timeout_message, delay)
 		Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
 		(requireParentFragment() as PermissionDetailFragment).setupWorker(dangerousDangerousPermission, delay)
 	}
