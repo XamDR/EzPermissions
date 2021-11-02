@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
+import androidx.recyclerview.widget.RecyclerView.Adapter.StateRestorationPolicy
 import com.maxdr.ezpermss.R
 import com.maxdr.ezpermss.core.DangerousPermissionInfo
 import com.maxdr.ezpermss.data.AppRepository
@@ -23,15 +24,21 @@ class DangerousPermissionsFragment : Fragment() {
 
 	private var binding: FragmentDangerousPermissionsBinding? = null
 	private val viewModel by viewModels<PermissionDetailViewModel> ( { requireParentFragment() } )
-	private lateinit var bottomAdapter: DangerousPermissionAdapter
-	private lateinit var topAdapter: DangerousPermissionAdapter
 	private lateinit var topHeaderAdapter: HeaderDangerousPermissionAdapter
 	private lateinit var bottomHeaderAdapter: HeaderDangerousPermissionAdapter
+	private val bottomAdapter = DangerousPermissionAdapter().apply {
+		stateRestorationPolicy = StateRestorationPolicy.PREVENT_WHEN_EMPTY
+	}
+	private val topAdapter = DangerousPermissionAdapter().apply {
+		stateRestorationPolicy = StateRestorationPolicy.PREVENT_WHEN_EMPTY
+	}
+	private lateinit var concatAdapter: ConcatAdapter
 
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
 		topHeaderAdapter = HeaderDangerousPermissionAdapter(getString(R.string.favorites_title))
 		bottomHeaderAdapter = HeaderDangerousPermissionAdapter(getString(R.string.others_title))
+		concatAdapter = ConcatAdapter(topHeaderAdapter, topAdapter, bottomHeaderAdapter, bottomAdapter)
 	}
 
 	override fun onCreateView(inflater: LayoutInflater,
@@ -55,20 +62,8 @@ class DangerousPermissionsFragment : Fragment() {
 	}
 
 	private fun showDangerousPermissions() {
-		viewModel.fetchDangerousPermissions(viewModel.appFullName).observe(viewLifecycleOwner) {
-			topAdapter = DangerousPermissionAdapter(
-				it.filter { pi -> pi.favorite }.toMutableList()
-			)
-			bottomAdapter = DangerousPermissionAdapter(
-				it.filter { pi -> !pi.favorite }.toMutableList()
-			).apply {
-				val concatAdapter = if (it.isNotEmpty()) ConcatAdapter(topHeaderAdapter, topAdapter, bottomHeaderAdapter, this)
-									else ConcatAdapter(this)
-				binding?.recyclerView?.adapter = concatAdapter
-			}
-			viewModel.hasDangerousPermissions.value = it.isEmpty()
-			hookListeners(it)
-		}
+		binding?.recyclerView?.adapter = concatAdapter
+		fillAdapters()
 	}
 
 	private fun hookListeners(dangerousPermissions: List<DangerousPermissionInfo>) {
@@ -79,11 +74,9 @@ class DangerousPermissionsFragment : Fragment() {
 			revokeDangerousPermissionAfterDelay(dangerousPermissions[position], delay)
 		}
 		bottomAdapter.setOnPermissionMovedListener { dangerousPermission ->
-			topAdapter.addPermission(dangerousPermission)
 			toggleDangerousPermissionFavorite(dangerousPermission, favorite = true)
 		}
 		topAdapter.setOnPermissionMovedListener { dangerousPermission ->
-			bottomAdapter.addPermission(dangerousPermission)
 			toggleDangerousPermissionFavorite(dangerousPermission, favorite = false)
 		}
 		topAdapter.setOnPermissionToggledListener { checked, position ->
@@ -136,6 +129,7 @@ class DangerousPermissionsFragment : Fragment() {
 			viewModel.hasDangerousPermissions.value = it.isEmpty()
 			topAdapter.submitList(it.filter { pi -> pi.favorite })
 			bottomAdapter.submitList(it.filter { pi -> !pi.favorite })
+			hookListeners(it)
 		}
 	}
 }

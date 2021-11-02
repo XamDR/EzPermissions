@@ -13,7 +13,7 @@ import com.maxdr.ezpermss.R
 import com.maxdr.ezpermss.core.DangerousPermissionInfo
 import com.maxdr.ezpermss.databinding.DangerousPermissionRowLayoutBinding
 
-class DangerousPermissionAdapter(private val dangerousPermissions: MutableList<DangerousPermissionInfo>) :
+class DangerousPermissionAdapter :
 	ListAdapter<DangerousPermissionInfo, DangerousPermissionAdapter.DangerousPermissionViewHolder>(DangerousPermissionsCallback()) {
 
 	inner class DangerousPermissionViewHolder(
@@ -52,12 +52,6 @@ class DangerousPermissionAdapter(private val dangerousPermissions: MutableList<D
 
 	fun setOnPermissionMovedListener(callback: (dangerousPermission: DangerousPermissionInfo) -> Unit) {
 		onPermissionMovedCallback = callback
-	}
-
-	fun addPermission(dangerousPermission: DangerousPermissionInfo) {
-		currentList
-//		dangerousPermissions.add(dangerousPermission)
-//		notifyItemInserted(dangerousPermissions.size - 1)
 	}
 
 	private fun buildPopupMenu(view: View, position: Int) {
@@ -122,8 +116,6 @@ class DangerousPermissionAdapter(private val dangerousPermissions: MutableList<D
 
 	private fun movePermission(position: Int) {
 		val dangerousPermission = getItem(position)
-//		dangerousPermissions.remove(dangerousPermission)
-//		notifyItemRemoved(position)
 		onPermissionMovedCallback?.invoke(dangerousPermission)
 	}
 
