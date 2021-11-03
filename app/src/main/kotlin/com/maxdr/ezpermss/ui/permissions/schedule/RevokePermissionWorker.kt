@@ -9,16 +9,16 @@ import com.maxdr.ezpermss.ui.permissions.PermissionHelper
 class RevokePermissionWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
 
 	override suspend fun doWork(): Result {
-		revokeRuntimePermission(applicationContext)
+		revokeRuntimePermission()
 		return Result.success()
 	}
 
-	private suspend fun revokeRuntimePermission(context: Context) {
+	private suspend fun revokeRuntimePermission() {
 		val packageName = inputData.getString("PACKAGE_NAME")
 		val permissionName = inputData.getString("PERMISSION_NAME")
 
 		if (packageName != null && permissionName != null) {
-			PermissionHelper.revokeDangerousPermission(context, packageName, permissionName)
+			PermissionHelper.revokeDangerousPermission(packageName, permissionName)
 			AppRepository.Instance.updateDangerousPermissionInfo(packageName, permissionName, false)
 		}
 	}

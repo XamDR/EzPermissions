@@ -6,7 +6,7 @@
 	<string name="package_permissions_number">Número total de permisos: %d</string>
 	<string name="nondangerous_permission">No peligroso</string>
 	<string name="dangerous_permission">Peligroso</string>
-	<string name="no_normal_permissions">No hay permisos normales para está aplicación.</string>
+	<string name="no_nondangerous_permissions">No hay permisos no peligrosos para está aplicación.</string>
 	<string name="no_dangerous_permissions">No hay permisos peligrosos para está aplicación.</string>
 	<string name="no_other_permissions">No hay permisos privilegiados o de firma para está aplicación.</string>
 	<string name="more_info_summary">Más información</string>
@@ -48,4 +48,5 @@
 	<string name="no_permission_summary">No hay más información sobre este permiso.</string>
 	<string name="favorites_title">Favoritos</string>
 	<string name="others_title">Otros</string>
+	<string name="no_root_msg"><![CDATA[Es necesario ser un <b>usuario root</b> para otorgar o revocar permisos peligrosos.]]></string>
 </resources>

@@ -59,28 +59,40 @@ class DangerousPermissionsFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		showDangerousPermissions()
+		hookTopAdapterListeners()
+		hookBottomAdapterListeners()
 	}
 
 	private fun showDangerousPermissions() {
-		binding?.recyclerView?.adapter = concatAdapter
-		fillAdapters()
+		viewModel.fetchDangerousPermissions(viewModel.appFullName).observe(viewLifecycleOwner) {
+			viewModel.hasDangerousPermissions.value = it.isEmpty()
+			topAdapter.submitList(it.filter { pi -> pi.favorite })
+			bottomAdapter.submitList(it.filter { pi -> !pi.favorite })
+
+			if (binding?.recyclerView?.adapter == null) {
+				binding?.recyclerView?.adapter = if (it.isNotEmpty()) concatAdapter else null
+			}
+		}
 	}
 
-	private fun hookListeners(dangerousPermissions: List<DangerousPermissionInfo>) {
-		bottomAdapter.setOnPermissionToggledListener { checked, position ->
-			toggleDangerousPermissionStatus(checked, dangerousPermissions[position])
+	private fun hookBottomAdapterListeners() {
+		bottomAdapter.setOnPermissionToggledListener { checked, dangerousPermission ->
+			toggleDangerousPermissionStatus(checked, dangerousPermission)
 		}
-		bottomAdapter.setOnPermissionRevokedListener { position, delay ->
-			revokeDangerousPermissionAfterDelay(dangerousPermissions[position], delay)
+		bottomAdapter.setOnPermissionRevokedListener { dangerousPermission, delay ->
+			revokeDangerousPermissionAfterDelay(dangerousPermission, delay)
 		}
 		bottomAdapter.setOnPermissionMovedListener { dangerousPermission ->
 			toggleDangerousPermissionFavorite(dangerousPermission, favorite = true)
 		}
+	}
+
+	private fun hookTopAdapterListeners() {
 		topAdapter.setOnPermissionMovedListener { dangerousPermission ->
 			toggleDangerousPermissionFavorite(dangerousPermission, favorite = false)
 		}
-		topAdapter.setOnPermissionToggledListener { checked, position ->
-			toggleDangerousPermissionStatus(checked, dangerousPermissions[position])
+		topAdapter.setOnPermissionToggledListener { checked, dangerousPermission ->
+			toggleDangerousPermissionStatus(checked, dangerousPermission)
 		}
 	}
 
@@ -96,16 +108,14 @@ class DangerousPermissionsFragment : Fragment() {
 
 	private fun toggleDangerousPermissionStatus(grant: Boolean, dangerousPermission: DangerousPermissionInfo) {
 		viewLifecycleOwner.lifecycleScope.launch {
-			if (grant) {
+			if (grant && !dangerousPermission.granted) {
 				PermissionHelper.grantDangerousPermission(
-					context = requireContext(),
 					packageName = viewModel.appFullName,
 					permissionName = dangerousPermission.name
 				)
 			}
-			else {
+			else if (!grant && dangerousPermission.granted) {
 				PermissionHelper.revokeDangerousPermission(
-					context = requireContext(),
 					packageName = viewModel.appFullName,
 					permissionName = dangerousPermission.name
 				)
@@ -122,14 +132,5 @@ class DangerousPermissionsFragment : Fragment() {
 		val message = getString(R.string.toast_timeout_message, delay)
 		Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
 		(requireParentFragment() as PermissionDetailFragment).setupWorker(dangerousDangerousPermission, delay)
-	}
-
-	private fun fillAdapters() {
-		viewModel.fetchDangerousPermissions(viewModel.appFullName).observe(viewLifecycleOwner) {
-			viewModel.hasDangerousPermissions.value = it.isEmpty()
-			topAdapter.submitList(it.filter { pi -> pi.favorite })
-			bottomAdapter.submitList(it.filter { pi -> !pi.favorite })
-			hookListeners(it)
-		}
 	}
 }

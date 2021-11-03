@@ -1,10 +1,12 @@
 package com.maxdr.ezpermss.ui.permissions.dangerous
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.PopupMenu
+import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +14,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.maxdr.ezpermss.R
 import com.maxdr.ezpermss.core.DangerousPermissionInfo
 import com.maxdr.ezpermss.databinding.DangerousPermissionRowLayoutBinding
+import com.topjohnwu.superuser.Shell
 
 class DangerousPermissionAdapter :
 	ListAdapter<DangerousPermissionInfo, DangerousPermissionAdapter.DangerousPermissionViewHolder>(DangerousPermissionsCallback()) {
@@ -22,8 +25,16 @@ class DangerousPermissionAdapter :
 		fun bind(dangerousPermissionInfo: DangerousPermissionInfo) {
 			binding.apply {
 				this.permissionInfo = dangerousPermissionInfo
-				this.onCheckedChange = CompoundButton.OnCheckedChangeListener { _, isChecked ->
-					onPermissionToggledCallback?.invoke(isChecked, bindingAdapterPosition)
+				this.onCheckedChange = CompoundButton.OnCheckedChangeListener { view, isChecked ->
+					if (view.isShown) {
+						if (Shell.rootAccess()) {
+							onPermissionToggledCallback?.invoke(isChecked, getItem(bindingAdapterPosition))
+						}
+						else {
+							togglePermission.isChecked = !togglePermission.isChecked
+							showNoRootAlertDialog(root.context)
+						}
+					}
 				}
 				executePendingBindings()
 			}
@@ -42,16 +53,27 @@ class DangerousPermissionAdapter :
 		holder.bind(dangerousPermission)
 	}
 
-	fun setOnPermissionToggledListener(callback: (checked: Boolean, position: Int) -> Unit) {
+	fun setOnPermissionToggledListener(callback: (checked: Boolean, dangerousPermission: DangerousPermissionInfo) -> Unit) {
 		onPermissionToggledCallback = callback
 	}
 
-	fun setOnPermissionRevokedListener(callback: (position: Int, delay: Long) -> Unit) {
+	fun setOnPermissionRevokedListener(callback: (dangerousPermission: DangerousPermissionInfo, delay: Long) -> Unit) {
 		onPermissionRevokedCallback = callback
 	}
 
 	fun setOnPermissionMovedListener(callback: (dangerousPermission: DangerousPermissionInfo) -> Unit) {
 		onPermissionMovedCallback = callback
+	}
+
+	private fun showNoRootAlertDialog(context: Context) {
+		val formattedString = HtmlCompat.fromHtml(
+			context.getText(R.string.no_root_msg).toString(), HtmlCompat.FROM_HTML_MODE_COMPACT
+		)
+		MaterialAlertDialogBuilder(context).apply {
+			setTitle(R.string.app_name)
+			setMessage(formattedString)
+			setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
+		}.show()
 	}
 
 	private fun buildPopupMenu(view: View, position: Int) {
@@ -98,7 +120,7 @@ class DangerousPermissionAdapter :
 			setSingleChoiceItems(R.array.timeout_names, -1) { dialog, which ->
 				val timeoutValues = context.resources.getIntArray(R.array.timeout_values)
 				val delayInMinutes = timeoutValues[which].toLong()
-				onPermissionRevokedCallback?.invoke(position, delayInMinutes)
+				onPermissionRevokedCallback?.invoke(getItem(position), delayInMinutes)
 				dialog.dismiss()
 			}
 			setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
@@ -119,18 +141,18 @@ class DangerousPermissionAdapter :
 		onPermissionMovedCallback?.invoke(dangerousPermission)
 	}
 
-	private var onPermissionToggledCallback: ((checked: Boolean, position: Int) -> Unit)? = null
+	private var onPermissionToggledCallback: ((checked: Boolean, dangerousPermission: DangerousPermissionInfo) -> Unit)? = null
 
-	private var onPermissionRevokedCallback: ((position: Int, delay: Long) -> Unit)? = null
+	private var onPermissionRevokedCallback: ((dangerousPermission: DangerousPermissionInfo, delay: Long) -> Unit)? = null
 
 	private var onPermissionMovedCallback: ((dangerousPermission: DangerousPermissionInfo) -> Unit?)? = null
 
 	private class DangerousPermissionsCallback : DiffUtil.ItemCallback<DangerousPermissionInfo>() {
 
 		override fun areItemsTheSame(oldPermissionInfo: DangerousPermissionInfo, newPermissionInfo: DangerousPermissionInfo)
-				= oldPermissionInfo.name == newPermissionInfo.name
+			= oldPermissionInfo.name == newPermissionInfo.name
 
 		override fun areContentsTheSame(oldPermissionInfo: DangerousPermissionInfo, newPermissionInfo: DangerousPermissionInfo)
-				= oldPermissionInfo == newPermissionInfo
+			= oldPermissionInfo == newPermissionInfo
 	}
 }
