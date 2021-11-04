@@ -5,7 +5,7 @@ import android.content.IntentFilter
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.maxdr.ezpermss.data.AppRepository
-import com.maxdr.ezpermss.ui.permissions.PermissionHelper
+import com.maxdr.ezpermss.ui.permissions.dangerous.PermissionHelper
 import com.maxdr.ezpermss.util.debug
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -82,14 +82,9 @@ class PermissionService : LifecycleService() {
 				val permissions = AppRepository.Instance.getDangerousPermissionInfoForApp(app.fullName)
 					.stateIn(lifecycleScope).value
 
-				// Grant permissions
-				val favoritePermissions = permissions.filter { it.favorite }.joinToString(separator = ",") { it.name }
-				PermissionHelper.grantDangerousPermissions(app.fullName, favoritePermissions)
-
-				// Update database
 				for (permission in permissions) {
 					if (permission.favorite) {
-//						PermissionHelper.grantDangerousPermission(this@PermissionService, app.fullName, permission.name)
+						PermissionHelper.grantDangerousPermission(app.fullName, permission.name)
 						AppRepository.Instance.updateDangerousPermissionInfo(
 							packageName = app.fullName,
 							permissionName = permission.name,
@@ -111,14 +106,9 @@ class PermissionService : LifecycleService() {
 				val permissions = AppRepository.Instance.getDangerousPermissionInfoForApp(app.fullName)
 					.stateIn(lifecycleScope).value
 
-				// Revoke permissions
-				val grantedPermissions = permissions.filter { it.granted }.joinToString(separator = ",") { it.name }
-				PermissionHelper.revokeDangerousPermissions(app.fullName, grantedPermissions)
-
-				// Update database
 				for (permission in permissions) {
 					if (permission.granted) {
-//						PermissionHelper.revokeDangerousPermission(this@PermissionService, app.fullName, permission.name)
+						PermissionHelper.revokeDangerousPermission(app.fullName, permission.name)
 						AppRepository.Instance.updateDangerousPermissionInfo(
 							packageName = app.fullName,
 							permissionName = permission.name,

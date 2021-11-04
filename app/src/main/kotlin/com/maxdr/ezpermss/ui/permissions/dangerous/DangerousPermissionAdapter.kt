@@ -9,31 +9,25 @@ import android.widget.PopupMenu
 import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.maxdr.ezpermss.R
 import com.maxdr.ezpermss.core.DangerousPermissionInfo
 import com.maxdr.ezpermss.databinding.DangerousPermissionRowLayoutBinding
+import com.maxdr.ezpermss.databinding.DangerousPermissionRowLayoutNoRootBinding
 import com.topjohnwu.superuser.Shell
 
 class DangerousPermissionAdapter :
-	ListAdapter<DangerousPermissionInfo, DangerousPermissionAdapter.DangerousPermissionViewHolder>(DangerousPermissionsCallback()) {
+	ListAdapter<DangerousPermissionInfo, BaseViewHolder>(DangerousPermissionsCallback()) {
 
 	inner class DangerousPermissionViewHolder(
-		private val binding: DangerousPermissionRowLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
+		private val binding: DangerousPermissionRowLayoutBinding) : BaseViewHolder(binding) {
 
-		fun bind(dangerousPermissionInfo: DangerousPermissionInfo) {
+		override fun bind(dangerousPermissionInfo: DangerousPermissionInfo) {
 			binding.apply {
 				this.permissionInfo = dangerousPermissionInfo
 				this.onCheckedChange = CompoundButton.OnCheckedChangeListener { view, isChecked ->
 					if (view.isShown) {
-						if (Shell.rootAccess()) {
-							onPermissionToggledCallback?.invoke(isChecked, getItem(bindingAdapterPosition))
-						}
-						else {
-							togglePermission.isChecked = !togglePermission.isChecked
-							showNoRootAlertDialog(root.context)
-						}
+						onPermissionToggledCallback?.invoke(isChecked, getItem(bindingAdapterPosition))
 					}
 				}
 				executePendingBindings()
@@ -41,14 +35,39 @@ class DangerousPermissionAdapter :
 		}
 	}
 
-	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DangerousPermissionViewHolder {
-		val binding = DangerousPermissionRowLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-		return DangerousPermissionViewHolder(binding).apply {
-			binding.moreOptions.setOnClickListener { buildPopupMenu(it, bindingAdapterPosition) }
+	inner class DangerousPermissionViewHolderNoRoot(
+		private val binding: DangerousPermissionRowLayoutNoRootBinding) : BaseViewHolder(binding) {
+
+		override fun bind(dangerousPermissionInfo: DangerousPermissionInfo) {
+			binding.apply {
+				this.permissionInfo = dangerousPermissionInfo
+				this.onCheckedChange = CompoundButton.OnCheckedChangeListener { view, _ ->
+					if (view.isShown) {
+						togglePermission.isChecked = !togglePermission.isChecked
+						showNoRootAlertDialog(root.context)
+					}
+				}
+				executePendingBindings()
+			}
 		}
 	}
 
-	override fun onBindViewHolder(holder: DangerousPermissionViewHolder, position: Int) {
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+		return if (Shell.rootAccess()) {
+			val binding = DangerousPermissionRowLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+			DangerousPermissionViewHolder(binding).apply {
+				binding.moreOptions.setOnClickListener { buildPopupMenu(it, bindingAdapterPosition) }
+			}
+		}
+		else {
+			val binding = DangerousPermissionRowLayoutNoRootBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+			DangerousPermissionViewHolderNoRoot(binding).apply {
+				binding.moreInfo.setOnClickListener { showFullSummary(it, bindingAdapterPosition) }
+			}
+		}
+	}
+
+	override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
 		val dangerousPermission = getItem(position)
 		holder.bind(dangerousPermission)
 	}

@@ -16,6 +16,7 @@ import com.maxdr.ezpermss.databinding.FragmentAppListBinding
 import com.maxdr.ezpermss.ui.helpers.PreferencesManager
 import com.maxdr.ezpermss.ui.permissions.service.PermissionService
 import com.maxdr.ezpermss.util.mainActivity
+import com.topjohnwu.superuser.Shell
 
 class AppListFragment : Fragment() {
 
@@ -60,11 +61,13 @@ class AppListFragment : Fragment() {
 	}
 
 	private fun setupFab() {
-		val manager = PreferencesManager(requireContext())
-		val resId = if (manager.isServiceRunning) R.drawable.ic_stop_service else R.drawable.ic_start_service
-		binding?.fabService?.apply {
-			setImageResource(resId)
-			setOnClickListener { togglePermissionService(it) }
+		if (Shell.rootAccess()) {
+			val manager = PreferencesManager(requireContext())
+			val resId = if (manager.isServiceRunning) R.drawable.ic_stop_service else R.drawable.ic_start_service
+			binding?.fabService?.apply {
+				setImageResource(resId)
+				setOnClickListener { togglePermissionService(it) }
+			}
 		}
 	}
 

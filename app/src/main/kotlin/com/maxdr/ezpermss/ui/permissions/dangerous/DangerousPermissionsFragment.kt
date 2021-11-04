@@ -17,7 +17,7 @@ import com.maxdr.ezpermss.data.AppRepository
 import com.maxdr.ezpermss.databinding.FragmentDangerousPermissionsBinding
 import com.maxdr.ezpermss.ui.permissions.PermissionDetailFragment
 import com.maxdr.ezpermss.ui.permissions.PermissionDetailViewModel
-import com.maxdr.ezpermss.ui.permissions.PermissionHelper
+import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.launch
 
 class DangerousPermissionsFragment : Fragment() {
@@ -38,7 +38,9 @@ class DangerousPermissionsFragment : Fragment() {
 		super.onAttach(context)
 		topHeaderAdapter = HeaderDangerousPermissionAdapter(getString(R.string.favorites_title))
 		bottomHeaderAdapter = HeaderDangerousPermissionAdapter(getString(R.string.others_title))
-		concatAdapter = ConcatAdapter(topHeaderAdapter, topAdapter, bottomHeaderAdapter, bottomAdapter)
+		concatAdapter = if (Shell.rootAccess()) {
+			ConcatAdapter(topHeaderAdapter, topAdapter, bottomHeaderAdapter, bottomAdapter)
+		} else ConcatAdapter(bottomAdapter)
 	}
 
 	override fun onCreateView(inflater: LayoutInflater,

@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.maxdr.ezpermss.data.AppRepository
-import com.maxdr.ezpermss.ui.permissions.PermissionHelper
+import com.maxdr.ezpermss.ui.permissions.dangerous.PermissionHelper
 
 class RevokePermissionWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
 
