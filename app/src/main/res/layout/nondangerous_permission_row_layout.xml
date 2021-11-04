@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools">
+
+	<data>
+		<import type="android.view.View"/>
+		<import type="android.text.TextUtils"/>
+		<import type="com.maxdr.ezpermss.util.Converter"/>
+		<variable
+			name="permissionInfo"
+			type="com.maxdr.ezpermss.core.NonDangerousPermissionInfo" />
+	</data>
+
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical">
+
+		<TextView
+			android:id="@+id/permission_name"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="15dp"
+			android:layout_marginEnd="15dp"
+			android:layout_marginTop="10dp"
+			android:layout_marginBottom="10dp"
+			android:maxLines="2"
+			android:text="@{permissionInfo.simpleName}"
+			android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+			android:textStyle="bold"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toTopOf="@id/permission_protection_level"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			tools:text="Access precise location only in the foreground" />
+
+		<TextView
+			android:id="@+id/permission_protection_level"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="15dp"
+			android:layout_marginEnd="15dp"
+			android:layout_marginBottom="10dp"
+			android:maxLines="2"
+			android:text="@{@string/permission_protection_level(Converter.protectionToString(permissionInfo.protectionLevel))}"
+			android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintBottom_toTopOf="@id/permission_summary"
+			tools:text="Protection level: normal|development" />
+
+		<TextView
+			android:id="@+id/permission_summary"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:layout_marginEnd="15dp"
+			android:layout_marginStart="15dp"
+			android:layout_marginBottom="10dp"
+			android:ellipsize="end"
+			android:justificationMode="inter_word"
+			android:maxLines="2"
+			android:text="@{permissionInfo.summary}"
+			android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toStartOf="@id/more_info"
+			app:layout_constraintBottom_toBottomOf="parent"
+			tools:text="@string/permission_summary"
+			tools:targetApi="o" />
+
+		<ImageButton
+			android:id="@+id/more_info"
+			android:layout_width="@android:dimen/app_icon_size"
+			android:layout_height="@android:dimen/app_icon_size"
+			android:layout_marginTop="5dp"
+			android:layout_marginEnd="15dp"
+			android:background="@null"
+			android:src="@drawable/ic_more_info"
+			android:contentDescription="@null"
+			android:visibility="@{permissionInfo.summary.equals(@string/no_permission_summary) ? View.GONE : View.VISIBLE}"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/permission_protection_level"
+			app:tint="?attr/colorPrimary"/>
+	</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

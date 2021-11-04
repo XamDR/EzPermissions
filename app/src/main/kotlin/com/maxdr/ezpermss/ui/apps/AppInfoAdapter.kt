@@ -3,18 +3,20 @@ package com.maxdr.ezpermss.ui.apps
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.maxdr.ezpermss.core.App
+import com.maxdr.ezpermss.core.AppInfo
 import com.maxdr.ezpermss.databinding.AppRowLayoutBinding
 import com.maxdr.ezpermss.ui.helpers.NavigationService
 import com.maxdr.ezpermss.ui.permissions.PermissionDetailFragment
+import com.maxdr.ezpermss.util.setOnClickListener
 
-class AppInfoAdapter(private val userInstalledApps: List<App>,
-					 private val navigator: NavigationService) : RecyclerView.Adapter<AppInfoAdapter.AppViewHolder>() {
+class AppInfoAdapter(private val navigator: NavigationService) : ListAdapter<AppInfo, AppInfoAdapter.AppViewHolder>(AppInfoCallback()) {
 
 	inner class AppViewHolder(private val binding: AppRowLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
 
-		fun bind(app: App) {
+		fun bind(app: AppInfo) {
 			binding.apply {
 				this.app = app
 				executePendingBindings()
@@ -25,20 +27,25 @@ class AppInfoAdapter(private val userInstalledApps: List<App>,
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppViewHolder {
 		val binding = AppRowLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 		return AppViewHolder(binding).apply {
-			binding.next.setOnClickListener { navigateToPermissionDetails(adapterPosition) }
+			setOnClickListener { position, _ -> navigateToPermissionDetails(position) }
 		}
 	}
 
 	override fun onBindViewHolder(holder: AppViewHolder, position: Int) {
-		val newsItem = userInstalledApps[position]
-		holder.bind(newsItem)
+		val appInfo = getItem(position)
+		holder.bind(appInfo)
 	}
 
-	override fun getItemCount() = userInstalledApps.size
-
 	private fun navigateToPermissionDetails(position: Int) {
-		val appInfo = userInstalledApps[position].info
+		val appInfo = getItem(position)
 		val args = bundleOf("info" to appInfo)
 		navigator.navigate(PermissionDetailFragment::class.java.name, args)
+	}
+
+	private class AppInfoCallback : DiffUtil.ItemCallback<AppInfo>() {
+
+		override fun areItemsTheSame(oldAppInfo: AppInfo, newAppInfo: AppInfo) = oldAppInfo.fullName == newAppInfo.fullName
+
+		override fun areContentsTheSame(oldAppInfo: AppInfo, newAppInfo: AppInfo) = oldAppInfo == newAppInfo
 	}
 }

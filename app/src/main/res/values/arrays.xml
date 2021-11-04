@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string-array name="timeout_names">
+		<item>@string/five_minutes</item>
+		<item>@string/ten_minutes</item>
+		<item>@string/fifteen_minutes</item>
+		<item>@string/thirty_minutes</item>
+		<item>@string/one_hour</item>
+		<item>@string/two_hours</item>
+		<item>@string/six_hours</item>
+		<item>@string/twelve_hours</item>
+	</string-array>
+
+	<integer-array name="timeout_values">
+		<item>5</item>
+		<item>10</item>
+		<item>15</item>
+		<item>30</item>
+		<item>60</item>
+		<item>120</item>
+		<item>360</item>
+		<item>720</item>
+	</integer-array>
+</resources>

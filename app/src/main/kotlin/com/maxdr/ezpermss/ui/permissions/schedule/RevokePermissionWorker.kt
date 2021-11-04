@@ -1,25 +1,25 @@
 package com.maxdr.ezpermss.ui.permissions.schedule
 
 import android.content.Context
-import androidx.work.Worker
+import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.maxdr.ezpermss.util.debug
-import com.topjohnwu.superuser.Shell
+import com.maxdr.ezpermss.data.AppRepository
+import com.maxdr.ezpermss.ui.permissions.dangerous.PermissionHelper
 
-class RevokePermissionWorker(context: Context, params: WorkerParameters) : Worker(context, params) {
+class RevokePermissionWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
 
-	override fun doWork(): Result {
+	override suspend fun doWork(): Result {
 		revokeRuntimePermission()
 		return Result.success()
 	}
 
-	private fun revokeRuntimePermission() {
+	private suspend fun revokeRuntimePermission() {
 		val packageName = inputData.getString("PACKAGE_NAME")
 		val permissionName = inputData.getString("PERMISSION_NAME")
 
 		if (packageName != null && permissionName != null) {
-			val result = Shell.su("pm revoke $packageName $permissionName").exec()
-			debug("RESULT", result.err)
+			PermissionHelper.revokeDangerousPermission(packageName, permissionName)
+			AppRepository.Instance.updateDangerousPermissionInfo(packageName, permissionName, false)
 		}
 	}
 }

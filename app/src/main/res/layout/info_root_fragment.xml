@@ -18,7 +18,7 @@
 			android:padding="10dp"
 			android:contentDescription="@string/root_icon"
 			android:scaleType="centerInside"
-			android:src="@drawable/root"/>
+			android:src="@drawable/logo"/>
 
 		<TextView
 			android:layout_width="match_parent"

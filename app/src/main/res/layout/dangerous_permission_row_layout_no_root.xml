@@ -41,18 +41,18 @@
 			android:layout_marginStart="10dp"
 			android:checked="@{permissionInfo.granted}"
 			android:onCheckedChanged="@{onCheckedChange}"
-			app:layout_constraintEnd_toStartOf="@id/more_options"
+			app:layout_constraintEnd_toStartOf="@id/more_info"
 			app:layout_constraintTop_toBottomOf="@id/permission_name"
 			app:layout_constraintBottom_toBottomOf="parent"/>
 
 		<ImageButton
-			android:id="@+id/more_options"
+			android:id="@+id/more_info"
 			android:layout_width="@android:dimen/app_icon_size"
 			android:layout_height="@android:dimen/app_icon_size"
 			android:layout_marginTop="10dp"
 			android:layout_marginBottom="10dp"
 			android:background="@null"
-			android:src="@drawable/ic_more_options"
+			android:src="@drawable/ic_more_info"
 			android:contentDescription="@null"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintTop_toBottomOf="@id/permission_name"

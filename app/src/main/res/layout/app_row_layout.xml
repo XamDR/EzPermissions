@@ -6,62 +6,61 @@
 	<data>
 		<variable
 			name="app"
-			type="com.maxdr.ezpermss.core.App" />
+			type="com.maxdr.ezpermss.core.AppInfo" />
 	</data>
 
-	<GridLayout
+	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:background="@drawable/recycler_view_item_background"
 		android:minHeight="?android:attr/listPreferredItemHeight"
 		android:paddingStart="?android:attr/listPreferredItemPaddingStart"
 		android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
 		android:paddingTop="8dp"
-		android:paddingBottom="8dp"
-		android:columnCount="3"
-		android:rowCount="2">
+		android:paddingBottom="8dp">
 
 		<ImageView
 			android:id="@+id/app_icon"
 			android:layout_width="@android:dimen/app_icon_size"
 			android:layout_height="@android:dimen/app_icon_size"
-			android:layout_rowSpan="2"
-			android:layout_marginEnd="8dp"
+			android:layout_marginTop="2dp"
 			android:contentDescription="@null"
 			android:scaleType="centerInside"
-			app:src="@{app.icon}"
+			app:src="@{app.drawableIconPath}"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toStartOf="@id/app_name"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
 			tools:src="@drawable/ic_launcher_foreground"/>
 
 		<TextView
 			android:id="@+id/app_name"
 			android:layout_width="0dp"
-			android:layout_gravity="fill_horizontal"
-			android:layout_marginTop="2dp"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="20dp"
+			android:layout_marginBottom="2dp"
 			android:singleLine="true"
 			android:ellipsize="end"
-			android:text="@{app.info.packageName}"
+			android:text="@{app.name}"
 			android:textAppearance="?android:attr/textAppearanceMedium"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toTopOf="@id/app_number_permissions"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toEndOf="@id/app_icon"
 			tools:text="Youtube Music"/>
 
 		<TextView
 			android:id="@+id/app_number_permissions"
-			android:layout_width="wrap_content"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:layout_column="1"
-			android:layout_row="1"
-			android:text="@{@string/package_permissions_number(app.info.packageNumberPermissions)}"
+			android:layout_marginTop="2dp"
+			android:layout_marginStart="20dp"
+			android:text="@{@string/package_permissions_number(app.numberOfPermissions)}"
 			android:textAppearance="?android:attr/textAppearanceSmall"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toEndOf="@id/app_icon"
+			app:layout_constraintBottom_toBottomOf="parent"
 			tools:text="Número total de permisos: 10"/>
 
-		<ImageButton
-			android:id="@+id/next"
-			android:layout_width="@android:dimen/app_icon_size"
-			android:layout_height="@android:dimen/app_icon_size"
-			android:layout_gravity="end|center_vertical"
-			android:layout_column="2"
-			android:layout_row="0"
-			android:layout_rowSpan="2"
-			android:background="?selectableItemBackgroundBorderless"
-			android:contentDescription="@null"
-			android:src="@drawable/ic_next"/>
-	</GridLayout>
+	</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

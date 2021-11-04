@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools">
+	xmlns:tools="http://schemas.android.com/tools"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
 
 	<data>
 		<variable
 			name="viewModel"
 			type="com.maxdr.ezpermss.ui.apps.AppListViewModel" />
+		<import type="com.topjohnwu.superuser.Shell"/>
+		<import type="android.view.View"/>
 	</data>
 
 	<androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -28,6 +30,7 @@
 			android:layout_height="wrap_content"
 			android:contentDescription="@string/start_service"
 			android:layout_margin="16dp"
+			android:visibility="@{Shell.rootAccess() ? View.VISIBLE : View.GONE}"
 			app:layout_anchor="@id/recycler_view"
 			app:layout_anchorGravity="bottom|end"
 			app:layout_behavior="com.maxdr.ezpermss.ui.helpers.FabScrollingBehavior"

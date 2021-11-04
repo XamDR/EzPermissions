@@ -4,14 +4,16 @@
 	<string name="package_icon">App Icon</string>
 	<string name="list_apps">Ver aplicaciones</string>
 	<string name="package_permissions_number">Número total de permisos: %d</string>
-	<string name="normal_permission">Normal</string>
+	<string name="nondangerous_permission">No peligroso</string>
 	<string name="dangerous_permission">Peligroso</string>
-	<string name="other_permission">Otros</string>
-	<string name="no_normal_permissions">No hay permisos normales para está aplicación.</string>
+	<string name="no_nondangerous_permissions">No hay permisos no peligrosos para está aplicación.</string>
 	<string name="no_dangerous_permissions">No hay permisos peligrosos para está aplicación.</string>
 	<string name="no_other_permissions">No hay permisos privilegiados o de firma para está aplicación.</string>
 	<string name="more_info_summary">Más información</string>
-	<string name="set_schedule">Tiempo de espera</string>
+	<string name="set_schedule">Establecer horario</string>
+	<string name="add_others">Añadir a otros</string>
+	<string name="add_favorites">Añadir a favoritos</string>
+	<string name="set_timeout">Tiempo de espera</string>
 	<string name="ok">Aceptar</string>
 	<string name="logo_desc">Logo de la aplicación</string>
 	<string name="description">EzPermissions es un administrador de permisos de aplicaciones que te ayudará a conocer los permisos que utilizan todas las aplicaciones instaladas en tu celular y te permitirá revocar de manera sencilla los permisos considerados peligrosos.</string>
@@ -33,7 +35,8 @@
 	<string name="twelve_hours">12 horas</string>
 	<string name="one_day">1 día</string>
 	<string name="custom_time">Escoge una hora…</string>
-	<string name="timeout_message">El permiso se revocará en %d minutos</string>
+	<string name="timeout_message">Este permiso se revocará en:</string>
+	<string name="toast_timeout_message">Este permiso se revocará en %d minutos</string>
 	<string name="start_service">Iniciar el servicio para otorgar y revocar permisos peligrosos.</string>
 	<string name="stop_service">Detener servicio</string>
 	<string name="foreground_service_notification_title">Administrando los permisos peligrosos.</string>
@@ -41,4 +44,9 @@
 	<string name="channel_name">Servicio para administrar permisos</string>
 	<string name="manual_permission_management">Para la gestión manual haga clic en el nombre de la aplicación.</string>
 	<string name="service_desc">Este servicio administra los permisos peligrosos.</string>
+	<string name="permission_protection_level">Nivel de protección: %s</string>
+	<string name="no_permission_summary">No hay más información sobre este permiso.</string>
+	<string name="favorites_title">Favoritos</string>
+	<string name="others_title">Otros</string>
+	<string name="no_root_msg"><![CDATA[Es necesario ser un <b>usuario root</b> para otorgar o revocar permisos peligrosos.]]></string>
 </resources>

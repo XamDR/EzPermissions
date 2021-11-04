@@ -1,16 +1,15 @@
 package com.maxdr.ezpermss.core
 
-import android.graphics.drawable.Drawable
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class AppInfo(
-	val packageName: String,
-	val packageFullName: String,
-	val packageNumberPermissions: Int) : Parcelable
-
-data class App(
-	val info: AppInfo,
-	val icon: Drawable
-)
+@Entity(tableName = "ApplicationInfo")
+data class AppInfo constructor(
+	val name: String,
+	@PrimaryKey val fullName: String,
+	val numberOfPermissions: Int,
+	val drawableIconPath: String
+) : Parcelable

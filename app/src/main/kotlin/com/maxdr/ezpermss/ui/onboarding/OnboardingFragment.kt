@@ -1,10 +1,10 @@
 package com.maxdr.ezpermss.ui.onboarding
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
 import com.maxdr.ezpermss.databinding.OnboardingFragmentBinding
 
@@ -31,7 +31,7 @@ class OnboardingFragment : Fragment() {
 	}
 
 	private fun setupViewPagerWithTabLayout() {
-		adapter = OnboardingStateAdapter(this, listOf(HomeFragment(), InfoFeaturesFragment(), InfoRootFragment()))
+		adapter = OnboardingStateAdapter(this, listOf(HomeFragment(), InfoRootFragment()))
 		binding?.onboardingPager?.adapter = adapter
 		TabLayoutMediator(binding?.tabDots!!, binding?.onboardingPager!!) { _, _ -> }.attach()
 	}
