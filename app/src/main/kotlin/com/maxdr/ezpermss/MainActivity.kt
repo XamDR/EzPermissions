@@ -6,12 +6,14 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.preference.PreferenceManager
 import com.maxdr.ezpermss.core.PackageManagerHelper
 import com.maxdr.ezpermss.data.AppRepository
 import com.maxdr.ezpermss.databinding.ActivityMainBinding
 import com.maxdr.ezpermss.ui.apps.PackageReceiver
 import com.maxdr.ezpermss.ui.helpers.NavigationService
 import com.maxdr.ezpermss.util.instantiate
+import com.maxdr.ezpermss.util.setNightMode
 import kotlinx.coroutines.launch
 import rikka.shizuku.Shizuku
 import rikka.shizuku.ShizukuProvider
@@ -35,6 +37,7 @@ class MainActivity : AppCompatActivity(), NavigationService, Shizuku.OnRequestPe
 		binding = ActivityMainBinding.inflate(layoutInflater)
 		setContentView(binding.root)
 		setSupportActionBar(binding.toolbar)
+		setNightMode(PreferenceManager.getDefaultSharedPreferences(this))
 		checkShizuku()
 		registerReceiver(packageReceiver, IntentFilter().apply {
 			addAction(Intent.ACTION_PACKAGE_ADDED)
@@ -69,20 +72,22 @@ class MainActivity : AppCompatActivity(), NavigationService, Shizuku.OnRequestPe
 
 	override fun onRequestPermissionResult(requestCode: Int, grantResult: Int) {
 		val isGranted = grantResult == PackageManager.PERMISSION_GRANTED
-		if (!isGranted) {
+		if (!isGranted && Shizuku.pingBinder()) {
 			requestShizuku()
 		}
 	}
 
 	private fun checkShizuku() {
-		val isGranted = if (Shizuku.isPreV11() || Shizuku.getVersion() < 11) {
-			checkSelfPermission(ShizukuProvider.PERMISSION) == PackageManager.PERMISSION_GRANTED
-		}
-		else {
-			Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED
-		}
-		if (!isGranted) {
-			requestShizuku()
+		if (Shizuku.pingBinder()) {
+			val isGranted = if (Shizuku.isPreV11() || Shizuku.getVersion() < 11) {
+				checkSelfPermission(ShizukuProvider.PERMISSION) == PackageManager.PERMISSION_GRANTED
+			}
+			else {
+				Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED
+			}
+			if (!isGranted) {
+				requestShizuku()
+			}
 		}
 	}
 

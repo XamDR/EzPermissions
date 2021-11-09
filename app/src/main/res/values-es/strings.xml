@@ -48,7 +48,17 @@
 	<string name="no_permission_summary">No hay más información sobre este permiso.</string>
 	<string name="favorites_title">Favoritos</string>
 	<string name="others_title">Otros</string>
-	<string name="no_root_msg"><![CDATA[Es necesario ser un <b>usuario root</b> para otorgar o revocar permisos peligrosos.]]></string>
+	<string name="no_shizuku_msg"><![CDATA[Es necesario tener instalada la aplicación <b>Shizuku</b> para otorgar o revocar permisos peligrosos.]]></string>
 	<string name="system_app">Aplicación del sistema</string>
 	<string name="install_shizuku">Instalar Shizuku</string>
+	<string name="fragment_settings">Configuración</string>
+	<string name="personalisation_header">Personalización</string>
+	<string name="app_theme_title">Tema de la aplicación</string>
+	<string name="light_theme">Claro</string>
+	<string name="dark_theme">Oscuro</string>
+	<string name="os_theme">Predeterminado del sistema</string>
+	<string name="about_header">Acerca de EzPermissions</string>
+	<string name="developer">Desarrollador</string>
+	<string name="version">Versión</string>
+	<string name="shizuku">Aplicación Shizuku</string>
 </resources>

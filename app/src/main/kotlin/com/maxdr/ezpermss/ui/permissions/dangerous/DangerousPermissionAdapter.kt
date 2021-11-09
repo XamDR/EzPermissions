@@ -86,7 +86,7 @@ class DangerousPermissionAdapter :
 
 	private fun showNoRootAlertDialog(context: Context) {
 		val formattedString = HtmlCompat.fromHtml(
-			context.getText(R.string.no_root_msg).toString(), HtmlCompat.FROM_HTML_MODE_COMPACT
+			context.getText(R.string.no_shizuku_msg).toString(), HtmlCompat.FROM_HTML_MODE_COMPACT
 		)
 		MaterialAlertDialogBuilder(context).apply {
 			setTitle(R.string.app_name)

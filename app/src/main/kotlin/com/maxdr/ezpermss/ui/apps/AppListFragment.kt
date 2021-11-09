@@ -3,6 +3,9 @@ package com.maxdr.ezpermss.ui.apps
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -15,6 +18,7 @@ import com.maxdr.ezpermss.R
 import com.maxdr.ezpermss.databinding.FragmentAppListBinding
 import com.maxdr.ezpermss.ui.helpers.PreferencesManager
 import com.maxdr.ezpermss.ui.permissions.service.PermissionService
+import com.maxdr.ezpermss.ui.settings.SettingsFragment
 import com.maxdr.ezpermss.util.mainActivity
 import rikka.shizuku.Shizuku
 
@@ -29,6 +33,7 @@ class AppListFragment : Fragment() {
 		adapter = AppInfoAdapter(mainActivity).apply {
 			stateRestorationPolicy = StateRestorationPolicy.PREVENT_WHEN_EMPTY
 		}
+		setHasOptionsMenu(true)
 	}
 
 	override fun onCreateView(inflater: LayoutInflater,
@@ -50,6 +55,16 @@ class AppListFragment : Fragment() {
 		super.onViewCreated(view, savedInstanceState)
 		setupRecyclerView()
 		setupFab()
+	}
+
+	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) =
+		inflater.inflate(R.menu.app_list_menu, menu)
+
+	override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+		R.id.settings -> {
+			mainActivity.navigate(SettingsFragment::class.java.name); true
+		}
+		else -> false
 	}
 
 	private fun setupRecyclerView() {
