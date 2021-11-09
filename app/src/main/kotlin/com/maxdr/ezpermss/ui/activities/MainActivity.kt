@@ -1,4 +1,4 @@
-package com.maxdr.ezpermss
+package com.maxdr.ezpermss.ui.activities
 
 import android.content.Intent
 import android.content.IntentFilter
@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
+import com.maxdr.ezpermss.R
 import com.maxdr.ezpermss.core.PackageManagerHelper
 import com.maxdr.ezpermss.data.AppRepository
 import com.maxdr.ezpermss.databinding.ActivityMainBinding

@@ -1,4 +1,4 @@
-package com.maxdr.ezpermss
+package com.maxdr.ezpermss.ui.activities
 
 import android.content.Intent
 import android.os.Bundle

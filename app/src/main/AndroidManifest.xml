@@ -45,7 +45,7 @@
         </receiver>
 
         <activity
-            android:name=".OnboardingActivity"
+            android:name=".ui.activities.OnboardingActivity"
             android:exported="true"
             android:noHistory="true" >
             <intent-filter>
@@ -54,7 +54,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.activities.MainActivity"
             android:exported="true" />
     </application>
 
