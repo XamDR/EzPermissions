@@ -34,6 +34,6 @@ interface AppDao {
 	@Query("SELECT favorite FROM DangerousPermissionInfo WHERE app_id=:packageName AND name=:permissionName")
 	suspend fun getDangerousPermissionFavoriteInfo(packageName: String, permissionName: String) : Boolean?
 
-	@Query("DELETE FROM ApplicationInfo WHERE fullName=:packageName")
+	@Query("DELETE FROM ApplicationInfo WHERE full_name=:packageName")
 	suspend fun removeAppInfo(packageName: String)
 }

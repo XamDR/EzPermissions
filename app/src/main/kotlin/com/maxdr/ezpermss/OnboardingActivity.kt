@@ -8,7 +8,6 @@ import com.maxdr.ezpermss.core.PackageManagerHelper
 import com.maxdr.ezpermss.databinding.ActivityOnboardingBinding
 import com.maxdr.ezpermss.ui.helpers.PreferencesManager
 import com.maxdr.ezpermss.util.debug
-import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.launch
 
 class OnboardingActivity : AppCompatActivity() {
@@ -39,18 +38,6 @@ class OnboardingActivity : AppCompatActivity() {
 	}
 
 	fun goToMainActivity() {
-		Shell.getShell {
-			startActivity(Intent(this, MainActivity::class.java))
-		}
-	}
-
-	companion object {
-		init {
-			Shell.enableVerboseLogging = BuildConfig.DEBUG
-			Shell.setDefaultBuilder(Shell.Builder.create()
-				.setFlags(Shell.FLAG_REDIRECT_STDERR)
-				.setTimeout(10)
-			)
-		}
+		startActivity(Intent(this, MainActivity::class.java))
 	}
 }

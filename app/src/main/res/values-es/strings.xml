@@ -3,7 +3,7 @@
 	<string name="welcome_msg">Bienvenido a EzPermissions</string>
 	<string name="package_icon">App Icon</string>
 	<string name="list_apps">Ver aplicaciones</string>
-	<string name="package_permissions_number">Número total de permisos: %d</string>
+	<string name="app_permissions_number">Permisos: %d</string>
 	<string name="nondangerous_permission">No peligroso</string>
 	<string name="dangerous_permission">Peligroso</string>
 	<string name="no_nondangerous_permissions">No hay permisos no peligrosos para está aplicación.</string>
@@ -18,8 +18,8 @@
 	<string name="logo_desc">Logo de la aplicación</string>
 	<string name="description">EzPermissions es un administrador de permisos de aplicaciones que te ayudará a conocer los permisos que utilizan todas las aplicaciones instaladas en tu celular y te permitirá revocar de manera sencilla los permisos considerados peligrosos.</string>
 	<string name="features"><![CDATA[ &#8226; Visualiza todas las aplicaciones instaladas en tu dispositivo.<br /> &#8226; Haz clic en cualquier aplicación de la lista para ver los detalles de sus permisos, agrupados por categoría.<br /> &#8226; Controla el acceso a los permisos peligrosos por cada aplicación instalada.<br /> &#8226; Establece intervalos de tiempo para otorgar acceso temporal a los permisos peligrosos por cada aplicación.<br /> ]]></string>
-	<string name="root_alert">Para obtener la máxima funcionalidad de la aplicación es necesario ser usuario ROOT.</string>
-	<string name="next">Siguiente</string>
+	<string name="shizuku_alert">Para obtener la máxima funcionalidad de la aplicación es necesario tener instalada la aplicación Shizuku.</string>
+	<string name="skip">Omitir</string>
 	<string name="alert">Muy importante</string>
 	<string name="root_icon">Ícono del usuario ROOT</string>
 	<string name="cancel">Cancelar</string>
@@ -49,4 +49,6 @@
 	<string name="favorites_title">Favoritos</string>
 	<string name="others_title">Otros</string>
 	<string name="no_root_msg"><![CDATA[Es necesario ser un <b>usuario root</b> para otorgar o revocar permisos peligrosos.]]></string>
+	<string name="system_app">Aplicación del sistema</string>
+	<string name="install_shizuku">Instalar Shizuku</string>
 </resources>

@@ -16,7 +16,7 @@ import com.maxdr.ezpermss.databinding.FragmentAppListBinding
 import com.maxdr.ezpermss.ui.helpers.PreferencesManager
 import com.maxdr.ezpermss.ui.permissions.service.PermissionService
 import com.maxdr.ezpermss.util.mainActivity
-import com.topjohnwu.superuser.Shell
+import rikka.shizuku.Shizuku
 
 class AppListFragment : Fragment() {
 
@@ -61,7 +61,7 @@ class AppListFragment : Fragment() {
 	}
 
 	private fun setupFab() {
-		if (Shell.rootAccess()) {
+		if (Shizuku.pingBinder()) {
 			val manager = PreferencesManager(requireContext())
 			val resId = if (manager.isServiceRunning) R.drawable.ic_stop_service else R.drawable.ic_start_service
 			binding?.fabService?.apply {

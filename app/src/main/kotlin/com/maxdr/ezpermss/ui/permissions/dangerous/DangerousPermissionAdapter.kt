@@ -14,7 +14,7 @@ import com.maxdr.ezpermss.R
 import com.maxdr.ezpermss.core.DangerousPermissionInfo
 import com.maxdr.ezpermss.databinding.DangerousPermissionRowLayoutBinding
 import com.maxdr.ezpermss.databinding.DangerousPermissionRowLayoutNoRootBinding
-import com.topjohnwu.superuser.Shell
+import rikka.shizuku.Shizuku
 
 class DangerousPermissionAdapter :
 	ListAdapter<DangerousPermissionInfo, BaseViewHolder>(DangerousPermissionsCallback()) {
@@ -53,7 +53,7 @@ class DangerousPermissionAdapter :
 	}
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
-		return if (Shell.rootAccess()) {
+		return if (Shizuku.pingBinder()) {
 			val binding = DangerousPermissionRowLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 			DangerousPermissionViewHolder(binding).apply {
 				binding.moreOptions.setOnClickListener { buildPopupMenu(it, bindingAdapterPosition) }

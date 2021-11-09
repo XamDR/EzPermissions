@@ -3,7 +3,7 @@
 	<string name="welcome_msg">Welcome to EzPermissions</string>
 	<string name="package_icon">App Icon</string>
 	<string name="list_apps">List apps</string>
-	<string name="package_permissions_number">Number of permissions: %d</string>
+	<string name="app_permissions_number">Permissions: %d</string>
 	<string name="normal_permissions" translatable="false">&#8226; android.permission.ACCESS_WIFI_STATE\n&#8226; android.permission.VIBRATE\n&#8226; android.permission.WAKE_LOCK\n&#8226; android.permission.SET_WALLPAPER\n&#8226; android.permission.NFC</string>
 	<string name="nondangerous_permission">Non dangerous</string>
 	<string name="dangerous_permission">Dangerous</string>
@@ -20,8 +20,8 @@
 	<string name="logo_desc">App logo</string>
 	<string name="description">EzPermissions is an application permission manager that will help you to know the permissions used by all the applications installed on your smartphone and will allow you to easily revoke permissions considered dangerous.</string>
 	<string name="features"><![CDATA[ &#8226; View all the applications installed on your device.<br /> &#8226; Click on any app in the list to see the details of its permissions, grouped by category.<br /> &#8226; Control access to dangerous permissions for each installed application.<br /> &#8226; Set time intervals to grant temporary access to dangerous permissions per application.<br /> ]]></string>
-	<string name="root_alert">To obtain the maximum functionality of the application it is necessary to be a ROOT user.</string>
-	<string name="next">Next</string>
+	<string name="shizuku_alert">To obtain the maximum functionality of the application it is necessary to have installed the app Shizuku.</string>
+	<string name="skip">Skip</string>
 	<string name="alert">Very important</string>
 	<string name="root_icon">Root user icon</string>
 	<string name="cancel">Cancel</string>
@@ -51,4 +51,6 @@
 	<string name="favorites_title">Favorites</string>
 	<string name="others_title">Others</string>
 	<string name="no_root_msg"><![CDATA[It\'s necessary to be a <b>root user</b> in order to grant or revoke dangerous permissions.]]></string>
+	<string name="system_app">System App</string>
+	<string name="install_shizuku">Install Shizuku</string>
 </resources>

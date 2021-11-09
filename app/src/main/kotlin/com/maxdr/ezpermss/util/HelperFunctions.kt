@@ -46,6 +46,9 @@ object Converter {
 		if (level and PermissionInfo.PROTECTION_FLAG_RUNTIME_ONLY != 0) {
 			protectionLevel += "|runtime"
 		}
+		if (level and PermissionInfo.FLAG_COSTS_MONEY != 0) {
+			protectionLevel += "|costs money"
+		}
 		return protectionLevel
 	}
 }

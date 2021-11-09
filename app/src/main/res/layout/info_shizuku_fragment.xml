@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical"
+		tools:context="ui.onboarding.InfoShizukuFragment">
+
+		<ImageView
+			android:id="@+id/root_icon"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_marginTop="20dp"
+			android:layout_marginBottom="20dp"
+			android:padding="10dp"
+			android:contentDescription="@string/root_icon"
+			android:scaleType="centerInside"
+			android:src="@drawable/logo"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toTopOf="@id/alert"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"/>
+
+		<TextView
+			android:id="@+id/alert"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_margin="10dp"
+			android:gravity="center"
+			android:text="@string/alert"
+			android:textAllCaps="true"
+			android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+			android:textColor="@color/red"
+			android:textStyle="bold"
+			app:layout_constraintTop_toBottomOf="@id/root_icon"
+			app:layout_constraintBottom_toTopOf="@id/shizuku_alert"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"/>
+
+		<TextView
+			android:id="@+id/shizuku_alert"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_margin="20dp"
+			android:gravity="center"
+			android:padding="10dp"
+			android:justificationMode="inter_word"
+			android:text="@string/shizuku_alert"
+			android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+			app:layout_constraintTop_toBottomOf="@id/alert"
+			app:layout_constraintBottom_toTopOf="@id/install_shizuku"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			tools:targetApi="o" />
+
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/install_shizuku"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_margin="10dp"
+			android:text="@string/install_shizuku"
+			app:layout_constraintTop_toBottomOf="@id/shizuku_alert"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toStartOf="@id/skip"/>
+
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/skip"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_margin="10dp"
+			android:text="@string/skip"
+			app:layout_constraintTop_toBottomOf="@id/shizuku_alert"
+			app:layout_constraintStart_toEndOf="@id/install_shizuku"
+			app:layout_constraintEnd_toEndOf="parent"/>
+	</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

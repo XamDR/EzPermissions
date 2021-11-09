@@ -6,9 +6,9 @@
 	<data>
 		<variable
 			name="viewModel"
-			type="com.maxdr.ezpermss.ui.apps.AppListViewModel" />
-		<import type="com.topjohnwu.superuser.Shell"/>
+			type="com.maxdr.ezpermss.ui.apps.AppListViewModel"/>
 		<import type="android.view.View"/>
+		<import type="rikka.shizuku.Shizuku"/>
 	</data>
 
 	<androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -30,7 +30,7 @@
 			android:layout_height="wrap_content"
 			android:contentDescription="@string/start_service"
 			android:layout_margin="16dp"
-			android:visibility="@{Shell.rootAccess() ? View.VISIBLE : View.GONE}"
+			android:visibility="@{Shizuku.pingBinder() ? View.VISIBLE : View.GONE}"
 			app:layout_anchor="@id/recycler_view"
 			app:layout_anchorGravity="bottom|end"
 			app:layout_behavior="com.maxdr.ezpermss.ui.helpers.FabScrollingBehavior"

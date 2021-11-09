@@ -17,8 +17,8 @@ import com.maxdr.ezpermss.data.AppRepository
 import com.maxdr.ezpermss.databinding.FragmentDangerousPermissionsBinding
 import com.maxdr.ezpermss.ui.permissions.PermissionDetailFragment
 import com.maxdr.ezpermss.ui.permissions.PermissionDetailViewModel
-import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.launch
+import rikka.shizuku.Shizuku
 
 class DangerousPermissionsFragment : Fragment() {
 
@@ -38,7 +38,7 @@ class DangerousPermissionsFragment : Fragment() {
 		super.onAttach(context)
 		topHeaderAdapter = HeaderDangerousPermissionAdapter(getString(R.string.favorites_title))
 		bottomHeaderAdapter = HeaderDangerousPermissionAdapter(getString(R.string.others_title))
-		concatAdapter = if (Shell.rootAccess()) {
+		concatAdapter = if (Shizuku.pingBinder()) {
 			ConcatAdapter(topHeaderAdapter, topAdapter, bottomHeaderAdapter, bottomAdapter)
 		} else ConcatAdapter(bottomAdapter)
 	}

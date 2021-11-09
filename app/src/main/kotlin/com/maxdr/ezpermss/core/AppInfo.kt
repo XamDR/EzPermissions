@@ -1,6 +1,7 @@
 package com.maxdr.ezpermss.core
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
@@ -9,7 +10,7 @@ import kotlinx.parcelize.Parcelize
 @Entity(tableName = "ApplicationInfo")
 data class AppInfo constructor(
 	val name: String,
-	@PrimaryKey val fullName: String,
+	@ColumnInfo(name = "full_name") @PrimaryKey val fullName: String,
+	@ColumnInfo(name = "system_app") val systemApp: Boolean,
 	val numberOfPermissions: Int,
-	val drawableIconPath: String
-) : Parcelable
+	@ColumnInfo(name = "drawable_icon_res_id") val drawableIconResId: Int) : Parcelable

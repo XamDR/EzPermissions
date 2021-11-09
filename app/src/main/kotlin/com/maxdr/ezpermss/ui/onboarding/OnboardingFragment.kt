@@ -31,7 +31,7 @@ class OnboardingFragment : Fragment() {
 	}
 
 	private fun setupViewPagerWithTabLayout() {
-		adapter = OnboardingStateAdapter(this, listOf(HomeFragment(), InfoRootFragment()))
+		adapter = OnboardingStateAdapter(this, listOf(HomeFragment(), InfoShizukuFragment()))
 		binding?.onboardingPager?.adapter = adapter
 		TabLayoutMediator(binding?.tabDots!!, binding?.onboardingPager!!) { _, _ -> }.attach()
 	}
