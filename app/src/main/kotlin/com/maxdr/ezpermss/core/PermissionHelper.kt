@@ -1,4 +1,4 @@
-package com.maxdr.ezpermss.ui.permissions.dangerous
+package com.maxdr.ezpermss.core
 
 import android.annotation.SuppressLint
 import android.os.Build

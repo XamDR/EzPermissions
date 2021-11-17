@@ -5,7 +5,7 @@ import android.content.IntentFilter
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.maxdr.ezpermss.data.AppRepository
-import com.maxdr.ezpermss.ui.permissions.dangerous.PermissionHelper
+import com.maxdr.ezpermss.core.PermissionHelper
 import com.maxdr.ezpermss.util.debug
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch

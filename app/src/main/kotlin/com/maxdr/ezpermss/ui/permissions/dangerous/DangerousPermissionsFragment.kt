@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView.Adapter.StateRestorationPolicy
 import com.maxdr.ezpermss.R
 import com.maxdr.ezpermss.core.DangerousPermissionInfo
+import com.maxdr.ezpermss.core.PermissionHelper
 import com.maxdr.ezpermss.data.AppRepository
 import com.maxdr.ezpermss.databinding.FragmentDangerousPermissionsBinding
 import com.maxdr.ezpermss.ui.permissions.PermissionDetailFragment
