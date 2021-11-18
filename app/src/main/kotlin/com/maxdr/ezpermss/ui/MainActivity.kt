@@ -1,4 +1,4 @@
-package com.maxdr.ezpermss.ui.activities
+package com.maxdr.ezpermss.ui
 
 import android.content.Intent
 import android.content.IntentFilter
@@ -54,12 +54,16 @@ class MainActivity : AppCompatActivity(), NavigationService, Shizuku.OnRequestPe
 		unregisterReceiver(packageReceiver)
 	}
 
-	override fun navigate(className: String, args: Bundle?) {
+	override fun navigate(className: String, args: Bundle?, isMainDestination: Boolean) {
 		val fragment = supportFragmentManager.instantiate(className).apply { arguments = args }
-		supportFragmentManager.beginTransaction()
-			.replace(R.id.fragment_container, fragment)
-			.addToBackStack(null)
-			.commit()
+		val transaction = supportFragmentManager.beginTransaction().replace(R.id.fragment_container, fragment)
+
+		if (isMainDestination) {
+			transaction.commit()
+		}
+		else {
+			transaction.addToBackStack(null).commit()
+		}
 	}
 
 	override fun onRequestPermissionsResult(requestCode: Int,

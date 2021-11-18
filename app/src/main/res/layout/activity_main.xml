@@ -23,7 +23,7 @@
 			android:id="@+id/fragment_container"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:name="com.maxdr.ezpermss.ui.apps.AppListFragment"
+			android:name="com.maxdr.ezpermss.ui.onboarding.OnboardingFragment"
 			app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 	</androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

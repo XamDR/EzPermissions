@@ -11,7 +11,7 @@ import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
-import com.maxdr.ezpermss.ui.activities.MainActivity
+import com.maxdr.ezpermss.ui.MainActivity
 import java.util.*
 
 val String.Companion.Empty: String

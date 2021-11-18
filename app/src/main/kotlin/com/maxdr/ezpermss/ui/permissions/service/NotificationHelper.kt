@@ -11,7 +11,7 @@ import android.media.AudioAttributes
 import android.media.RingtoneManager
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import com.maxdr.ezpermss.ui.activities.MainActivity
+import com.maxdr.ezpermss.ui.MainActivity
 import com.maxdr.ezpermss.R
 
 object NotificationHelper {

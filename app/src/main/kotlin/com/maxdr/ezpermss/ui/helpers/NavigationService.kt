@@ -3,5 +3,5 @@ package com.maxdr.ezpermss.ui.helpers
 import android.os.Bundle
 
 interface NavigationService {
-	fun navigate(className: String, args: Bundle? = null)
+	fun navigate(className: String, args: Bundle? = null, isMainDestination: Boolean = false)
 }
