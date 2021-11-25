@@ -13,4 +13,4 @@ data class AppInfo constructor(
 	@ColumnInfo(name = "full_name") @PrimaryKey val fullName: String,
 	@ColumnInfo(name = "system_app") val systemApp: Boolean,
 	val numberOfPermissions: Int,
-	@ColumnInfo(name = "drawable_icon_res_id") val drawableIconResId: Int) : Parcelable
+	@ColumnInfo(name = "drawable_icon_path") val drawableIconPath: String) : Parcelable

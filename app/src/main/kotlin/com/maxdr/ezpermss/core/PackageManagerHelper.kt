@@ -6,8 +6,10 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.pm.PermissionInfo.PROTECTION_DANGEROUS
 import android.os.Build
+import androidx.core.graphics.drawable.toBitmap
 import com.maxdr.ezpermss.R
 import com.maxdr.ezpermss.data.AppRepository
+import com.maxdr.ezpermss.ui.helpers.ImageStorageManager
 import com.maxdr.ezpermss.util.toTitleCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,15 +27,18 @@ class PackageManagerHelper(private val context: Context) {
 			if (icon != 0 && pm.getLaunchIntentForPackage(packageFullName) != null) {
 				val packageName = pm.getApplicationLabel(packageInfo).toString()
 				val isSystemApp = packageInfo.flags and (ApplicationInfo.FLAG_SYSTEM or ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0
+				val drawableIcon = pm.getApplicationIcon(packageFullName)
 				val pi = pm.getPackageInfo(packageFullName, PackageManager.GET_PERMISSIONS)
 				val permissions: Array<String>? = pi.requestedPermissions
+
+				ImageStorageManager.saveToInternalStorage(context, drawableIcon.toBitmap(), packageName)
 
 				val appInfo = AppInfo(
 					name = packageName,
 					fullName = packageFullName,
 					systemApp = isSystemApp,
 					numberOfPermissions = permissions?.size ?: 0,
-					drawableIconResId = icon
+					drawableIconPath = packageName
 				)
 				AppRepository.Instance.insertAppInfo(appInfo)
 			}
@@ -47,15 +52,18 @@ class PackageManagerHelper(private val context: Context) {
 		if (icon != 0 && packageManager.getLaunchIntentForPackage(appFullName) != null) {
 			val packageInfo = packageManager.getApplicationInfo(appFullName, PackageManager.GET_META_DATA)
 			val isSystemApp = packageInfo.flags and (ApplicationInfo.FLAG_SYSTEM or ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0
+			val drawableIcon = packageManager.getApplicationIcon(appFullName)
 			val pi = packageManager.getPackageInfo(appFullName, PackageManager.GET_PERMISSIONS)
 			val permissions: Array<String>? = pi.requestedPermissions
+
+			ImageStorageManager.saveToInternalStorage(context, drawableIcon.toBitmap(), appFullName)
 
 			val appInfo = AppInfo(
 				name = packageInfo.loadLabel(packageManager).toString(),
 				fullName = appFullName,
 				systemApp = isSystemApp,
 				numberOfPermissions = permissions?.size ?: 0,
-				drawableIconResId = icon
+				drawableIconPath = appFullName
 			)
 			AppRepository.Instance.insertAppInfo(appInfo)
 		}
